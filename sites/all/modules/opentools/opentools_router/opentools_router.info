@@ -1,0 +1,5 @@
+name = "opentools router"
+description = "Custom stuff."
+core = "7.x"
+php = "5.2.4"
+dependencies[] = "opentools"

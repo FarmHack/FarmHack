@@ -1,0 +1,19 @@
+<?php
+
+function opentools_router_init() {
+  if(arg(0) == "opentools") {
+    drupal_goto("node/add/wiki", array("query" => array("parent_type" => arg(2))));
+  }
+}
+
+function opentools_router_menu() {
+  $items['opentools/add/%'] = array(
+    "page callback" => "opentools_router_route"
+  );
+  return $items;
+}
+
+function opentools_router_route() {
+  return "";
+}
+
