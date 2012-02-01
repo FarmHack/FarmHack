@@ -8,9 +8,14 @@ function opentools_router_init() {
 
 function opentools_router_menu() {
   $items['opentools/add/%'] = array(
-    "page callback" => "opentools_router_route"
+    "page callback" => "opentools_router_route",
+    "access callback" => "opentools_access_add",
   );
   return $items;
+}
+
+function opentools_access_add() {
+  return TRUE;
 }
 
 function opentools_router_route() {
