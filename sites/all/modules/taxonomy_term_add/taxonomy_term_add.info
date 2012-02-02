@@ -1,0 +1,3 @@
+name = "Taxonomy Term Add"
+description = "Non-admin screens for adding taxonomy terms."
+core = "7.x"

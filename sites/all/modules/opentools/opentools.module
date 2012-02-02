@@ -23,6 +23,7 @@ function opentools_init() {
       }
     }
   } 
+  
   // Reroute Forum pages
   if(arg(0) == "forum" && is_numeric(arg(1)) && arg(2) != 'edit') {
     $term = taxonomy_term_load(arg(1));
@@ -33,10 +34,16 @@ function opentools_init() {
   } 
 }
 
-function opentools_node_insert($node){
-  if($node->type == 'wiki' && $_GET['parent_type'] == 'event') {
+function opentools_taxonomy_term_insert($term){
+  if($term->vocabulary_machine_name == 'events') {
     // Create a wiki page
     // Example from http://drupal.org/node/889058#comment-3709802
+    $wiki = new StdClass();
+    $wiki->title = $term->name;
+    $wiki->type = 'wiki';
+    $wiki->language = LANGUAGE_NONE;
+    node_object_prepare($wiki);
+    node_save($wiki);
     // Create a forum
     $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'forums'")->fetchField();
     
@@ -53,35 +60,36 @@ function opentools_node_insert($node){
     taxonomy_term_save($term);
   }
 
-  //if($term->vocabulary_machine_name == 'tools') {
-  if($node->type == 'wiki' && $_GET['parent_type'] == 'tool') {
+  if($term->vocabulary_machine_name == 'tools') {
+    // Create a wiki page
+    // Example from http://drupal.org/node/889058#comment-3709802
+    $wiki = new StdClass();
+    $wiki->title = $term->name;
+    $wiki->type = 'wiki';
+    $wiki->language = LANGUAGE_NONE;
+    node_object_prepare($wiki);
+    node_save($wiki);
     // Create a forum
     $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'forums'")->fetchField();
     
     $forum = (object) array(
-      'name' => $node->title,
+      'name' => $term->name,
       'vid' => $vid,
       'parent' => array(2)
     );
     taxonomy_term_save($forum);
-    // @todo Create a tool with references to the new wiki page and forum 
-    $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'tools'")->fetchField();
+    // Save the tool with references to the new wiki page and forum 
+    $term->field_tool_to_wiki['und'][0]['target_id'] = $wiki->nid;
+    $term->field_tool_to_forum['und'][0]['tid'] = $forum->tid;
     
-    $tool = (object) array(
-      'name' => $node->title,
-      'vid' => $vid,
-    );
-    $tool->field_tool_to_wiki = array('und' => array(0 => array('target_id' => $node->nid)));
-    $tool->field_tool_to_forum =  array('und' => array(0 => array('tid' => $forum->tid)));    
-    taxonomy_term_save($tool);
-
+    taxonomy_term_save($term);
   }
+
 }
 
 function opentools_form_alter(&$form, &$form_state, $form_id) {
-  
   // Hide unnecessary form items
-  if($form_id == "taxonomy_form_term" && $form['#vocabulary']->machine_name == 'tools') {
+  if($form_id == "taxonomy_term_add_form_term" && $form['#vocabulary']->machine_name == 'tools') {
    $form['field_tool_to_wiki']['#type'] = 'hidden';
    $form['field_tool_to_forum']['#type'] = 'hidden';
    // Drupal croaks if I hide these elements without css... 
@@ -89,7 +97,7 @@ function opentools_form_alter(&$form, &$form_state, $form_id) {
    // $form['description']['#type'] = 'hidden';
    // $form['relations']['#type'] = 'hidden';
   }
-  if($form_id == "taxonomy_form_term" && $form['#vocabulary']->machine_name == 'events') {
+  if($form_id == "taxonomy_term_add_form_term" && $form['#vocabulary']->machine_name == 'events') {
    $form['field_events_to_forum']['#type'] = 'hidden';
    $form['field_event_to_wiki']['#type'] = 'hidden';
    // Drupal croaks if I hide these elements without css... 
