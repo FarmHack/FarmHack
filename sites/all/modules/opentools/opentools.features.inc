@@ -23,3 +23,20 @@ function opentools_views_api() {
     return array("version" => "3.0");
   }
 }
+
+/**
+ * Implements hook_node_info().
+ */
+function opentools_node_info() {
+  $items = array(
+    'wiki' => array(
+      'name' => t('Wiki page'),
+      'base' => 'node_content',
+      'description' => t('A <em>wiki page</em>, with freelinking and wiki input format.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+  );
+  return $items;
+}

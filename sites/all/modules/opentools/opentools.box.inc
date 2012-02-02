@@ -25,8 +25,8 @@ function opentools_default_box() {
 global $user;
 
 // Get forum context
-$tid = opentools_get_context();
-
+$context = opentools_get_context();
+$tid = $context[\'forum\'];
 $query = "
 SELECT * FROM notifications_subscription 
 INNER JOIN notifications_subscription_fields 
