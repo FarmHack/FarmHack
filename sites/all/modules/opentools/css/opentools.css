@@ -100,6 +100,7 @@ body.page-taxonomy-term #block-system-main {display: none;}
 */
 body.page-taxonomy-term .field-name-field-image {float: right;}
 body.page-taxonomy-term .feed-icon {display: none;}
+body.page-taxonomy-term #block-system-main {display: none;}
 body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
 
 /*
