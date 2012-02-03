@@ -33,6 +33,14 @@ function opentools_views_api() {
  */
 function opentools_node_info() {
   $items = array(
+    'opentools_tool' => array(
+      'name' => t('Tool'),
+      'base' => 'node_content',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Name'),
+      'help' => '',
+    ),
     'wiki' => array(
       'name' => t('Wiki page'),
       'base' => 'node_content',

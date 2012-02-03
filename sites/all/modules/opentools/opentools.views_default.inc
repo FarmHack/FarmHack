@@ -873,7 +873,7 @@ function opentools_views_default_views() {
   $handler->display->display_options['relationships']['field_forum_section_tid']['table'] = 'field_data_field_forum_section';
   $handler->display->display_options['relationships']['field_forum_section_tid']['field'] = 'field_forum_section_tid';
   $handler->display->display_options['relationships']['field_forum_section_tid']['required'] = 1;
-  /* Field: Taxonomy term: Forum */
+  /* Field: Field: Forum */
   $handler->display->display_options['fields']['field_tool_to_forum']['id'] = 'field_tool_to_forum';
   $handler->display->display_options['fields']['field_tool_to_forum']['table'] = 'field_data_field_tool_to_forum';
   $handler->display->display_options['fields']['field_tool_to_forum']['field'] = 'field_tool_to_forum';
@@ -1405,7 +1405,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Taxonomy term: Tool type (field_tool_type) */
+  /* Relationship: Field: Tool type (field_tool_type) */
   $handler->display->display_options['relationships']['field_tool_type_tid']['id'] = 'field_tool_type_tid';
   $handler->display->display_options['relationships']['field_tool_type_tid']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['relationships']['field_tool_type_tid']['field'] = 'field_tool_type_tid';
@@ -1515,7 +1515,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Taxonomy term: Tool type (field_tool_type) */
+  /* Relationship: Field: Tool type (field_tool_type) */
   $handler->display->display_options['relationships']['field_tool_type_tid']['id'] = 'field_tool_type_tid';
   $handler->display->display_options['relationships']['field_tool_type_tid']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['relationships']['field_tool_type_tid']['field'] = 'field_tool_type_tid';
@@ -1668,7 +1668,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler = $view->new_display('block', 'Tool Type', 'block_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Taxonomy term: Tool type (field_tool_type) */
+  /* Relationship: Field: Tool type (field_tool_type) */
   $handler->display->display_options['relationships']['field_tool_type_tid']['id'] = 'field_tool_type_tid';
   $handler->display->display_options['relationships']['field_tool_type_tid']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['relationships']['field_tool_type_tid']['field'] = 'field_tool_type_tid';
@@ -1732,7 +1732,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   /* Display: Origins */
   $handler = $view->new_display('block', 'Origins', 'block_2');
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Taxonomy term: Origin (field_tool_to_origin) */
+  /* Relationship: Field: Origin (field_tool_to_origin) */
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['id'] = 'field_tool_to_origin_tid';
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['table'] = 'field_data_field_tool_to_origin';
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['field'] = 'field_tool_to_origin_tid';
@@ -1797,7 +1797,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler = $view->new_display('block', 'Stage', 'block_3');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Taxonomy term: Stage (field_tool_to_stage) */
+  /* Relationship: Field: Stage (field_tool_to_stage) */
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['id'] = 'field_tool_to_stage_tid';
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['table'] = 'field_data_field_tool_to_stage';
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['field'] = 'field_tool_to_stage_tid';
@@ -1950,7 +1950,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['fields']['name']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['name']['link_to_taxonomy'] = 1;
   $handler->display->display_options['fields']['name']['convert_spaces'] = 0;
-  /* Field: Taxonomy term: Tool type */
+  /* Field: Field: Tool type */
   $handler->display->display_options['fields']['field_tool_type']['id'] = 'field_tool_type';
   $handler->display->display_options['fields']['field_tool_type']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['fields']['field_tool_type']['field'] = 'field_tool_type';
