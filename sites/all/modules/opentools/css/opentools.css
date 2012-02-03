@@ -101,6 +101,8 @@ body.page-taxonomy-term #block-system-main {display: none;}
 body.page-taxonomy-term .field-name-field-image {float: right;}
 body.page-taxonomy-term .feed-icon {display: none;}
 body.page-taxonomy-term #block-system-main {display: none;}
+body.page-taxonomy-term #overlay-content #block-system-main {display: block;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main {display: block;}
 body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
 
 /*
