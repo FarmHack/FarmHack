@@ -172,5 +172,54 @@ print "</div>";
   );
   $export['tools_forum_title'] = $box;
 
+  $box = new stdClass;
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
+  $box->delta = 'tools_wiki_title';
+  $box->plugin_key = 'simple';
+  $box->title = 'Tool Wiki';
+  $box->description = 'Tool\'s Wiki Title';
+  $box->options = array(
+    'body' => array(
+      'value' => '<a name="wiki"></a>
+<?php
+
+global $user;
+
+// Get wiki context
+$context = opentools_get_context();
+$nid = $context[\'wiki\'];
+
+$query = "
+SELECT * FROM notifications_subscription 
+INNER JOIN notifications_subscription_fields 
+WHERE notifications_subscription.uid=" . $user->uid . " 
+AND notifications_subscription_fields.value = \'" . $nid . "\';";
+
+$results = db_query($query);
+$records = array();
+foreach($results as $record) {
+  $records[] = $record;
+}
+
+if(count($records) > 0) {
+$link = "/notifications/unsubscribe/" . $records[0]->sid . "?destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'unsubscribe-text\'>Unsubscribe from changes to this Tool\'s Wiki</div></a>";
+print "</div>";
+}
+else {
+$link = "/notifications/subscribe/content_thread?0=" . $nid . "&destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'subscribe-text\'>Subscribe to changes in this Tool\'s Wiki</div></a>";
+print "</div>";
+}
+
+?>',
+      'format' => 'php_code',
+    ),
+  );
+  $export['tools_wiki_title'] = $box;
+
   return $export;
 }
