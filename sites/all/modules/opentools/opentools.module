@@ -93,7 +93,7 @@ function opentools_form_alter(&$form, &$form_state, $form_id) {
    $form['field_tool_to_wiki']['#type'] = 'hidden';
    $form['field_tool_to_forum']['#type'] = 'hidden';
    // Drupal croaks if I hide these elements without css... 
-   drupal_add_css('#edit-description-format, .form-item-description-value, #edit-relations {display: none;}', $options['type']='inline');
+   drupal_add_css('#edit-description-format, #edit-relations {display: none;}', $options['type']='inline');
    drupal_add_css('#block-system-main {display: block !important;}', $options['type']='inline');
    // $form['description']['#type'] = 'hidden';
    // $form['relations']['#type'] = 'hidden';
@@ -102,7 +102,7 @@ function opentools_form_alter(&$form, &$form_state, $form_id) {
    $form['field_events_to_forum']['#type'] = 'hidden';
    $form['field_event_to_wiki']['#type'] = 'hidden';
    // Drupal croaks if I hide these elements without css... 
-   drupal_add_css('#edit-description-format, .form-item-description-value, #edit-relations {display: none;}', $options['type']='inline');
+   drupal_add_css('#edit-description-format, #edit-relations {display: none;}', $options['type']='inline');
    //$form['description']['#type'] = 'hidden';
    //$form['relations']['#type'] = 'hidden';
   }
