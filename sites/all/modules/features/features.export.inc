@@ -43,6 +43,7 @@ function features_populate($items, $dependencies, $module_name) {
 function _features_populate($pipe, &$export, $module_name = '') {
   features_include();
   foreach ($pipe as $component => $data) {
+    static $processed = array();
     // Convert already defined items to dependencies.
     _features_resolve_dependencies($data, $export, $module_name, $component);
     if (!empty($data) && $function = features_hook($component, 'features_export')) {
@@ -55,9 +56,20 @@ function _features_populate($pipe, &$export, $module_name = '') {
       drupal_alter(array('features_pipe', 'features_pipe_' . $component), $more, $data, $export);
       // Remove the component information.
       unset($export['component']);
-      // Allow for export functions to request additional exports.
+      // Allow for export functions to request additional exports, but avoid
+      // circular references on already processed components.
+      $processed[$component] = isset($processed[$component]) ? array_merge($processed[$component], $data) : $data;
+
       if (!empty($more)) {
-        _features_populate($more, $export, $module_name);
+        // Remove already processed components.
+        foreach ($more as $component_name => $component_data) {
+          if (isset($processed[$component_name])) {
+            $more[$component_name] = array_diff($component_data, $processed[$component_name]);
+          }
+        }
+        if ($more = array_filter($more)) {
+          _features_populate($more, $export, $module_name);
+        }
       }
     }
   }
@@ -235,8 +247,10 @@ function features_export_render($export, $module_name, $reset = FALSE) {
       $code[$file['name']] = array();
     }
 
-    foreach ($hooks as $hook_name => $hook_code) {
-      $code[$file['name']][$hook_name] = features_export_render_defaults($module_name, $hook_name, $hook_code);
+    foreach ($hooks as $hook_name => $hook_info) {
+      $hook_code = is_array($hook_info) ? $hook_info['code'] : $hook_info;
+      $hook_args = is_array($hook_info) && !empty($hook_info['args']) ? $hook_info['args'] : '';
+      $code[$file['name']][$hook_name] = features_export_render_defaults($module_name, $hook_name, $hook_code, $hook_args);
     }
   }
 
@@ -335,34 +349,18 @@ function features_detect_overrides($module) {
  * Gets the available default hooks keyed by components.
  */
 function features_get_default_hooks($component = NULL, $reset = FALSE) {
-  static $hooks;
-  if (!isset($hooks) || $reset) {
-    $hooks = array();
-    features_include();
-    foreach (module_implements('features_api') as $module) {
-      $info = module_invoke($module, 'features_api');
-      foreach ($info as $k => $v) {
-        if (isset($v['default_hook'])) {
-          $hooks[$k] = $v['default_hook'];
-        }
-      }
-    }
-  }
-  if (isset($component)) {
-    return isset($hooks[$component]) ? $hooks[$component] : FALSE;
-  }
-  return $hooks;
+  return features_get_components($component, 'default_hook', $reset);
 }
 
 /**
  * Return a code string representing an implementation of a defaults module hook.
  */
-function features_export_render_defaults($module, $hook, $code) {
+function features_export_render_defaults($module, $hook, $code, $args = '') {
   $output = array();
   $output[] = "/**";
   $output[] = " * Implements hook_{$hook}().";
   $output[] = " */";
-  $output[] = "function {$module}_{$hook}() {";
+  $output[] = "function {$module}_{$hook}(" . $args . ") {";
   $output[] = $code;
   $output[] = "}";
   return implode("\n", $output);

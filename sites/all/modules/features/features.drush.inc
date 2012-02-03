@@ -180,7 +180,7 @@ function drush_features_export() {
   }
   else {
     $rows = array(array(dt('Available sources')));
-    foreach (features_get_components(TRUE) as $component => $info) {
+    foreach (features_get_feature_components() as $component => $info) {
       if ($options = features_invoke($component, 'features_export_options')) {
         foreach ($options as $key => $value) {
           $rows[] = array($component .':'. $key);
@@ -198,7 +198,7 @@ function drush_features_add() {
   if ($args = func_get_args()) {
     // Get a complete list of components.
     $all_components = array();
-    foreach (features_get_components(TRUE) as $source => $info) {
+    foreach (features_get_feature_components() as $source => $info) {
       if ($options = features_invoke($source, 'features_export_options')) {
         foreach ($options as $key => $value) {
           $all_components[$key][] = $source;
@@ -329,7 +329,7 @@ function _drush_features_component_list($arg = NULL, $source = NULL, $render = T
   $index .= empty($arg) ? 'all' : $arg;
 
   if (empty($items[$index])) {
-    $components = features_get_components(TRUE);
+    $components = features_get_feature_components();
     if ($arg) {
       $heading = dt('Components similar to "!arg"', array('!arg' => $arg));
     }
