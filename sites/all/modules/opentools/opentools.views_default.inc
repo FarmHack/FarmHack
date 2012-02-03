@@ -1732,7 +1732,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   /* Display: Origins */
   $handler = $view->new_display('block', 'Origins', 'block_2');
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Taxonomy term: Origin (field_tool_to_origin) */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['id'] = 'field_tool_to_origin_tid';
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['table'] = 'field_data_field_tool_to_origin';
   $handler->display->display_options['relationships']['field_tool_to_origin_tid']['field'] = 'field_tool_to_origin_tid';
@@ -1797,7 +1797,7 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler = $view->new_display('block', 'Stage', 'block_3');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Taxonomy term: Stage (field_tool_to_stage) */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['id'] = 'field_tool_to_stage_tid';
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['table'] = 'field_data_field_tool_to_stage';
   $handler->display->display_options['relationships']['field_tool_to_stage_tid']['field'] = 'field_tool_to_stage_tid';
