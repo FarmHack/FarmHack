@@ -740,7 +740,7 @@ function opentools_field_default_fields() {
       ),
       'module' => 'image',
       'settings' => array(
-        'default_image' => 0,
+        'default_image' => '104',
         'uri_scheme' => 'public',
       ),
       'translatable' => '1',
@@ -1001,7 +1001,7 @@ function opentools_field_default_fields() {
       ),
       'module' => 'image',
       'settings' => array(
-        'default_image' => 0,
+        'default_image' => '104',
         'uri_scheme' => 'public',
       ),
       'translatable' => '1',
@@ -1050,6 +1050,152 @@ function opentools_field_default_fields() {
     ),
   );
 
+  // Exported field: 'taxonomy_term-origins-field_image'
+  $fields['taxonomy_term-origins-field_image'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_image',
+      'foreign keys' => array(
+        'fid' => array(
+          'columns' => array(
+            'fid' => 'fid',
+          ),
+          'table' => 'file_managed',
+        ),
+      ),
+      'global_block_settings' => '1',
+      'indexes' => array(
+        'fid' => array(
+          0 => 'fid',
+        ),
+      ),
+      'module' => 'image',
+      'settings' => array(
+        'default_image' => '104',
+        'uri_scheme' => 'public',
+      ),
+      'translatable' => '1',
+      'type' => 'image',
+    ),
+    'field_instance' => array(
+      'bundle' => 'origins',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'image',
+          'settings' => array(
+            'image_link' => '',
+            'image_style' => '',
+          ),
+          'type' => 'image',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_image',
+      'label' => 'Image',
+      'required' => 0,
+      'settings' => array(
+        'alt_field' => 0,
+        'file_directory' => '',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'title_field' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'image',
+        'settings' => array(
+          'preview_image_style' => 'thumbnail',
+          'progress_indicator' => 'throbber',
+        ),
+        'type' => 'image_image',
+        'weight' => '32',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-stages-field_image'
+  $fields['taxonomy_term-stages-field_image'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_image',
+      'foreign keys' => array(
+        'fid' => array(
+          'columns' => array(
+            'fid' => 'fid',
+          ),
+          'table' => 'file_managed',
+        ),
+      ),
+      'global_block_settings' => '1',
+      'indexes' => array(
+        'fid' => array(
+          0 => 'fid',
+        ),
+      ),
+      'module' => 'image',
+      'settings' => array(
+        'default_image' => '104',
+        'uri_scheme' => 'public',
+      ),
+      'translatable' => '1',
+      'type' => 'image',
+    ),
+    'field_instance' => array(
+      'bundle' => 'stages',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'image',
+          'settings' => array(
+            'image_link' => '',
+            'image_style' => '',
+          ),
+          'type' => 'image',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_image',
+      'label' => 'Image',
+      'required' => 0,
+      'settings' => array(
+        'alt_field' => 0,
+        'file_directory' => '',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'title_field' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'image',
+        'settings' => array(
+          'preview_image_style' => 'thumbnail',
+          'progress_indicator' => 'throbber',
+        ),
+        'type' => 'image_image',
+        'weight' => '32',
+      ),
+    ),
+  );
+
   // Exported field: 'taxonomy_term-tool_types-field_image'
   $fields['taxonomy_term-tool_types-field_image'] = array(
     'field_config' => array(
@@ -1074,7 +1220,7 @@ function opentools_field_default_fields() {
       ),
       'module' => 'image',
       'settings' => array(
-        'default_image' => 0,
+        'default_image' => '104',
         'uri_scheme' => 'public',
       ),
       'translatable' => '1',
@@ -1147,7 +1293,7 @@ function opentools_field_default_fields() {
       ),
       'module' => 'image',
       'settings' => array(
-        'default_image' => 0,
+        'default_image' => '104',
         'uri_scheme' => 'public',
       ),
       'translatable' => '1',
@@ -1201,7 +1347,7 @@ function opentools_field_default_fields() {
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => '4',
+        'weight' => '6',
       ),
     ),
   );
@@ -1272,7 +1418,150 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
+        'weight' => '5',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-tools-field_tool_to_origin'
+  $fields['taxonomy_term-tools-field_tool_to_origin'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_tool_to_origin',
+      'foreign keys' => array(
+        'tid' => array(
+          'columns' => array(
+            'tid' => 'tid',
+          ),
+          'table' => 'taxonomy_term_data',
+        ),
+      ),
+      'indexes' => array(
+        'tid' => array(
+          0 => 'tid',
+        ),
+      ),
+      'module' => 'taxonomy',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => array(
+            'vocabulary' => 'origins',
+            'parent' => '0',
+          ),
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'taxonomy_term_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'tools',
+      'default_value' => array(
+        0 => array(
+          'tid' => '63',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'taxonomy',
+          'settings' => array(),
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 6,
+        ),
+        'full' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_tool_to_origin',
+      'label' => 'Origin',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
         'weight' => '3',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-tools-field_tool_to_stage'
+  $fields['taxonomy_term-tools-field_tool_to_stage'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_tool_to_stage',
+      'foreign keys' => array(
+        'tid' => array(
+          'columns' => array(
+            'tid' => 'tid',
+          ),
+          'table' => 'taxonomy_term_data',
+        ),
+      ),
+      'indexes' => array(
+        'tid' => array(
+          0 => 'tid',
+        ),
+      ),
+      'module' => 'taxonomy',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => array(
+            'vocabulary' => 'stages',
+            'parent' => '0',
+          ),
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'taxonomy_term_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'tools',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'taxonomy',
+          'settings' => array(),
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 7,
+        ),
+        'full' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_tool_to_stage',
+      'label' => 'Stage',
+      'required' => FALSE,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_select',
+        'weight' => '2',
       ),
     ),
   );
@@ -1351,7 +1640,7 @@ function opentools_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'options_select',
-        'weight' => '2',
+        'weight' => '4',
       ),
     ),
   );
@@ -1441,7 +1730,9 @@ function opentools_field_default_fields() {
   t('Image');
   t('Images');
   t('Location');
+  t('Origin');
   t('Season');
+  t('Stage');
   t('Tool type');
   t('Video');
   t('Wiki');
