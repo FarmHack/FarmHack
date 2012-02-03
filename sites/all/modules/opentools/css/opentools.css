@@ -103,6 +103,11 @@ body.page-taxonomy-term .feed-icon {display: none;}
 body.page-taxonomy-term #block-system-main {display: none;}
 body.page-taxonomy-term #overlay-content #block-system-main {display: block;}
 body.page-taxonomy-term-edit #page-wrapper  #block-system-main {display: block;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main .form-item-description-value {display: none;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main #edit-description-format {display: none;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main .form-item-field-tool-to-wiki-und {display: none;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main .form-item-field-tool-to-forum-und {display: none;}
+body.page-taxonomy-term-edit #page-wrapper  #block-system-main #edit-relations {display: none;}
 body.page-taxonomy-term #triptych-wrapper {padding-top:60px;}
 
 /*
