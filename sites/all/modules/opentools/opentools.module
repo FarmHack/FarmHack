@@ -7,8 +7,10 @@ include_once("opentools.features.inc");
  */
 
 function opentools_init() {
- // drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE));
   
+  // Set global $context["opentools_space"]   
+  opentools_set_current_space();
+
   if(arg(0) != 'admin' && arg(2) != 'edit') {
     drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css');
   }
@@ -17,29 +19,28 @@ function opentools_init() {
   if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit' && arg(2) != 'revisions') {
     $node = node_load(arg(1));
     if ($node->type == "wiki") {
-      $context = opentools_get_context($node, 'node');
-      if(is_array($context) && $parent = $context["parent"]["object"]) {
-        drupal_goto(drupal_get_path_alias("taxonomy/term/$parent->tid"), array("fragment" => "wiki"));
+      $space = opentools_get_current_space();
+      if(is_array($space) && $parent = $space["object"]) {
+        drupal_goto(drupal_get_path_alias("node/" . $space["id"]), array("fragment" => "wiki"));
       }
     }
   } 
   
   // Reroute Forum pages
   if(arg(0) == "forum" && is_numeric(arg(1)) && arg(2) != 'edit') {
-    $term = taxonomy_term_load(arg(1));
-    $context = opentools_get_context($term, 'term');
-    if(is_array($context) && $parent = $context["parent"]["object"]) {
-      drupal_goto(drupal_get_path_alias("taxonomy/term/$parent->tid"), array('fragment'=> "forum"));
+    $space = opentools_get_current_space();
+    if(is_array($space) && $space["object"]) {
+      drupal_goto(drupal_get_path_alias("node/" . $space['id']), array('fragment'=> "forum"));
     }
   } 
 }
 
-function opentools_taxonomy_term_insert($term){
-  if($term->vocabulary_machine_name == 'events') {
+function opentools_node_presave($node){
+  if($node->type == 'opentools_event') {
     // Create a wiki page
     // Example from http://drupal.org/node/889058#comment-3709802
     $wiki = new StdClass();
-    $wiki->title = $term->name;
+    $wiki->title = $node->title;
     $wiki->type = 'wiki';
     $wiki->language = LANGUAGE_NONE;
     node_object_prepare($wiki);
@@ -48,43 +49,43 @@ function opentools_taxonomy_term_insert($term){
     $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'forums'")->fetchField();
     
     $forum = (object) array(
-      'name' => $term->name,
+      'name' => $node->title,
       'vid' => $vid,
       'parent' => array(33)
     );
     taxonomy_term_save($forum);
     // Save the tool with references to the new wiki page and forum 
-    $term->field_event_to_wiki['und'][0]['target_id'] = $wiki->nid;
-    $term->field_events_to_forum['und'][0]['tid'] = $forum->tid;
+    $node->field_event_to_wiki['und'][0]['target_id'] = $wiki->nid;
+    $node->field_events_to_forum['und'][0]['tid'] = $forum->tid;
     
-    taxonomy_term_save($term);
+    //node_save($node);
   }
-
-  if($term->vocabulary_machine_name == 'tools') {
+  debug($node);
+  if($node->type == 'opentools_tool' && $node->is_new) {
+   debug($node);
     // Create a wiki page
     // Example from http://drupal.org/node/889058#comment-3709802
     $wiki = new StdClass();
-    $wiki->title = $term->name;
+    $wiki->title = $node->title;
     $wiki->type = 'wiki';
     $wiki->language = LANGUAGE_NONE;
+    debug($wiki);
     node_object_prepare($wiki);
     node_save($wiki);
     // Create a forum
     $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'forums'")->fetchField();
     
     $forum = (object) array(
-      'name' => $term->name,
+      'name' => $node->title,
       'vid' => $vid,
       'parent' => array(2)
     );
     taxonomy_term_save($forum);
-    // Save the tool with references to the new wiki page and forum 
-    $term->field_tool_to_wiki['und'][0]['target_id'] = $wiki->nid;
-    $term->field_tool_to_forum['und'][0]['tid'] = $forum->tid;
-    
-    taxonomy_term_save($term);
+    // Save the tool with references to the new wiki page and forum
+    debug($wiki);
+    $node->field_tool_to_wiki = array("und" => array(array('target_id' => $wiki->nid, 'target_type' => 'node')));
+    $node->field_tool_to_forum = array("und" => array(array('tid' => $forum->tid)));
   }
-
 }
 
 function opentools_form_alter(&$form, &$form_state, $form_id) {
@@ -120,115 +121,145 @@ function opentools_form_alter(&$form, &$form_state, $form_id) {
  *  . 
  */ 
 
-function opentools_get_context($object = NULL, $object_type = NULL) {
- 
-  $context = array(
-    "parent" => array(
+
+/*
+ * Determines if there is an active object that we can determine a space from. Not just "Am I somewhere?" but 
+ * "Am I somewhere that matters to Open Tools?"
+ * 
+ * Compatible context types include term_forum, node_forum_topic, node_tool, node_event, node_wiki  
+ */
+
+function opentools_get_compatible_context() {
+  global $context;
+  $context['opentools_context'] = array(
       "id" => NULL,
-      "type" => NULL,
+      "type" => NULL, 
       "object" => NULL
-    ),
-    "forum" => NULL,
-    "wiki" => NULL
   );
   
-  // Try to figure out the current object if none was given.
   
   // We are in a Forum
-  if(!$object && arg(0) == 'forum' && is_numeric(arg(1))) {
-    // Too soon $context['forum'] = arg(1);
-    $object = taxonomy_term_load(arg(1));
-    $object_type = "term";
-  }
-  // We are on a taxonomy term page
-  elseif (!$object && arg(0) == 'taxonomy' && arg(1) == "term" && is_numeric(arg(2))) {
-    $object = menu_get_object('taxonomy_term', 2);
-    $object_type = "term";
+  if(arg(0) == 'forum' && is_numeric(arg(1))) {
+    $context['opentools_context']['object'] = taxonomy_term_load(arg(1));
+    $context['opentools_context']['id'] = $context['opentools_context']['object']->tid;
+    $context['opentools_context']['type'] = "term_forum";
+    return $context;
   }
   // We are on a node
-  elseif (!$object && arg(0) == 'node' && is_numeric(arg(1))) {
+  elseif (arg(0) == 'node' && is_numeric(arg(1))) {
     $object = node_load(arg(1));
-    $object_type = "node";
-    // If we are on a Topic Node, we actually want the parent Forum term.
-    if ($object->type == "forum_topic") {
-      $object = taxonomy_term_load($object->taxonomy_forums['und'][0]['tid']);
-      $object_type = "term";
-    }
     if ($object->type == "wiki") {
-      $object_type = "wiki";
+      $opentools_context_type = "node_wiki";
     }
-
-  }
-
-  // Try to figure the object type if we don't have it yet.
-  
-  if ($object && !$object_type) {
-    if (property_exists($object, "vocabulary_machine_name")) {
-      $object_type = "term";
+    if ($object->type == "forum_topic") {
+      $opentools_context_type = "node_forum_topic";
+    } 
+    if ($object->type == "opentools_event") {
+      $opentools_context_type = "node_event";
     }
-    elseif (property_exists($object, "type")) {
-      $object_type = "node";
+    if ($object->type == "opentools_tool") {
+      $opentools_context_type = "node_tool";
     }
-  }
-  
-  // Now get the $context
-  
-  // If $object is a taxonomy term
-  // ------ NOTE!! EVERYTHING ENDS ITS RUN HERE WITH THE OBJECT EITHER  -----
-  // ------ BEING AN EVENT OR A TOOL.                                   -----
-  if ($object && $object_type == "term") {
-    switch ($object->vocabulary_machine_name) {
-      case "wiki" :
-        return;
-
-      case "events" :
-        $context["forum"] = $object->field_events_to_forum['und'][0]['tid'];
-        $context["wiki"] = $object->field_event_to_wiki['und'][0]['target_id'];
-        $context["parent"]["id"] = $object->tid;
-        $context["parent"]["object"] = $object;
-        $context["parent"]["type"] = "term";
-        break;
-      case "tools" :
-        $context["forum"] = $object->field_tool_to_forum['und'][0]['tid'];
-        $context["wiki"] = $object->field_tool_to_wiki['und'][0]['target_id'];
-        $context["parent"]["id"] = $object->tid;
-        $context["parent"]["object"] = $object;
-        $context["parent"]["type"] = "term";        
-        break;
-      case "forums" :
-        $parent_object = opentools_get_forum_parent($object);
-        if ($parent_object) {
-          $context = opentools_get_context($parent_object);
-        } 
-        // No parent? Then this forum is the end of the line.
-        // @todo There is a bug around here somewhere. When viewing contextual links
-        // on Forum nodes under Forum Terms that do not have parents, the results are
-        // REALLY weird.
-        else {
-          $context["forum"] = $object->tid;
-        }  
-        break;
-    }
-  }
-  // If $object is a node
-  elseif($object && $object_type == "node") {
-    switch ($object->type) {
-      case "wiki" :
-        // Find the Event or Tool that relates to this wiki page
-        $parent_object = opentools_get_wiki_parent($object);
-        $context = opentools_get_context($parent_object, "term");
-        break;
-      case "forum" :
-        $parent_object = opentools_get_forum_parent(taxonomy_term_load($object->taxonomy_forums['und'][0]['tid']));
-        if($parent_object) {
-          $context = opentools_get_context($parent_object);
-        }
-        break;
+    if($opentools_context_type) {
+      $context['opentools_context']['object'] = $object;
+      $context['opentools_context']['id'] = $context['opentools_context']['object']->nid;
+      $context['opentools_context']['type'] = $opentools_context_type;
+      return $context;
     }
   }
   
-  return $context;
+  // We are on a taxonomy term page
+  // @todo We could get context on edit pages as well but I dont think we care right now. 
+  /*
+  elseif (arg(0) == 'taxonomy' && arg(1) == "term" && is_numeric(arg(2))) {
+    $object = menu_get_object('taxonomy_term', 2);
+  }
+  */
+  
+  return FALSE;
 }
+
+
+/*
+ * Given a supported object and object type, figure out if that object is in a given space.
+ * Compatible context types include term_forum, node_forum_topic, node_tool, node_event, node_wiki  
+ */
+
+function opentools_set_current_space($reset = FALSE) {
+  
+  global $context;
+  
+  if($context["opentools_space"] && $reset === FALSE) { 
+    return; 
+  }
+  
+  if(!$context["opentools_context"] && !opentools_get_compatible_context()) {
+    return;
+  }
+
+  $cntxt = $context["opentools_context"]; 
+  
+  $context["opentools_space"] = array(
+    "id" => NULL,
+    "type" => NULL, // Either going to be a node_tool or a node_event
+    "object" => NULL
+  );
+  
+  // If cntxt is a Forum topic, then move our way up to the parent forum term
+  if ($cntxt["type"] == "node_forum_topic") {
+    $cntxt["object"] = taxonomy_term_load($cntxt["object"]->taxonomy_forums['und'][0]['tid']);
+    $cntxt["type"] = "term_forum";
+    $cntxt["id"] = $cntxt['object']->tid;  
+  }
+   
+  // If cntxt is a Forum term, then find the parent Event or Tool 
+  if($cntxt["type"] == "term_forum") {
+    $object = opentools_get_forum_parent($object);
+    if ($object) {
+      $cntxt["object"] = $object;
+      $cntxt["type"] = "opentools_space";
+      $cntxt["id"] = $object->nid;  
+    }
+  }
+  
+  // If cntxt is a Wiki page, then find the parent Event or Tool
+  if($cntxt["type"] == "node_wiki") {
+    $object = opentools_get_wiki_parent($object);
+    if ($object) {
+      $cntxt["object"] = $object;
+      $cntxt["type"] = "opentools_space";
+      $cntxt["id"] = $object->nid;  
+    }
+  }
+  
+  if($cntxt["type"] = "opentools_space") {
+    if($cntxt["object"]->type == "opentools_tool") {
+      $cntxt["type"] = "node_tool";
+    }
+    elseif($cntxt["object"]->type == "opentools_event") {
+      $cntxt["type"] = "node_event";
+    }
+  }
+  
+  if ($cntxt["type"] == "node_event" || $cntxt["type"] == "node_tool") {
+    $context["opentools_space"]["forum"] = $cntxt['object']->field_events_to_forum['und'][0]['tid'];
+    $context["opentools_space"]["wiki"] = $cntxt['object']->field_event_to_wiki['und'][0]['target_id'];
+    $context["opentools_space"]["id"] = $cntxt['id'];
+    $context["opentools_space"]["object"] = $cntxt['object'];
+    $context["opentools_space"]["type"] = $cntxt['type'];
+  }
+}
+
+function opentools_get_current_space($reset = FALSE) {
+  global $context;
+  if ($reset) {
+    opentools_set_current_space(TRUE);
+  }
+  if (array_key_exists($context, "opentools_space")) {
+    return $context["opentools_space"];
+  }
+}
+
 
 /*
  * @todo
