@@ -241,9 +241,17 @@ function opentools_set_current_space($reset = FALSE) {
     }
   }
   
-  if ($cntxt["type"] == "node_event" || $cntxt["type"] == "node_tool") {
+  if ($cntxt["type"] == "node_event") {
     $context["opentools_space"]["forum"] = $cntxt['object']->field_events_to_forum['und'][0]['tid'];
     $context["opentools_space"]["wiki"] = $cntxt['object']->field_event_to_wiki['und'][0]['target_id'];
+  }
+ 
+  if ($cntxt["type"] == "node_tool") {
+    $context["opentools_space"]["forum"] = $cntxt['object']->field_tool_to_forum['und'][0]['tid'];
+    $context["opentools_space"]["wiki"] = $cntxt['object']->field_tool_to_wiki['und'][0]['target_id'];
+  }
+
+  if ($cntxt["type"] == "node_event" || $cntxt["type"] == "node_tool") {
     $context["opentools_space"]["id"] = $cntxt['id'];
     $context["opentools_space"]["object"] = $cntxt['object'];
     $context["opentools_space"]["type"] = $cntxt['type'];
