@@ -1,4 +1,43 @@
 
+
+/*
+ *  Tool Node Pages
+ */
+
+body.node-type-opentools-tool #block-system-main {
+  display:none;
+}
+
+body.node-type-opentools-tool #featured #block-views-opentools-tool-block-7 {
+background: #333;
+color: white;
+position: relative;
+left: -400px;
+font-size: 40px;
+width: 970px;
+padding: 50px 1035px 50px 400px;
+bottom: 25px;
+}
+
+body.node-type-opentools-tool #featured .block {
+  float: left;
+  width: 300px;
+}
+
+body.node-type-opentools-tool #featured .block-views-opentools-tool-block-2 {
+  float: right;
+}
+
+body.node-type-opentools-tool #featured #block-views-opentools-tool-block-6 {
+  clear: both;
+  width:960px !important;
+  text-align: left;
+}
+
+body.node-type-opentools-tool #featured #block-views-opentools-tool-block-6 .views-field-field-image {
+  float: right;
+}
+
 /*
  * Forum Topic Action links
  */

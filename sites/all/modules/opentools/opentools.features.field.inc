@@ -44,10 +44,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'text',
           'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 6,
+          'type' => 'hidden',
+          'weight' => '2',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -77,6 +76,91 @@ function opentools_field_default_fields() {
           'rows' => '5',
         ),
         'type' => 'text_textarea',
+        'weight' => '2',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-opentools_tool-field_image'
+  $fields['node-opentools_tool-field_image'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_image',
+      'foreign keys' => array(
+        'fid' => array(
+          'columns' => array(
+            'fid' => 'fid',
+          ),
+          'table' => 'file_managed',
+        ),
+      ),
+      'global_block_settings' => '1',
+      'indexes' => array(
+        'fid' => array(
+          0 => 'fid',
+        ),
+      ),
+      'module' => 'image',
+      'settings' => array(
+        'default_image' => 0,
+        'uri_scheme' => 'public',
+      ),
+      'translatable' => '1',
+      'type' => 'image',
+    ),
+    'field_instance' => array(
+      'bundle' => 'opentools_tool',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'image',
+          'settings' => array(
+            'image_link' => '',
+            'image_style' => '',
+          ),
+          'type' => 'image',
+          'weight' => 6,
+        ),
+        'notifications' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_image',
+      'label' => 'Image',
+      'required' => 0,
+      'settings' => array(
+        'alt_field' => 0,
+        'file_directory' => '',
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize' => '',
+        'max_resolution' => '',
+        'min_resolution' => '',
+        'title_field' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'image',
+        'settings' => array(
+          'preview_image_style' => 'thumbnail',
+          'progress_indicator' => 'throbber',
+        ),
+        'type' => 'image_image',
         'weight' => '1',
       ),
     ),
@@ -124,10 +208,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'taxonomy',
           'settings' => array(),
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 2,
+          'type' => 'hidden',
+          'weight' => '5',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -154,7 +237,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -200,10 +283,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'taxonomy',
           'settings' => array(),
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 3,
+          'type' => 'hidden',
+          'weight' => '0',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -230,7 +312,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -276,10 +358,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'taxonomy',
           'settings' => array(),
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 4,
+          'type' => 'hidden',
+          'weight' => '1',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -306,7 +387,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '6',
+        'weight' => '7',
       ),
     ),
   );
@@ -355,12 +436,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'entityreference',
-          'settings' => array(
-            'link' => FALSE,
-          ),
-          'type' => 'entityreference_label',
-          'weight' => 1,
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => '4',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -391,7 +469,7 @@ function opentools_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'entityreference_autocomplete',
-        'weight' => '3',
+        'weight' => '4',
       ),
     ),
   );
@@ -438,10 +516,9 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'taxonomy',
           'settings' => array(),
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 5,
+          'type' => 'hidden',
+          'weight' => '3',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -468,7 +545,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '7',
+        'weight' => '8',
       ),
     ),
   );

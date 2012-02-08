@@ -159,6 +159,65 @@ function opentools_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
+  $context->name = 'opentools_tool';
+  $context->description = '';
+  $context->tag = 'Tools';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'opentools_tool' => 'opentools_tool',
+      ),
+      'options' => array(
+        'node_form' => '1',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-opentools_tool-block_7' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool-block_7',
+          'region' => 'featured',
+          'weight' => '-10',
+        ),
+        'views-opentools_tool-block_6' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool-block_6',
+          'region' => 'featured',
+          'weight' => '-9',
+        ),
+        'views-opentools_tool-block_5' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool-block_5',
+          'region' => 'featured',
+          'weight' => '-7',
+        ),
+        'views-opentools_tool-block_4' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool-block_4',
+          'region' => 'featured',
+          'weight' => '-6',
+        ),
+        'views-opentools_tool-block_3' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool-block_3',
+          'region' => 'featured',
+          'weight' => '-5',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Tools');
+  $export['opentools_tool'] = $context;
+
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
   $context->name = 'tools';
   $context->description = '';
   $context->tag = 'tools';
