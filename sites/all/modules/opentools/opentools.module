@@ -60,16 +60,13 @@ function opentools_node_presave($node){
     
     //node_save($node);
   }
-  debug($node);
   if($node->type == 'opentools_tool' && $node->is_new) {
-   debug($node);
     // Create a wiki page
     // Example from http://drupal.org/node/889058#comment-3709802
     $wiki = new StdClass();
     $wiki->title = $node->title;
     $wiki->type = 'wiki';
     $wiki->language = LANGUAGE_NONE;
-    debug($wiki);
     node_object_prepare($wiki);
     node_save($wiki);
     // Create a forum
@@ -148,6 +145,7 @@ function opentools_get_compatible_context() {
   // We are on a node
   elseif (arg(0) == 'node' && is_numeric(arg(1))) {
     $object = node_load(arg(1));
+    $opentools_context_type = NULL;
     if ($object->type == "wiki") {
       $opentools_context_type = "node_wiki";
     }
