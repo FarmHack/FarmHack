@@ -2122,6 +2122,200 @@ return $space[\'forum\'];';
   $export['opentools_tool_forum'] = $view;
 
   $view = new view;
+  $view->name = 'opentools_tool_forum_comments';
+  $view->description = 'Contains a block and a page to list recent comments; the block will automatically link to the page, which displays the comment body as well as a link to the node.';
+  $view->tag = 'default';
+  $view->base_table = 'comment';
+  $view->human_name = 'Open Tools - Tool Forum comments';
+  $view->core = 0;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Recent comments';
+  $handler->display->display_options['use_more'] = TRUE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Comment: Content */
+  $handler->display->display_options['relationships']['nid']['id'] = 'nid';
+  $handler->display->display_options['relationships']['nid']['table'] = 'comment';
+  $handler->display->display_options['relationships']['nid']['field'] = 'nid';
+  /* Relationship: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['relationship'] = 'nid';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['required'] = 0;
+  /* Relationship: Content: Forums (taxonomy_forums) */
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['id'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['table'] = 'field_data_taxonomy_forums';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['field'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['relationship'] = 'nid';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['required'] = 0;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['relationship'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_image']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_image']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_image']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image']['settings'] = array(
+    'image_style' => 'icon',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_image']['field_api_classes'] = 0;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'nid';
+  $handler->display->display_options['fields']['title']['label'] = 'Topic';
+  $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['title']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['title']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['title']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['title']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+  /* Field: Comment: Title */
+  $handler->display->display_options['fields']['subject']['id'] = 'subject';
+  $handler->display->display_options['fields']['subject']['table'] = 'comment';
+  $handler->display->display_options['fields']['subject']['field'] = 'subject';
+  $handler->display->display_options['fields']['subject']['label'] = 'Comment';
+  $handler->display->display_options['fields']['subject']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['subject']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['subject']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['subject']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['subject']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['subject']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['subject']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['subject']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['subject']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['subject']['link_to_comment'] = 1;
+  $handler->display->display_options['fields']['subject']['link_to_node'] = 0;
+  /* Field: Comment: Updated date */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'comment';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'changed';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
+  /* Sort criterion: Comment: Updated date */
+  $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['sorts']['timestamp']['table'] = 'comment';
+  $handler->display->display_options['sorts']['timestamp']['field'] = 'changed';
+  $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
+  /* Contextual filter: Taxonomy term: Term ID */
+  $handler->display->display_options['arguments']['tid']['id'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['relationship'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
+return $space[\'forum\'];';
+  $handler->display->display_options['arguments']['tid']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['tid']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['tid']['not'] = 0;
+  /* Filter criterion: Content: Published or admin */
+  $handler->display->display_options['filters']['status_extra']['id'] = 'status_extra';
+  $handler->display->display_options['filters']['status_extra']['table'] = 'node';
+  $handler->display->display_options['filters']['status_extra']['field'] = 'status_extra';
+  $handler->display->display_options['filters']['status_extra']['relationship'] = 'nid';
+  $handler->display->display_options['filters']['status_extra']['group'] = 0;
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'title' => 'title',
+    'timestamp' => 'timestamp',
+  );
+  $handler->display->display_options['row_options']['separator'] = '&nbsp;';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'nid';
+  $handler->display->display_options['fields']['title']['label'] = 'Reply to';
+  $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+  /* Field: Comment: Updated date */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'comment';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'changed';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'time ago';
+  /* Field: Comment: Title */
+  $handler->display->display_options['fields']['subject']['id'] = 'subject';
+  $handler->display->display_options['fields']['subject']['table'] = 'comment';
+  $handler->display->display_options['fields']['subject']['field'] = 'subject';
+  $handler->display->display_options['fields']['subject']['label'] = '';
+  $handler->display->display_options['fields']['subject']['link_to_comment'] = 1;
+  /* Field: Comment: Comment */
+  $handler->display->display_options['fields']['comment']['id'] = 'comment';
+  $handler->display->display_options['fields']['comment']['table'] = 'field_data_comment_body';
+  $handler->display->display_options['fields']['comment']['field'] = 'comment_body';
+  $handler->display->display_options['fields']['comment']['label'] = '';
+  $handler->display->display_options['path'] = 'comments/recent';
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $export['opentools_tool_forum_comments'] = $view;
+
+  $view = new view;
   $view->name = 'opentools_tool_wiki';
   $view->description = '';
   $view->tag = 'default';

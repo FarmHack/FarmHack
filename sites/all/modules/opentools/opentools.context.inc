@@ -168,7 +168,7 @@ function opentools_context_default_contexts() {
         'opentools_tool' => 'opentools_tool',
       ),
       'options' => array(
-        'node_form' => '1',
+        'node_form' => '0',
       ),
     ),
   );
@@ -221,13 +221,19 @@ function opentools_context_default_contexts() {
           'module' => 'boxes',
           'delta' => 'opentools_tool_forum_title',
           'region' => 'triptych_first',
-          'weight' => '-49',
+          'weight' => '-10',
         ),
         'views-opentools_action_links-block' => array(
           'module' => 'views',
           'delta' => 'opentools_action_links-block',
           'region' => 'triptych_first',
-          'weight' => '-48',
+          'weight' => '-9',
+        ),
+        'views-8643ea93b7731563783233adbc89e305' => array(
+          'module' => 'views',
+          'delta' => '8643ea93b7731563783233adbc89e305',
+          'region' => 'triptych_first',
+          'weight' => '-8',
         ),
         'views-opentools_tool_forum-block' => array(
           'module' => 'views',
