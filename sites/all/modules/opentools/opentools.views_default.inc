@@ -1039,6 +1039,198 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $export['forum_topic_type_actions'] = $view;
 
   $view = new view;
+  $view->name = 'opentools_action_links';
+  $view->description = '';
+  $view->tag = 'opentools';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'Open Tools - Action Links - Create Forum Topic Types';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['group_rendered'] = 0;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Taxonomy term: Forum Section (field_forum_section) */
+  $handler->display->display_options['relationships']['field_forum_section_tid']['id'] = 'field_forum_section_tid';
+  $handler->display->display_options['relationships']['field_forum_section_tid']['table'] = 'field_data_field_forum_section';
+  $handler->display->display_options['relationships']['field_forum_section_tid']['field'] = 'field_forum_section_tid';
+  $handler->display->display_options['relationships']['field_forum_section_tid']['required'] = 1;
+  /* Field: Field: Forum */
+  $handler->display->display_options['fields']['field_tool_to_forum']['id'] = 'field_tool_to_forum';
+  $handler->display->display_options['fields']['field_tool_to_forum']['table'] = 'field_data_field_tool_to_forum';
+  $handler->display->display_options['fields']['field_tool_to_forum']['field'] = 'field_tool_to_forum';
+  $handler->display->display_options['fields']['field_tool_to_forum']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['field_tool_to_forum']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_tool_to_forum']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_tool_to_forum']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_tool_to_forum']['field_api_classes'] = 0;
+  /* Field: Taxonomy term: Term ID */
+  $handler->display->display_options['fields']['tid']['id'] = 'tid';
+  $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['tid']['field'] = 'tid';
+  $handler->display->display_options['fields']['tid']['label'] = '';
+  $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['tid']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['tid']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['tid']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['tid']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['tid']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['tid']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['tid']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['tid']['format_plural'] = 0;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_image']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_image']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_image']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image']['settings'] = array(
+    'image_style' => 'icon',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_image']['field_api_classes'] = 0;
+  /* Field: Taxonomy term: Action Text */
+  $handler->display->display_options['fields']['field_action_text']['id'] = 'field_action_text';
+  $handler->display->display_options['fields']['field_action_text']['table'] = 'field_data_field_action_text';
+  $handler->display->display_options['fields']['field_action_text']['field'] = 'field_action_text';
+  $handler->display->display_options['fields']['field_action_text']['label'] = '';
+  $handler->display->display_options['fields']['field_action_text']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_action_text']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_action_text']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_action_text']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_action_text']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_action_text']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_action_text']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_action_text']['field_api_classes'] = 0;
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['php']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['php']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['php']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['php']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['php']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php 
+$space = opentools_get_active_space();
+$tid = $space[\'forum\'];
+print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->tid . \'&edit[taxonomy_forums][und]=\' . $tid . \'">\' . taxonomy_term_load($row->field_action_text)->field_action_text[\'und\'][0][\'value\'] . \'</a>\'; ?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Contextual filter: Taxonomy term: Term ID */
+  $handler->display->display_options['arguments']['tid']['id'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['relationship'] = 'field_forum_section_tid';
+  $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
+dpm($space);
+if(is_numeric($space[\'forum\'])) {
+  $ancestry = opentools_get_forum_context_ancestry($space["forum"]);
+  return implode(\',\', $ancestry);
+}
+elseif (arg(0) == "forum" && is_numeric(arg(1))) {
+  $ancestry = opentools_get_forum_context_ancestry(arg(1));
+  $ancestry[] = arg(1);
+  return implode(\',\', $ancestry);
+}
+
+';
+  $handler->display->display_options['arguments']['tid']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['tid']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['tid']['not'] = 0;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'forum_topic_types' => 'forum_topic_types',
+  );
+
+  /* Display: Create Forum Topics */
+  $handler = $view->new_display('block', 'Create Forum Topics', 'block');
+  $export['opentools_action_links'] = $view;
+
+  $view = new view;
   $view->name = 'opentools_tool';
   $view->description = 'The Fields on a Tool';
   $view->tag = 'opentools';
@@ -1666,6 +1858,269 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['fields']['title']['empty_zero'] = 0;
   $handler->display->display_options['fields']['title']['link_to_node'] = 1;
   $export['opentools_tool'] = $view;
+
+  $view = new view;
+  $view->name = 'opentools_tool_forum';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Open Tools Tool Forum';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Wiki-Forum Wiki Node Blocks';
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['group_rendered'] = 1;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Content: Forums (taxonomy_forums) */
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['id'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['table'] = 'field_data_taxonomy_forums';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['field'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['relationships']['taxonomy_forums_tid']['required'] = 1;
+  /* Relationship: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['relationships']['field_forum_topic_type_tid']['required'] = 0;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['relationship'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_image']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_image']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_image']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image']['settings'] = array(
+    'image_style' => 'icon',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_image']['field_api_classes'] = 0;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['title']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['title']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['title']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+  /* Contextual filter: Taxonomy term: Term ID */
+  $handler->display->display_options['arguments']['tid']['id'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['relationship'] = 'taxonomy_forums_tid';
+  $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
+return $space[\'forum\'];';
+  $handler->display->display_options['arguments']['tid']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['tid']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['tid']['not'] = 0;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 0;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Broken/missing handler */
+  $handler->display->display_options['filters']['field_topic_type_value']['id'] = 'field_topic_type_value';
+  $handler->display->display_options['filters']['field_topic_type_value']['table'] = 'field_data_field_topic_type';
+  $handler->display->display_options['filters']['field_topic_type_value']['field'] = 'field_topic_type_value';
+  $handler->display->display_options['filters']['field_topic_type_value']['operator'] = 'in';
+  $handler->display->display_options['filters']['field_topic_type_value']['value'] = array(
+    'general' => 'general',
+  );
+
+  /* Display: Tool Forum Activity - Ideas  */
+  $handler = $view->new_display('block', 'Tool Forum Activity - Ideas ', 'block');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'New Information and/or Ideas for this Tool';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 0;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['value'] = array(
+    18 => '18',
+  );
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+
+  /* Display: Tool Forum Activity - Questions */
+  $handler = $view->new_display('block', 'Tool Forum Activity - Questions', 'block_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Questions for this Tool';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 0;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['value'] = array(
+    0 => '19',
+  );
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+
+  /* Display: Tool Forum Activity - Research */
+  $handler = $view->new_display('block', 'Tool Forum Activity - Research', 'block_2');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Field Trials & Feedback on this Tool';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 0;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['value'] = array(
+    20 => '20',
+  );
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+
+  /* Display: Tool Forum Activity - How To Build */
+  $handler = $view->new_display('block', 'Tool Forum Activity - How To Build', 'block_3');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'How to build this Tool';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['value'] = array(
+    17 => '17',
+  );
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+
+  /* Display: Tool Forum Activity - How To Use */
+  $handler = $view->new_display('block', 'Tool Forum Activity - How To Use', 'block_4');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'How to use this Tool';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['value'] = array(
+    30 => '30',
+  );
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+  $export['opentools_tool_forum'] = $view;
 
   $view = new view;
   $view->name = 'opentools_tool_wiki';
