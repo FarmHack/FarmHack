@@ -1265,6 +1265,34 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['relationships']['field_tool_type_tid']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['relationships']['field_tool_type_tid']['field'] = 'field_tool_type_tid';
   $handler->display->display_options['relationships']['field_tool_type_tid']['required'] = 0;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image_3']['id'] = 'field_image_3';
+  $handler->display->display_options['fields']['field_image_3']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image_3']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image_3']['label'] = '';
+  $handler->display->display_options['fields']['field_image_3']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_image_3']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_image_3']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image_3']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_image_3']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_image_3']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_image_3']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image_3']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_image_3']['field_api_classes'] = 0;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -1465,34 +1493,6 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['fields']['field_description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['field_description']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['field_description']['field_api_classes'] = 0;
-  /* Field: Field: Image */
-  $handler->display->display_options['fields']['field_image_3']['id'] = 'field_image_3';
-  $handler->display->display_options['fields']['field_image_3']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image_3']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image_3']['label'] = '';
-  $handler->display->display_options['fields']['field_image_3']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['field_image_3']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['field_image_3']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image_3']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['field_image_3']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['field_image_3']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['field_image_3']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image_3']['settings'] = array(
-    'image_style' => '',
-    'image_link' => '',
-  );
-  $handler->display->display_options['fields']['field_image_3']['field_api_classes'] = 0;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -1738,6 +1738,35 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   /* Display: Edit link, Short Description, and Image */
   $handler = $view->new_display('block', 'Edit link, Short Description, and Image', 'block_6');
   $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_image']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_image']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_image']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_image']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_image']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image']['type'] = 'lightbox2__lightbox__large__original';
+  $handler->display->display_options['fields']['field_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_image']['field_api_classes'] = 0;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1807,35 +1836,6 @@ elseif (arg(0) == "forum" && is_numeric(arg(1))) {
   $handler->display->display_options['fields']['field_description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['field_description']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['field_description']['field_api_classes'] = 0;
-  /* Field: Field: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['field_image']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['field_image']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['field_image']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['field_image']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['field_image']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['field_image']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['type'] = 'lightbox2__lightbox__large__original';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => '',
-    'image_link' => '',
-  );
-  $handler->display->display_options['fields']['field_image']['field_api_classes'] = 0;
 
   /* Display: Name */
   $handler = $view->new_display('block', 'Name', 'block_7');

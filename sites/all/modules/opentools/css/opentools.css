@@ -82,6 +82,11 @@ body.node-type-opentools-tool #featured #block-views-opentools-tool-block-6 .vie
   float: right;
 }
 
+body.node-type-opentools-tool #block-views-opentools-wiki-images-block {
+  float: right;
+  margin: 20px 0px 20px 20px;
+}
+
 /*
  * Forum Topic Action links
  */
