@@ -4,7 +4,7 @@
  */
 
 .title-strip {
-position: relative;
+position: absolute;
 top: -75px;
 background: #292929;
 color: #FFF !important;
@@ -45,7 +45,10 @@ line-height: 1em !important;
  *  Tool Node Pages
  */
 
-body.node-type-opentools-tool #block-system-main {
+body.node-type-opentools-tool #block-system-main,
+body.node-type-opentools-tool #breadcrumb,
+body.node-type-opentools-tool #content .tabs,
+body.node-type-opentools-tool #page-title {
   display:none;
 }
 

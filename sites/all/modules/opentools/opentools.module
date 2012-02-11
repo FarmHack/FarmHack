@@ -79,7 +79,6 @@ function opentools_node_presave($node){
     );
     taxonomy_term_save($forum);
     // Save the tool with references to the new wiki page and forum
-    debug($wiki);
     $node->field_tool_to_wiki = array("und" => array(array('target_id' => $wiki->nid, 'target_type' => 'node')));
     $node->field_tool_to_forum = array("und" => array(array('tid' => $forum->tid)));
   }
@@ -221,7 +220,6 @@ function opentools_set_active_space($reset = FALSE) {
   if($cntxt["type"] == "node_wiki") { 
     $cntxt = opentools_get_space_for_wiki($cntxt['object']);
   }
-
   // Check to see if we're reached a righteous opentools space
   if ($cntxt["type"] == "node_event" || $cntxt["type"] == "node_tool") {
     $context["opentools_space"]["wiki"] = $cntxt['object']->field_tool_to_wiki['und'][0]['target_id'];
@@ -230,6 +228,7 @@ function opentools_set_active_space($reset = FALSE) {
     $context["opentools_space"]["object"] = $cntxt['object'];
     $context["opentools_space"]["type"] = $cntxt['type'];
   }
+  
 }
 
 function opentools_get_active_space($reset = FALSE) {
@@ -290,7 +289,11 @@ function opentools_get_space_for_wiki($node) {
   WHERE (( (node.status = '1') AND (field_data_field_tool_to_wiki.field_tool_to_wiki_target_id = '$nid') ))";
   $results = db_query($sql);
   foreach($results as $result) {
-    return node_load($result->nid);
+    return array(
+      "id" => $result->nid,
+      "type" => "node_tool",
+      "object" => node_load($result->nid)
+      );
   }
 /* @todo 
   // Check all Events

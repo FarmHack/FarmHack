@@ -209,13 +209,19 @@ function opentools_context_default_contexts() {
           'module' => 'boxes',
           'delta' => 'opentools_tool_wiki_title',
           'region' => 'content',
-          'weight' => '-45',
+          'weight' => '-10',
+        ),
+        'views-opentools_wiki_images-block' => array(
+          'module' => 'views',
+          'delta' => 'opentools_wiki_images-block',
+          'region' => 'content',
+          'weight' => '-9',
         ),
         'views-opentools_tool_wiki-block' => array(
           'module' => 'views',
           'delta' => 'opentools_tool_wiki-block',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '-8',
         ),
         'boxes-opentools_tool_forum_title' => array(
           'module' => 'boxes',
@@ -235,21 +241,21 @@ function opentools_context_default_contexts() {
           'region' => 'triptych_first',
           'weight' => '-8',
         ),
-        'views-opentools_tool_forum-block' => array(
-          'module' => 'views',
-          'delta' => 'opentools_tool_forum-block',
-          'region' => 'triptych_middle',
-          'weight' => '-10',
-        ),
         'views-opentools_tool_forum-block_1' => array(
           'module' => 'views',
           'delta' => 'opentools_tool_forum-block_1',
           'region' => 'triptych_middle',
           'weight' => '-10',
         ),
-        'views-opentools_tool_forum-block_2' => array(
+        'views-opentools_tool_forum-block' => array(
           'module' => 'views',
-          'delta' => 'opentools_tool_forum-block_2',
+          'delta' => 'opentools_tool_forum-block',
+          'region' => 'triptych_middle',
+          'weight' => '-10',
+        ),
+        'views-opentools_tool_forum-block_4' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool_forum-block_4',
           'region' => 'triptych_last',
           'weight' => '-10',
         ),
@@ -259,9 +265,9 @@ function opentools_context_default_contexts() {
           'region' => 'triptych_last',
           'weight' => '-10',
         ),
-        'views-opentools_tool_forum-block_4' => array(
+        'views-opentools_tool_forum-block_2' => array(
           'module' => 'views',
-          'delta' => 'opentools_tool_forum-block_4',
+          'delta' => 'opentools_tool_forum-block_2',
           'region' => 'triptych_last',
           'weight' => '-10',
         ),
