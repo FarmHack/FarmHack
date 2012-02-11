@@ -230,7 +230,6 @@ function opentools_set_active_space($reset = FALSE) {
     $context["opentools_space"]["object"] = $cntxt['object'];
     $context["opentools_space"]["type"] = $cntxt['type'];
   }
-  dpm($context);
 }
 
 function opentools_get_active_space($reset = FALSE) {

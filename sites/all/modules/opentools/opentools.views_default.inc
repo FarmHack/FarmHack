@@ -1200,7 +1200,6 @@ print \'<a href="/node/add/forum?edit[field_forum_topic_type][und]=\' . $row->ti
   $handler->display->display_options['arguments']['tid']['default_action'] = 'default';
   $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'php';
   $handler->display->display_options['arguments']['tid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
-dpm($space);
 if(is_numeric($space[\'forum\'])) {
   $ancestry = opentools_get_forum_context_ancestry($space["forum"]);
   return implode(\',\', $ancestry);
