@@ -9,7 +9,7 @@ include_once("opentools.features.inc");
 function opentools_init() {
   
   // Set global $context["opentools_space"]   
-  opentools_set_current_space();
+  opentools_set_active_space();
 
   if(arg(0) != 'admin' && arg(2) != 'edit') {
     drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css');
@@ -19,7 +19,7 @@ function opentools_init() {
   if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit' && arg(2) != 'revisions') {
     $node = node_load(arg(1));
     if ($node->type == "wiki") {
-      $space = opentools_get_current_space();
+      $space = opentools_get_active_space();
       if(is_array($space) && $parent = $space["object"]) {
         drupal_goto(drupal_get_path_alias("node/" . $space["id"]), array("fragment" => "wiki"));
       }
@@ -28,7 +28,7 @@ function opentools_init() {
   
   // Reroute Forum pages
   if(arg(0) == "forum" && is_numeric(arg(1)) && arg(2) != 'edit') {
-    $space = opentools_get_current_space();
+    $space = opentools_get_active_space();
     if(is_array($space) && $space["object"]) {
       drupal_goto(drupal_get_path_alias("node/" . $space['id']), array('fragment'=> "forum"));
     }
@@ -126,7 +126,7 @@ function opentools_form_alter(&$form, &$form_state, $form_id) {
  * Compatible context types include term_forum, node_forum_topic, node_tool, node_event, node_wiki  
  */
 
-function opentools_get_compatible_context() {
+function opentools_get_context() {
   global $context;
   $context['opentools_context'] = array(
       "id" => NULL,
@@ -140,7 +140,7 @@ function opentools_get_compatible_context() {
     $context['opentools_context']['object'] = taxonomy_term_load(arg(1));
     $context['opentools_context']['id'] = $context['opentools_context']['object']->tid;
     $context['opentools_context']['type'] = "term_forum";
-    return $context;
+    return TRUE;
   }
   // We are on a node
   elseif (arg(0) == 'node' && is_numeric(arg(1))) {
@@ -183,7 +183,7 @@ function opentools_get_compatible_context() {
  * Compatible context types include term_forum, node_forum_topic, node_tool, node_event, node_wiki  
  */
 
-function opentools_set_current_space($reset = FALSE) {
+function opentools_set_active_space($reset = FALSE) {
   
   global $context;
   
@@ -191,12 +191,14 @@ function opentools_set_current_space($reset = FALSE) {
     return; 
   }
   
-  if(!$context["opentools_context"] && !opentools_get_compatible_context()) {
+  // Check to see if we aleady have a context to work from or if we can get one.
+  if(!$context["opentools_context"] && !opentools_get_context()) {
     return;
   }
-
-  $cntxt = $context["opentools_context"]; 
   
+  //  At this point we should have figured out what our relevant context is that we'll
+  //  want to use to travel back to figure out what our space is. 
+  $cntxt = $context["opentools_context"]; 
   $context["opentools_space"] = array(
     "id" => NULL,
     "type" => NULL, // Either going to be a node_tool or a node_event
@@ -204,85 +206,64 @@ function opentools_set_current_space($reset = FALSE) {
   );
   
   // If cntxt is a Forum topic, then move our way up to the parent forum term
-  if ($cntxt["type"] == "node_forum_topic") {
+  if($cntxt["type"] == "node_forum_topic") { 
     $cntxt["object"] = taxonomy_term_load($cntxt["object"]->taxonomy_forums['und'][0]['tid']);
     $cntxt["type"] = "term_forum";
     $cntxt["id"] = $cntxt['object']->tid;  
   }
-   
+
   // If cntxt is a Forum term, then find the parent Event or Tool 
   if($cntxt["type"] == "term_forum") {
-    $object = opentools_get_forum_parent($object);
-    if ($object) {
-      $cntxt["object"] = $object;
-      $cntxt["type"] = "opentools_space";
-      $cntxt["id"] = $object->nid;  
-    }
-  }
-  
-  // If cntxt is a Wiki page, then find the parent Event or Tool
-  if($cntxt["type"] == "node_wiki") {
-    $object = opentools_get_wiki_parent($object);
-    if ($object) {
-      $cntxt["object"] = $object;
-      $cntxt["type"] = "opentools_space";
-      $cntxt["id"] = $object->nid;  
-    }
-  }
-  
-  if($cntxt["type"] = "opentools_space") {
-    if($cntxt["object"]->type == "opentools_tool") {
-      $cntxt["type"] = "node_tool";
-    }
-    elseif($cntxt["object"]->type == "opentools_event") {
-      $cntxt["type"] = "node_event";
-    }
-  }
-  
-  if ($cntxt["type"] == "node_event") {
-    $context["opentools_space"]["forum"] = $cntxt['object']->field_events_to_forum['und'][0]['tid'];
-    $context["opentools_space"]["wiki"] = $cntxt['object']->field_event_to_wiki['und'][0]['target_id'];
-  }
- 
-  if ($cntxt["type"] == "node_tool") {
-    $context["opentools_space"]["forum"] = $cntxt['object']->field_tool_to_forum['und'][0]['tid'];
-    $context["opentools_space"]["wiki"] = $cntxt['object']->field_tool_to_wiki['und'][0]['target_id'];
+    $cntxt = opentools_get_space_for_forum($cntxt['object']);
   }
 
+  // If cntxt is a Wiki page, then find the parent Event or Tool
+  if($cntxt["type"] == "node_wiki") { 
+    $cntxt = opentools_get_space_for_wiki($cntxt['object']);
+  }
+
+  // Check to see if we're reached a righteous opentools space
   if ($cntxt["type"] == "node_event" || $cntxt["type"] == "node_tool") {
+    $context["opentools_space"]["wiki"] = $cntxt['object']->field_tool_to_wiki['und'][0]['target_id'];
+    $context["opentools_space"]["forum"] = $cntxt['object']->field_tool_to_forum['und'][0]['tid'];
     $context["opentools_space"]["id"] = $cntxt['id'];
     $context["opentools_space"]["object"] = $cntxt['object'];
     $context["opentools_space"]["type"] = $cntxt['type'];
   }
+  dpm($context);
 }
 
-function opentools_get_current_space($reset = FALSE) {
+function opentools_get_active_space($reset = FALSE) {
   global $context;
   if ($reset) {
-    opentools_set_current_space(TRUE);
+    opentools_set_active_space(TRUE);
   }
-  if (array_key_exists($context, "opentools_space")) {
+  if (is_array($context) && array_key_exists("opentools_space", $context)) {
     return $context["opentools_space"];
   }
 }
 
 
 /*
- * @todo
+ * 
  */
-function opentools_get_forum_parent($term) {
-  $tid = $term->tid; 
+function opentools_get_space_for_forum($term) {
+  $tid = $term->tid;
   // Check all Tools
-  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  $sql = "SELECT node.title AS node_title, node.nid AS nid, node.created AS node_created
   FROM 
-  {taxonomy_term_data} taxonomy_term_data
-  LEFT JOIN {field_data_field_tool_to_forum} field_data_field_tool_to_forum ON taxonomy_term_data.tid = field_data_field_tool_to_forum.entity_id AND (field_data_field_tool_to_forum.entity_type = 'taxonomy_term' AND field_data_field_tool_to_forum.deleted = '0')
-  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
-  WHERE (( (field_data_field_tool_to_forum.field_tool_to_forum_tid = '$tid' ) ))";
+  {node} node
+  INNER JOIN {field_data_field_tool_to_forum} field_data_field_tool_to_forum ON node.nid = field_data_field_tool_to_forum.entity_id AND (field_data_field_tool_to_forum.entity_type = 'node' AND field_data_field_tool_to_forum.deleted = '0')
+  WHERE (( (node.status = '1') AND (field_data_field_tool_to_forum.field_tool_to_forum_tid = '$tid') ))";
   $results = db_query($sql);
   foreach($results as $result) {
-    return taxonomy_term_load($result->tid);
+    return array(
+      "id" => $result->nid,
+      "type" => "node_tool",
+      "object" => node_load($result->nid)
+      );
   }
+  /* @todo
   // Check all Events
   $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
   FROM 
@@ -294,29 +275,28 @@ function opentools_get_forum_parent($term) {
   foreach($results as $result) {
     return taxonomy_term_load($result->tid);
   }
-  
+  */
 }
 
 /*
- * @todo
+ * 
  */
-function opentools_get_wiki_parent($node) {
+function opentools_get_space_for_wiki($node) {
   $nid = $node->nid;
   // Check all Tools
-  $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
+  $sql = "SELECT node.title AS node_title, node.nid AS nid, node.created AS node_created
   FROM 
-  {taxonomy_term_data} taxonomy_term_data
-  LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
-  LEFT JOIN {field_data_field_tool_to_wiki} field_data_field_tool_to_wiki ON taxonomy_term_data.tid = field_data_field_tool_to_wiki.entity_id AND (field_data_field_tool_to_wiki.entity_type = 'taxonomy_term' AND field_data_field_tool_to_wiki.deleted = '0')
-  WHERE (( (taxonomy_vocabulary.machine_name IN  ('tools')) AND (field_data_field_tool_to_wiki.field_tool_to_wiki_target_id = '$nid' ) ))";
+  {node} node
+  LEFT JOIN {field_data_field_tool_to_wiki} field_data_field_tool_to_wiki ON node.nid = field_data_field_tool_to_wiki.entity_id AND (field_data_field_tool_to_wiki.entity_type = 'node' AND field_data_field_tool_to_wiki.deleted = '0')
+  WHERE (( (node.status = '1') AND (field_data_field_tool_to_wiki.field_tool_to_wiki_target_id = '$nid') ))";
   $results = db_query($sql);
   foreach($results as $result) {
-    return taxonomy_term_load($result->tid);
+    return node_load($result->nid);
   }
-
+/* @todo 
   // Check all Events
   $sql = "SELECT taxonomy_term_data.name AS taxonomy_term_data_name, taxonomy_term_data.vid AS taxonomy_term_data_vid, taxonomy_term_data.tid AS tid, taxonomy_vocabulary.machine_name AS taxonomy_vocabulary_machine_name
-  FROM 
+  FROM
   {taxonomy_term_data} taxonomy_term_data
   LEFT JOIN {field_data_field_event_to_wiki} field_data_field_event_to_wiki ON taxonomy_term_data.tid = field_data_field_event_to_wiki.entity_id AND (field_data_field_event_to_wiki.entity_type = 'taxonomy_term' AND field_data_field_event_to_wiki.deleted = '0')
   LEFT JOIN {taxonomy_vocabulary} taxonomy_vocabulary ON taxonomy_term_data.vid = taxonomy_vocabulary.vid
@@ -325,7 +305,7 @@ function opentools_get_wiki_parent($node) {
   foreach($results as $result) {
     return taxonomy_term_load($result->tid);
   }
-
+*/
 } 
 
 

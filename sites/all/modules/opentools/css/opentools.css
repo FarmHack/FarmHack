@@ -1,5 +1,46 @@
 
+/*
+ * General Elements
+ */
 
+.title-strip {
+position: relative;
+top: -75px;
+background: #292929;
+color: #FFF !important;
+width: 255px;
+left: -400px;
+padding: 15px 0px 15px 400px;
+font-size: 40px !important;
+line-height: 1em !important;
+}
+
+.title-strip .subscription-box .subscribe-title div {
+  position: absolute;
+  top: 0px;
+  left: 80px;
+  height: 60px;
+  width: 100px;
+  line-height: 17px;
+  text-align: center;
+  background: #444;
+  padding: 10px 5px 0px 0px;
+}
+.title-strip .subscription-box img {
+  margin: 0px 5px;
+}
+.title-strip .subscription-box a:hover {
+  background: green;
+
+}
+.title-strip .subscription-box a {
+  font-size: 13px;
+  position: absolute;
+  background: #444;
+  left: 655px;
+  top: 0px;
+  height: 70px;
+}
 /*
  *  Tool Node Pages
  */
@@ -325,7 +366,7 @@ body.page-taxonomy-term- .region-content .tabs {display: none; position: relativ
 position: relative;
 }
 
-.region-content .block h2 {
+.region-content .block h2 .title-strip {
 position: relative;
 top: -75px;
 background: #292929;

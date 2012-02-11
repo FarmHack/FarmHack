@@ -205,6 +205,24 @@ function opentools_context_default_contexts() {
           'region' => 'featured',
           'weight' => '-5',
         ),
+        'views-opentools_tool_wiki-block' => array(
+          'module' => 'views',
+          'delta' => 'opentools_tool_wiki-block',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
+        'boxes-opentools_tool_wiki_title' => array(
+          'module' => 'boxes',
+          'delta' => 'opentools_tool_wiki_title',
+          'region' => 'content',
+          'weight' => '-45',
+        ),
+        'boxes-opentools_tool_forum_title' => array(
+          'module' => 'boxes',
+          'delta' => 'opentools_tool_forum_title',
+          'region' => 'triptych_first',
+          'weight' => '-10',
+        ),
       ),
     ),
   );
@@ -438,24 +456,7 @@ function opentools_context_default_contexts() {
       ),
     ),
   );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'diff-inline' => array(
-          'module' => 'diff',
-          'delta' => 'inline',
-          'region' => 'sidebar_second',
-          'weight' => '-12',
-        ),
-        'views-wiki_node_images-block' => array(
-          'module' => 'views',
-          'delta' => 'wiki_node_images-block',
-          'region' => 'sidebar_second',
-          'weight' => '-10',
-        ),
-      ),
-    ),
-  );
+  $context->reactions = array();
   $context->condition_mode = 0;
 
   // Translatables
