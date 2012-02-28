@@ -139,7 +139,8 @@ function opentools_get_context() {
     $context['opentools_context']['object'] = taxonomy_term_load(arg(1));
     $context['opentools_context']['id'] = $context['opentools_context']['object']->tid;
     $context['opentools_context']['type'] = "term_forum";
-    return TRUE;
+    $context['opentools_context']['forum'] = $context['opentools_context']['id'];
+    return $context['opentools_context'];
   }
   // We are on a node
   elseif (arg(0) == 'node' && is_numeric(arg(1))) {
