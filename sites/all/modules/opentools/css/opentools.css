@@ -94,7 +94,9 @@ body.node-type-opentools-tool #block-views-opentools-wiki-images-block {
 /*
  * Forum Topic Action links
  */
-
+#block-views-forum-topic-type-actions-block .view-content {
+  height: 3px;
+}
 #block-views-forum-topic-type-actions-block .view-content {
   position: absolute;
   width: 1068px;
