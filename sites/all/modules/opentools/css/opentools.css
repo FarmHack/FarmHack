@@ -92,6 +92,13 @@ body.node-type-opentools-tool #block-views-opentools-wiki-images-block {
 }
 
 /*
+ * Forum
+ */
+#forum table {
+ float: left;
+} 
+
+/*
  * Forum Topic Action links
  */
 #block-views-forum-topic-type-actions-block .view-content {
