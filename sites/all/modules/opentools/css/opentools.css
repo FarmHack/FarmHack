@@ -422,3 +422,12 @@ body.page-forum- #block-views-forum-topic-type-actions-block .view-content {
 left: 0px;
 bottom: -0px;
 }
+
+
+/*
+ * Users
+ */
+
+.comment .attribution img {
+  border: none !important;
+}
