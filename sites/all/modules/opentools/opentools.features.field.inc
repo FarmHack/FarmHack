@@ -242,81 +242,6 @@ function opentools_field_default_fields() {
     ),
   );
 
-  // Exported field: 'node-opentools_tool-field_tool_to_origin'
-  $fields['node-opentools_tool-field_tool_to_origin'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_tool_to_origin',
-      'foreign keys' => array(
-        'tid' => array(
-          'columns' => array(
-            'tid' => 'tid',
-          ),
-          'table' => 'taxonomy_term_data',
-        ),
-      ),
-      'indexes' => array(
-        'tid' => array(
-          0 => 'tid',
-        ),
-      ),
-      'module' => 'taxonomy',
-      'settings' => array(
-        'allowed_values' => array(
-          0 => array(
-            'vocabulary' => 'origins',
-            'parent' => '0',
-          ),
-        ),
-      ),
-      'translatable' => '0',
-      'type' => 'taxonomy_term_reference',
-    ),
-    'field_instance' => array(
-      'bundle' => 'opentools_tool',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '0',
-        ),
-        'notifications' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_tool_to_origin',
-      'label' => 'Origin',
-      'required' => 0,
-      'settings' => array(
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'options',
-        'settings' => array(),
-        'type' => 'options_select',
-        'weight' => '6',
-      ),
-    ),
-  );
-
   // Exported field: 'node-opentools_tool-field_tool_to_stage'
   $fields['node-opentools_tool-field_tool_to_stage'] = array(
     'field_config' => array(
@@ -354,7 +279,11 @@ function opentools_field_default_fields() {
       'bundle' => 'opentools_tool',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => '<strong>Concept</strong> - from idea up to when the tool has been tested. <br />
+<strong>Functional prototype</strong> - tool has been built/tested in the field, but not fully documented. <br />
+<strong>DIY</strong> - tool has been built and documented well enough that it could be reproduced. <br />
+<strong>Commercial Product</strong> - currently being manufactured and available for purchase. <br />
+',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -550,16 +479,14 @@ function opentools_field_default_fields() {
     ),
   );
 
-  // Exported field: 'node-wiki-body'
-  $fields['node-wiki-body'] = array(
+  // Exported field: 'node-wiki-field_documentation'
+  $fields['node-wiki-field_documentation'] = array(
     'field_config' => array(
       'active' => '1',
       'cardinality' => '1',
       'deleted' => '0',
-      'entity_types' => array(
-        0 => 'node',
-      ),
-      'field_name' => 'body',
+      'entity_types' => array(),
+      'field_name' => 'field_documentation',
       'foreign keys' => array(
         'format' => array(
           'columns' => array(
@@ -568,7 +495,6 @@ function opentools_field_default_fields() {
           'table' => 'filter_format',
         ),
       ),
-      'global_block_settings' => '1',
       'indexes' => array(
         'format' => array(
           0 => 'format',
@@ -577,7 +503,7 @@ function opentools_field_default_fields() {
       'module' => 'text',
       'settings' => array(),
       'translatable' => '0',
-      'type' => 'text_with_summary',
+      'type' => 'text_long',
     ),
     'field_instance' => array(
       'bundle' => 'wiki',
@@ -590,7 +516,7 @@ function opentools_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '4',
+          'weight' => 7,
         ),
         'notifications' => array(
           'label' => 'above',
@@ -599,21 +525,17 @@ function opentools_field_default_fields() {
           'weight' => 0,
         ),
         'teaser' => array(
-          'label' => 'hidden',
-          'module' => 'text',
-          'settings' => array(
-            'trim_length' => '800',
-          ),
-          'type' => 'text_summary_or_trimmed',
-          'weight' => '0',
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'body',
+      'field_name' => 'field_documentation',
       'label' => 'Documentation',
       'required' => 0,
       'settings' => array(
-        'display_summary' => 1,
         'text_processing' => '1',
         'user_register_form' => FALSE,
       ),
@@ -621,11 +543,10 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'text',
         'settings' => array(
-          'rows' => '20',
-          'summary_rows' => 5,
+          'rows' => '10',
         ),
-        'type' => 'text_textarea_with_summary',
-        'weight' => '6',
+        'type' => 'text_textarea',
+        'weight' => '7',
       ),
     ),
   );
@@ -2258,6 +2179,11 @@ function opentools_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('<strong>Concept</strong> - from idea up to when the tool has been tested. <br />
+<strong>Functional prototype</strong> - tool has been built/tested in the field, but not fully documented. <br />
+<strong>DIY</strong> - tool has been built and documented well enough that it could be reproduced. <br />
+<strong>Commercial Product</strong> - currently being manufactured and available for purchase. <br />
+');
   t('Action Text');
   t('Address');
   t('Choose which areas of the forum to use this topic type.');

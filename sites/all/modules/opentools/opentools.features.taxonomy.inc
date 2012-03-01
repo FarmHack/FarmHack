@@ -151,7 +151,7 @@ function opentools_taxonomy_default_vocabularies() {
       'name' => 'Tool Types',
       'machine_name' => 'tool_types',
       'description' => '',
-      'hierarchy' => '0',
+      'hierarchy' => '1',
       'module' => 'taxonomy',
       'weight' => '0',
       'rdf_mapping' => array(
@@ -174,7 +174,7 @@ function opentools_taxonomy_default_vocabularies() {
       'name' => 'Tools',
       'machine_name' => 'tools',
       'description' => '',
-      'hierarchy' => '1',
+      'hierarchy' => '0',
       'module' => 'taxonomy',
       'weight' => '0',
       'rdf_mapping' => array(
