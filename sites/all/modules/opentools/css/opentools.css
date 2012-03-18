@@ -110,6 +110,13 @@ body.node-type-opentools-tool #block-views-opentools-wiki-images-block {
 }
 
 /*
+ * Wiki pages
+ */
+body.node-type-wiki .field-name-field-images {
+  float: right;
+}
+
+/*
  * Forum
  */
 #forum table {
