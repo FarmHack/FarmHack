@@ -67,6 +67,9 @@ line-height: 1em !important;
 .region-content h1 {
   font-size: 2em;
 }
+h1.page-title {
+  font-size: 3em;
+}
 /*
  *  Tool Node Pages
  */
