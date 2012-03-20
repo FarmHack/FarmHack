@@ -33,6 +33,11 @@ function opentools_init() {
       drupal_goto(drupal_get_path_alias("node/" . $space['id']), array('fragment'=> "forum"));
     }
   } 
+
+  // Warn when creating loose wiki pages
+  if($_GET['q'] == 'node/add/wiki') {
+    drupal_set_message("You are creating a loose Wiki page that nothing links to.  You will need to link to this Wiki page from somewhere after you save it if you want anyone to find it.", 'warning');
+   }
 }
 
 function opentools_node_presave($node){
