@@ -5,3 +5,18 @@
  */
 
 include_once('farmhack_users.features.inc');
+
+
+function farmhack_users_menu() {
+  $items['activity'] = array(
+    'page callback' => 'farmhack_users_activity_page',
+    'access callback' => TRUE
+  );
+  return $items;
+}
+
+
+function farmhack_users_activity_page() {
+  drupal_set_title("The Farm Hack River of Activity");
+  return "";
+}
