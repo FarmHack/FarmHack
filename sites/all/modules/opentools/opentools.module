@@ -89,6 +89,13 @@ function opentools_node_presave($node){
   }
 }
 
+function opentools_node_view($node, $view_mode, $langcode) {
+  if($node->type == "opentools_tool") {
+    $space = opentools_get_active_space();
+    node_tag_new(node_load($space['wiki']));    
+  }
+}
+
 function opentools_form_alter(&$form, &$form_state, $form_id) {
   // Hide unnecessary form item>s
   if(($form_id == "taxonomy_term_add_form_term" || $form_id == "taxonomy_form_term") && $form['#vocabulary']->machine_name == 'tools') {
