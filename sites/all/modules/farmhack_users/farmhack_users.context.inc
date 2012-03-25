@@ -29,23 +29,29 @@ function farmhack_users_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'boxes-farmhack_user_stats' => array(
+          'module' => 'boxes',
+          'delta' => 'farmhack_user_stats',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
         'views-farmhack_user_wiki_edits-block' => array(
           'module' => 'views',
           'delta' => 'farmhack_user_wiki_edits-block',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '-9',
         ),
         'views-098d16db421c23b1630a19009bc89f20' => array(
           'module' => 'views',
           'delta' => '098d16db421c23b1630a19009bc89f20',
           'region' => 'content',
-          'weight' => '-9',
+          'weight' => '-8',
         ),
         'views-farmhack_user_comments-block' => array(
           'module' => 'views',
           'delta' => 'farmhack_user_comments-block',
           'region' => 'content',
-          'weight' => '-8',
+          'weight' => '-7',
         ),
       ),
     ),
