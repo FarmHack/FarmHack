@@ -40,6 +40,14 @@
  *   'base': Optional. An alternative base key to use when calling features
  *   hooks for this component. Can be used for features component types that
  *   are declared "dynamically" or are part of a family of components.
+ *
+ *   'alter_type': What type of alter hook this hook uses. 'normal' is called
+ *   after the main hook is called. 'inline' is embeded within the default hook
+ *   and may not be implemented by some default hooks.
+ *   'none' is no alter hook exists. Defaults to 'normal'
+ *
+ *   'alter_hook': What the name of the alter hook for this component is.
+ *    Do not include the '_alter' part. Defaults to 'default_hook'.
  */
 function hook_features_api() {
   return array(

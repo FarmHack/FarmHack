@@ -10,6 +10,7 @@
 define('FEATURES_MODULE_ENABLED', 1);
 define('FEATURES_MODULE_DISABLED', 0);
 define('FEATURES_MODULE_MISSING', -1);
+define('FEATURES_MODULE_CONFLICT', 2);
 
 define('FEATURES_REBUILDABLE', -1);
 define('FEATURES_DEFAULT', 0);
@@ -18,6 +19,10 @@ define('FEATURES_NEEDS_REVIEW', 2);
 define('FEATURES_REBUILDING', 3);
 define('FEATURES_CONFLICT', 4);
 define('FEATURES_DISABLED', 5);
+define('FEATURES_CHECKING', 6);
+define('FEATURES_ALTER_TYPE_NORMAL', 'normal');
+define('FEATURES_ALTER_TYPE_INLINE', 'inline');
+define('FEATURES_ALTER_TYPE_NONE', 'none');
 
 // Duration of rebuild semaphore: 10 minutes.
 define('FEATURES_SEMAPHORE_TIMEOUT', 10 * 60);
@@ -150,6 +155,12 @@ function features_menu() {
     'page arguments' => array(3),
     'load arguments' => array(3, TRUE),
     'access callback' => 'user_access',
+    'access arguments' => array('administer features'),
+    'type' => MENU_CALLBACK,
+    'file' => 'features.admin.inc',
+  );
+  $items['features/autocomplete/packages'] = array(
+    'page callback' => 'features_autocomplete_packages',
     'access arguments' => array('administer features'),
     'type' => MENU_CALLBACK,
     'file' => 'features.admin.inc',
@@ -297,7 +308,7 @@ function features_include($reset = FALSE) {
     // Features provides integration on behalf of these modules.
     // The features include provides handling for the feature dependencies.
     // Note that ctools is placed last because it implements hooks "dynamically" for other modules.
-    $modules = array('features', 'block', 'context', 'field', 'filter', 'image', 'menu', 'node', 'taxonomy', 'user', 'views', 'ctools');
+    $modules = array('features', 'block', 'context', 'field', 'filter', 'image', 'locale', 'menu', 'node', 'taxonomy', 'user', 'views', 'ctools');
 
     foreach (array_filter($modules, 'module_exists') as $module) {
       module_load_include('inc', 'features', "includes/features.$module");
@@ -346,13 +357,7 @@ function features_include_defaults($components = NULL, $reset = FALSE) {
     if (isset($include_components[$component]) && (!isset($included[$component]) || $reset)) {
       $info = $include_components[$component];
       // Inclusion of defaults for Views.
-      if ($component === 'views') {
-        views_include('view');
-        views_include_handlers();
-        views_module_include('views_default.inc');
-      }
-      // Inclusion of defaults for CTools.
-      else if (isset($info['api'], $info['module'], $info['current_version'])) {
+      if (isset($info['api'], $info['module'], $info['current_version'])) {
         ctools_include('plugins');
         ctools_plugin_api_include($info['module'], $info['api'], $info['current_version'], $info['current_version']);
       }

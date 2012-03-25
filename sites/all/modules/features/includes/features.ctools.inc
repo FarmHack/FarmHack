@@ -70,19 +70,21 @@ function ctools_features_export($data, &$export, $module_name = '') {
  * Adds the ctools mothership hook, ctools_plugin_api().
  */
 function ctools_features_export_render($module, $data) {
-  $code = array();
-  $code[] = '  list($module, $api) = func_get_args();';
-
   $component_exports =  array();
   foreach ($data as $component) {
     $code = array();
-    $code[] = '  list($module, $api) = func_get_args();';
-
     if ($info = _ctools_features_get_info($component)) {
-
-      $code[] = '  if ($module == "'. $info['module'] .'" && $api == "'. $info['api'] .'") {';
-      $code[] = '    return array("version" => "'. $info['current_version'] .'");';
-      $code[] = '  }';
+      // For background on why we change the output for hook_views_api()
+      // see http://drupal.org/node/1459120.
+      if ($info['module'] == 'views') {
+        $code[] = '  return array("version" => "3.0");';
+      }
+      else {
+        $code[] = '  list($module, $api) = func_get_args();';
+        $code[] = '  if ($module == "'. $info['module'] .'" && $api == "'. $info['api'] .'") {';
+        $code[] = '    return array("version" => "'. $info['current_version'] .'");';
+        $code[] = '  }';
+      }
     }
     ctools_include('plugins');
     $plugin_api_hook_name = ctools_plugin_api_get_hook($info['module'], $info['api']);
@@ -206,7 +208,9 @@ function ctools_component_features_revert($component, $module) {
       // Some things (like views) do not use the machine name as key
       // and need to be loaded explicitly in order to be deleted.
       $object = ctools_export_crud_load($component, $name);
-      _ctools_features_export_crud_delete($component, $object);
+      if ($object && ($object->export_type & EXPORT_IN_DATABASE)) {
+        _ctools_features_export_crud_delete($component, $object);
+      }
     }
   }
 }

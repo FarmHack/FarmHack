@@ -250,11 +250,13 @@ function features_export_render($export, $module_name, $reset = FALSE) {
     foreach ($hooks as $hook_name => $hook_info) {
       $hook_code = is_array($hook_info) ? $hook_info['code'] : $hook_info;
       $hook_args = is_array($hook_info) && !empty($hook_info['args']) ? $hook_info['args'] : '';
-      $code[$file['name']][$hook_name] = features_export_render_defaults($module_name, $hook_name, $hook_code, $hook_args);
+      $hook_file = is_array($hook_info) && !empty($hook_info['file']) ? $hook_info['file'] : $file['name'];
+      $code[$hook_file][$hook_name] = features_export_render_defaults($module_name, $hook_name, $hook_code, $hook_args);
     }
   }
 
   // Finalize strings to be written to files
+  $code = array_filter($code);
   foreach ($code as $filename => $contents) {
     $code[$filename] = "<?php\n/**\n * @file\n * {$module_name}.{$filename}.inc\n */\n\n". implode("\n\n", $contents) ."\n";
   }
@@ -293,7 +295,7 @@ function features_export_render($export, $module_name, $reset = FALSE) {
   }
   // Add a stub module to include the defaults
   else if (!empty($code['features'])) {
-    $code['module'] = "<?php\n/**\n * @file\n * Code for the {$export['name']} feature.\n */\n\ninclude_once('{$module_name}.features.inc');\n";
+    $code['module'] = "<?php\n/**\n * @file\n * Code for the {$export['name']} feature.\n */\n\ninclude_once '{$module_name}.features.inc';\n";
   }
   else {
     $code['module'] = "<?php\n/**\n * @file\n */\n\n// Drupal needs this blank file.\n";
@@ -350,6 +352,16 @@ function features_detect_overrides($module) {
  */
 function features_get_default_hooks($component = NULL, $reset = FALSE) {
   return features_get_components($component, 'default_hook', $reset);
+}
+
+/**
+ * Gets the available default hooks keyed by components.
+ */
+function features_get_default_alter_hook($component) {
+  $default_hook = features_get_components($component, 'default_hook');
+  $alter_hook = features_get_components($component, 'alter_hook');
+  $alter_type = features_get_components($component, 'alter_type');
+  return empty($alter_type) || $alter_type != 'none' ? ($alter_hook ? $alter_hook : $default_hook) : FALSE;
 }
 
 /**
@@ -653,8 +665,11 @@ function features_get_default($component, $module_name = NULL, $alter = TRUE, $r
       else {
         if ($default_hook && module_hook($m, $default_hook)) {
           $cache[$component][$m] = call_user_func("{$m}_{$default_hook}");
-          if ($alter) {
-            drupal_alter($default_hook, $cache[$component][$m]);
+          $alter_type = features_get_components('alter_type', $component);
+          if ($alter && (!isset($alter_type) || $alter_type == FEATURES_ALTER_TYPE_NORMAL)) {
+            if ($alter_hook = features_get_default_alter_hook($component)) {
+              drupal_alter($alter_hook, $cache[$component][$m]);
+            }
           }
         }
         else {
@@ -780,7 +795,7 @@ function features_get_component_states($features = array(), $rebuild_only = TRUE
                   $cache[$feature][$component] = FEATURES_OVERRIDDEN;
                 }
                 // DB has no modifications to prior code state (or this is initial install).
-                else if ($codecache == $normal || empty($codecache)) {
+                else if (empty($codecache) || $codecache == $normal) {
                   $cache[$feature][$component] = FEATURES_REBUILDABLE;
                 }
                 // None of the states match. Requires user intervention.
