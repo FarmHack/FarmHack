@@ -2350,7 +2350,10 @@ return $nid;';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '0';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = 0;
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['group_rendered'] = 1;
   $handler->display->display_options['style_options']['columns'] = array(
@@ -2359,6 +2362,7 @@ return $nid;';
     'field_description' => 'field_description',
     'name_1' => 'name_1',
     'name_2' => 'name_2',
+    'changed' => 'changed',
   );
   $handler->display->display_options['style_options']['default'] = 'title';
   $handler->display->display_options['style_options']['info'] = array(
@@ -2397,6 +2401,13 @@ return $nid;';
       'separator' => '',
       'empty_column' => 0,
     ),
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
@@ -2411,6 +2422,11 @@ return $nid;';
   $handler->display->display_options['relationships']['field_tool_type_tid']['table'] = 'field_data_field_tool_type';
   $handler->display->display_options['relationships']['field_tool_type_tid']['field'] = 'field_tool_type_tid';
   $handler->display->display_options['relationships']['field_tool_type_tid']['required'] = 0;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['id'] = 'field_tool_to_wiki_target_id';
+  $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['table'] = 'field_data_field_tool_to_wiki';
+  $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['field'] = 'field_tool_to_wiki_target_id';
+  $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['required'] = 0;
   /* Field: Field: Image */
   $handler->display->display_options['fields']['field_image_3']['id'] = 'field_image_3';
   $handler->display->display_options['fields']['field_image_3']['table'] = 'field_data_field_image';
@@ -2528,6 +2544,31 @@ return $nid;';
   $handler->display->display_options['fields']['name_2']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['name_2']['link_to_taxonomy'] = 0;
   $handler->display->display_options['fields']['name_2']['convert_spaces'] = 0;
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['relationship'] = 'field_tool_to_wiki_target_id';
+  $handler->display->display_options['fields']['changed']['label'] = 'Last Tool Wiki Update';
+  $handler->display->display_options['fields']['changed']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['changed']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['changed']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['changed']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['changed']['element_label_colon'] = 0;
+  $handler->display->display_options['fields']['changed']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['changed']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['changed']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['changed']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['changed']['custom_date_format'] = 'm/d/Y';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -2826,7 +2867,7 @@ return $nid;';
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'tools';
   $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Tools';
+  $handler->display->display_options['menu']['title'] = 'TOOLS';
   $handler->display->display_options['menu']['weight'] = '0';
   $export['opentools_tools'] = $view;
 
@@ -2895,9 +2936,7 @@ return $nid;';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
   $handler->display->display_options['arguments']['nid']['field'] = 'nid';
   $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['nid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
-return $space[\'wiki\'];';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
   $handler->display->display_options['arguments']['nid']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
@@ -2919,8 +2958,26 @@ return $space[\'wiki\'];';
     'wiki' => 'wiki',
   );
 
+  /* Display: Tool Wiki Node Images */
+  $handler = $view->new_display('block', 'Tool Wiki Node Images', 'block');
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['nid']['default_argument_options']['code'] = '$space = opentools_get_active_space();
+return $space[\'wiki\'];';
+  $handler->display->display_options['arguments']['nid']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['nid']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['nid']['not'] = 0;
+
   /* Display: Wiki Node Images */
-  $handler = $view->new_display('block', 'Wiki Node Images', 'block');
+  $handler = $view->new_display('block', 'Wiki Node Images', 'block_1');
   $export['opentools_wiki_images'] = $view;
 
   $view = new view;

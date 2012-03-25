@@ -66,7 +66,7 @@ function opentools_field_default_fields() {
       'label' => 'Short description',
       'required' => 0,
       'settings' => array(
-        'text_processing' => '0',
+        'text_processing' => '1',
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -512,11 +512,11 @@ function opentools_field_default_fields() {
       'description' => '',
       'display' => array(
         'default' => array(
-          'label' => 'above',
+          'label' => 'hidden',
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => 7,
+          'weight' => '2',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -588,9 +588,10 @@ function opentools_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'hidden',
+          'module' => 'lightbox2',
           'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '6',
+          'type' => 'lightbox2__lightshow__medium__original',
+          'weight' => '0',
         ),
         'notifications' => array(
           'label' => 'above',
@@ -672,7 +673,7 @@ function opentools_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '3',
+          'weight' => '1',
         ),
         'notifications' => array(
           'label' => 'above',
