@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the FarmHack Users feature.
+ */
+
+include_once('farmhack_users.features.inc');

@@ -1,0 +1,8 @@
+name = Profile2
+description = Supports configurable user profiles.
+core = 7.x
+files[] = profile2.admin.inc
+files[] = profile2.info.inc
+files[] = profile2.test
+dependencies[] = entity
+configure = admin/structure/profiles
