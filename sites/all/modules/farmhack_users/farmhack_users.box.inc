@@ -21,8 +21,6 @@ function farmhack_users_default_box() {
     'body' => array(
       'value' => '<?php
 
-$args = func_get_args();
-
 $view = views_get_view(\'farmhack_user_wiki_edits\');
 $view->set_display(\'block\');    
 $view->render();   
