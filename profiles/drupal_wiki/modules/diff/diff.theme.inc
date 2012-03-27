@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * @file
@@ -157,10 +158,10 @@ function theme_diff_table($vars) {
   $caption    = isset($vars['caption']) ? $vars['caption'] : '';
   $cols       = isset($vars['cols']) ? $vars['cols'] : array();
 
-  $output = '<table'. drupal_attributes($attributes) .">\n";
+  $output = '<table' . drupal_attributes($attributes) . ">\n";
 
   if (isset($caption)) {
-    $output .= '<caption>'. $caption ."</caption>\n";
+    $output .= '<caption>' . $caption . "</caption>\n";
   }
 
   // Format the table columns:
@@ -185,15 +186,15 @@ function theme_diff_table($vars) {
 
       // Build colgroup
       if (is_array($cells) && count($cells)) {
-        $output .= ' <colgroup'. drupal_attributes($attributes) .'>';
+        $output .= ' <colgroup' . drupal_attributes($attributes) . '>';
         $i = 0;
         foreach ($cells as $cell) {
-          $output .= ' <col'. drupal_attributes($cell) .' />';
+          $output .= ' <col' . drupal_attributes($cell) . ' />';
         }
         $output .= " </colgroup>\n";
       }
       else {
-        $output .= ' <colgroup'. drupal_attributes($attributes) ." />\n";
+        $output .= ' <colgroup' . drupal_attributes($attributes) . " />\n";
       }
     }
   }
@@ -235,14 +236,14 @@ function theme_diff_table($vars) {
       // Add odd/even class
       $class = $flip[$class];
       if (isset($attributes['class'])) {
-        $attributes['class'] .= ' '. $class;
+        $attributes['class'] .= ' ' . $class;
       }
       else {
         $attributes['class'] = $class;
       }
 
       // Build row
-      $output .= ' <tr'. drupal_attributes($attributes) .'>';
+      $output .= ' <tr' . drupal_attributes($attributes) . '>';
       $i = 0;
       foreach ($cells as $cell) {
         $cell = tablesort_cell($cell, $header, $ts, $i++);
@@ -260,14 +261,14 @@ function theme_diff_table($vars) {
  * Theme function for a header line in the diff.
  */
 function theme_diff_header_line($vars) {
-  return '<strong>'. t('Line %lineno', array('%lineno' => $vars['lineno'])) .'</strong>';
+  return '<strong>' . t('Line %lineno', array('%lineno' => $vars['lineno'])) . '</strong>';
 }
 
 /**
  * Theme function for a content line in the diff.
  */
 function theme_diff_content_line($vars) {
-  return '<div>'. $vars['line'] .'</div>';
+  return '<div>' . $vars['line'] . '</div>';
 }
 
 /**
@@ -281,7 +282,7 @@ function theme_diff_empty_line($vars) {
  * Theme function for inline diff form.
  */
 function theme_diff_inline_form($vars) {
-  drupal_add_css(drupal_get_path('module', 'diff') .'/diff.css');
+  drupal_add_css(drupal_get_path('module', 'diff') . '/diff.css');
   return drupal_render_children($vars['form']);
 }
 
@@ -289,18 +290,18 @@ function theme_diff_inline_form($vars) {
  * Display inline diff metadata.
  */
 function theme_diff_inline_metadata($vars) {
-  drupal_add_css(drupal_get_path('module', 'diff') .'/diff.css');
+  drupal_add_css(drupal_get_path('module', 'diff') . '/diff.css');
   $node = $vars['node'];
 
   $output = "<div class='diff-inline-metadata clear-block'>";
   $output .= "<div class='diff-inline-byline'>";
   $output .= t('Updated by !name on @date', array(
-    '!name' => theme('username', array('name' => $node)),
+    '!name' => theme('username', array('account' => user_load($node->revision_uid))),
     '@date' => format_date($node->revision_timestamp, 'small'),
   ));
   $output .= "</div>";
   $output .= "<div class='diff-inline-legend clear-block'>";
-  $output .= "<label>". t('Legend') ."</label>";
+  $output .= "<label>" . t('Legend') . "</label>";
   $output .= theme('diff_inline_chunk', array('text' => t('Added'), 'type' => 'add'));
   $output .= theme('diff_inline_chunk', array('text' => t('Changed'), 'type' => 'change'));
   $output .= theme('diff_inline_chunk', array('text' => t('Deleted'), 'type' => 'delete'));

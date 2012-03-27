@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * @file
@@ -75,7 +76,7 @@ function diff_node_revisions($form, $form_state, $node) {
         '#markup' => t('!date by !username', array(
           '!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"),
           '!username' => theme('username', array('account' => $revision))))
-        . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : ''),
+        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
       );
     }
     else {
@@ -83,7 +84,7 @@ function diff_node_revisions($form, $form_state, $node) {
         '#markup' => t('!date by !username', array(
           '!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"),
           '!username' => theme('username', array('account' => $revision))))
-        . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : '')
+        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '')
       );
       if ($revert_permission) {
         $operations[] = array('#markup' => l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert"));
@@ -128,7 +129,7 @@ function diff_node_revisions_submit($form, &$form_state) {
   // the ids are ordered so the old revision is always on the left
   $old_vid = min($form_state['values']['old'], $form_state['values']['new']);
   $new_vid = max($form_state['values']['old'], $form_state['values']['new']);
-  $form_state['redirect'] =  'node/'. $form_state['values']['nid'] .'/revisions/view/'. $old_vid .'/'. $new_vid;
+  $form_state['redirect'] =  'node/' . $form_state['values']['nid'] . '/revisions/view/' . $old_vid . '/' . $new_vid;
 }
 
 /**
@@ -173,20 +174,20 @@ function diff_diffs_show($node, $old_vid, $new_vid) {
     '!username' => theme('username', array('account' => $node_revisions[$new_vid])),
   ));
 
-  $old_log = $old_node->log != '' ? '<p class="revision-log">'. filter_xss($old_node->log) .'</p>' : '';
-  $new_log = $new_node->log != '' ? '<p class="revision-log">'. filter_xss($new_node->log) .'</p>' : '';
+  $old_log = $old_node->log != '' ? '<p class="revision-log">' . filter_xss($old_node->log) . '</p>' : '';
+  $new_log = $new_node->log != '' ? '<p class="revision-log">' . filter_xss($new_node->log) . '</p>' : '';
 
   // Generate previous diff/next diff links.
   $next_vid = _diff_get_next_vid($node_revisions, $new_vid);
   if ($next_vid) {
-    $next_link = l(t('next diff >'), 'node/'. $node->nid .'/revisions/view/'. $new_vid .'/'. $next_vid);
+    $next_link = l(t('next diff >'), 'node/' . $node->nid . '/revisions/view/' . $new_vid . '/' . $next_vid);
   }
   else {
     $next_link = '';
   }
   $prev_vid = _diff_get_previous_vid($node_revisions, $old_vid);
   if ($prev_vid) {
-    $prev_link = l(t('< previous diff'), 'node/'. $node->nid .'/revisions/view/'. $prev_vid .'/'. $old_vid);
+    $prev_link = l(t('< previous diff'), 'node/' . $node->nid . '/revisions/view/' . $prev_vid . '/' . $old_vid);
   }
   else {
     $prev_link = '';
@@ -223,10 +224,10 @@ function diff_diffs_show($node, $old_vid, $new_vid) {
   $output = theme('diff_table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('diff')), 'cols' => $cols));
 
   if ($node->vid == $new_vid) {
-    $output .= '<div class="diff-section-title">'. t('Current revision:') .'</div>';
+    $output .= '<div class="diff-section-title">' . t('Current revision:') . '</div>';
   }
   else {
-    $output .= '<div class="diff-section-title">'. t('Revision of !new_date:', array('!new_date' => format_date($new_node->revision_timestamp))) .'</div>';
+    $output .= '<div class="diff-section-title">' . t('Revision of !new_date:', array('!new_date' => format_date($new_node->revision_timestamp))) . '</div>';
   }
   // Don't include node links (final argument) when viewing the diff.
   $view = node_view($new_node, 'full');
@@ -244,7 +245,7 @@ function diff_diffs_show($node, $old_vid, $new_vid) {
  *   Node for comparison which will be displayed on the right side.
  */
 function _diff_body_rows($old_node, $new_node) {
-  drupal_add_css(drupal_get_path('module', 'diff') .'/diff.css');
+  drupal_add_css(drupal_get_path('module', 'diff') . '/diff.css');
 
   module_load_include('inc', 'diff', 'includes/node');
 
@@ -323,7 +324,8 @@ function _diff_module_invoke_all($old_node, $new_node) {
     if ($module == 'date') {
       continue; // Avoid function name collision with date_diff().
     }
-    $result = module_invoke($module, 'diff', $old_node, $new_node);
+    $function = "{$module}_diff";
+    $result = $function($old_node, $new_node);
     if (isset($result) && is_array($result)) {
       $return = array_merge_recursive($return, $result);
     }

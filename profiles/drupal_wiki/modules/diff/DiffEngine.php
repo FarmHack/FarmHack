@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * @file
@@ -238,7 +239,7 @@ class _DiffEngine {
    * Returns the whole line if it's small enough, or the MD5 hash otherwise.
    */
   function _line_hash($line) {
-    if (strlen($line) > $this->MAX_XREF_LENGTH()) {
+    if (drupal_strlen($line) > $this->MAX_XREF_LENGTH()) {
       return md5($line);
     }
     else {
@@ -701,7 +702,7 @@ class Diff {
     }
 
     $lcs = $this->lcs();
-    trigger_error('Diff okay: LCS = '. $lcs, E_USER_NOTICE);
+    trigger_error('Diff okay: LCS = ' . $lcs, E_USER_NOTICE);
   }
 }
 
@@ -953,7 +954,7 @@ class _HWLDF_WordAccumulator {
   function _flushGroup($new_tag) {
     if ($this->_group !== '') {
       if ($this->_tag == 'mark') {
-        $this->_line .= '<span class="diffchange">'. check_plain($this->_group) .'</span>';
+        $this->_line .= '<span class="diffchange">' . check_plain($this->_group) . '</span>';
       }
       else {
         $this->_line .= check_plain($this->_group);
@@ -986,7 +987,7 @@ class _HWLDF_WordAccumulator {
       }
       if ($word[0] == "\n") {
         $this->_flushLine($tag);
-        $word = substr($word, 1);
+        $word = drupal_substr($word, 1);
       }
       assert(!strstr($word, "\n"));
       $this->_group .= $word;
@@ -1030,7 +1031,7 @@ class WordLevelDiff extends MappedDiff {
         $words[] = "\n";
         $stripped[] = "\n";
       }
-      if ( strlen( $line ) > $this->MAX_LINE_LENGTH() ) {
+      if ( drupal_strlen( $line ) > $this->MAX_LINE_LENGTH() ) {
         $words[] = $line;
         $stripped[] = $line;
       }
@@ -1239,7 +1240,7 @@ class DrupalDiffInline {
           break;
         case 'delete':
           foreach ($chunk->orig as $i => $piece) {
-            if (strpos($piece, '<') === 0 && substr($piece, strlen($piece) - 1) === '>') {
+            if (strpos($piece, '<') === 0 && drupal_substr($piece, drupal_strlen($piece) - 1) === '>') {
               $output .= $piece;
             }
             else {
@@ -1250,7 +1251,7 @@ class DrupalDiffInline {
         default:
           $chunk->closing = $this->process_chunk($chunk->closing);
           foreach ($chunk->closing as $i => $piece) {
-            if ($piece === ' ' || (strpos($piece, '<') === 0 && substr($piece, strlen($piece) - 1) === '>' && strtolower(substr($piece, 1, 3)) != 'img')) {
+            if ($piece === ' ' || (strpos($piece, '<') === 0 && drupal_substr($piece, drupal_strlen($piece) - 1) === '>' && drupal_strtolower(drupal_substr($piece, 1, 3)) != 'img')) {
               $output .= $piece;
             }
             else {
@@ -1271,11 +1272,11 @@ class DrupalDiffInline {
     $j = 0;
     foreach ($chunk as $i => $piece) {
       $next = isset($chunk[$i+1]) ? $chunk[$i+1] : NULL;
-      if (strpos($piece, '<') === 0 && substr($piece, strlen($piece) - 1) === '>') {
+      if (strpos($piece, '<') === 0 && drupal_substr($piece, drupal_strlen($piece) - 1) === '>') {
         $processed[$j] = $piece;
         $j++;
       }
-      else if (isset($next) && strpos($next, '<') === 0 && substr($next, strlen($next) - 1) === '>') {
+      elseif (isset($next) && strpos($next, '<') === 0 && drupal_substr($next, drupal_strlen($next) - 1) === '>') {
         $processed[$j] .= $piece;
         $j++;
       }
