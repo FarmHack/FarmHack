@@ -1,0 +1,6 @@
+name = Revisioning Scheduler
+description = "Allows revisions to be published or reverted at specified times."
+dependencies[] = revisioning
+configure = admin/config/content/revisioning_scheduler
+core = "7.x"
+version = "7.x-1.x-dev"
