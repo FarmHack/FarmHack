@@ -10,7 +10,7 @@
 function farmhack_users_context_default_contexts() {
   $export = array();
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'farmhack_user_profile';
@@ -63,7 +63,7 @@ function farmhack_users_context_default_contexts() {
   t('FarmHack');
   $export['farmhack_user_profile'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'farmhack_users_all_activity';
