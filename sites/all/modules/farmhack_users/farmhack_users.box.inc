@@ -21,25 +21,28 @@ function farmhack_users_default_box() {
     'body' => array(
       'value' => '<?php
 
+$args = func_get_args();
+
 $view = views_get_view(\'farmhack_user_wiki_edits\');
-$view->set_display(\'block_0\'); // like \'block_1\'    
+$view->set_display(\'block\');    
 $view->render();   
 print "<p>" . "# of Wiki Edits: " . $view->total_rows . "</p>";
 
 $view = views_get_view(\'farmhack_user_forum_topics\');
-$view->set_display(\'block_0\'); // like \'block_1\'    
+$view->set_display(\'block\');    
 $view->render();   
 print "<p># of Forum topics submitted: " . $view->total_rows . "</p>";
 
 
 $view = views_get_view(\'farmhack_user_comments\');
-$view->set_display(\'block_0\'); // like \'block_1\'    
+$view->set_display(\'block\');
 $view->render();   
 print "<p># of Comments: " . $view->total_rows . "</p>";
 
 ?>',
       'format' => 'php_code',
     ),
+    'additional_classes' => '',
   );
   $export['farmhack_user_stats'] = $box;
 
