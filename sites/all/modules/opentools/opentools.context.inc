@@ -10,7 +10,7 @@
 function opentools_context_default_contexts() {
   $export = array();
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'events';
@@ -34,7 +34,7 @@ function opentools_context_default_contexts() {
   t('events');
   $export['events'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'events_term_page';
@@ -117,7 +117,7 @@ function opentools_context_default_contexts() {
   t('events');
   $export['events_term_page'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'forums';
@@ -156,7 +156,7 @@ function opentools_context_default_contexts() {
   t('forums');
   $export['forums'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'opentools_tool';
@@ -281,7 +281,7 @@ function opentools_context_default_contexts() {
   t('Tools');
   $export['opentools_tool'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'tools';
@@ -305,7 +305,7 @@ function opentools_context_default_contexts() {
   t('tools');
   $export['tools'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'tools_term_page';
@@ -430,7 +430,7 @@ function opentools_context_default_contexts() {
   t('tools');
   $export['tools_term_page'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'topic_node';
@@ -465,7 +465,7 @@ function opentools_context_default_contexts() {
   t('forum');
   $export['topic_node'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'wiki';
@@ -488,7 +488,7 @@ function opentools_context_default_contexts() {
   t('wiki');
   $export['wiki'] = $context;
 
-  $context = new stdClass;
+  $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'wiki_node';
