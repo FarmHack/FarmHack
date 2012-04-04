@@ -27,7 +27,7 @@ function farmhack_donate_default_box() {
 <style>
 #block-boxes-farmhack-donate {
 position: absolute;
-top: -192px;
+bottom: 192px;
 right: 205px;
 }
 
