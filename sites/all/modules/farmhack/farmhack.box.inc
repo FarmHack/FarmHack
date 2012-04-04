@@ -13,6 +13,22 @@ function farmhack_default_box() {
   $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
+  $box->delta = 'farmhac_friends';
+  $box->plugin_key = 'simple';
+  $box->title = 'Friends of Farm Hack';
+  $box->description = 'FarmHack Friends';
+  $box->options = array(
+    'body' => array(
+      'value' => '<div class="textwidget"><p><a href="http://thegreenhorns.net/">The Greenhorns</a></p>
+<p><a href="http://www.greenstartnh.org/">Green Start</a></p></div>',
+      'format' => 'filtered_html',
+    ),
+  );
+  $export['farmhac_friends'] = $box;
+
+  $box = new stdClass();
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
   $box->delta = 'farmhack_about';
   $box->plugin_key = 'simple';
   $box->title = 'What is Farm Hack?';
@@ -27,6 +43,23 @@ We also seek to bring our non-farmer allies on board: engineers, architects, des
     'additional_classes' => '',
   );
   $export['farmhack_about'] = $box;
+
+  $box = new stdClass();
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
+  $box->delta = 'farmhack_social_media_links';
+  $box->plugin_key = 'simple';
+  $box->title = 'Connect With Farm Hack';
+  $box->description = 'Connect With Farm Hack';
+  $box->options = array(
+    'body' => array(
+      'value' => '<div id="fm_ft_social"> <a href="http://www.facebook.com/pages/The-National-Young-Farmers-Coalition/157485677636655" target="_blank"></a> <a href="http://twitter.com/#!/NYFCNYFC" target="_blank"></a> <a href="http://feeds.feedburner.com/nyfc" target="_blank"></a>
+      <div class="clear"></div>
+    </div>',
+      'format' => 'full_html',
+    ),
+  );
+  $export['farmhack_social_media_links'] = $box;
 
   $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
