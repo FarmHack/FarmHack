@@ -19,7 +19,7 @@ function farmhack_donate_default_box() {
   $box->description = 'Farm Hack Donate';
   $box->options = array(
     'body' => array(
-      'value' => '<a class="donate" href="http://farmhack.net">
+      'value' => '<a class="donate" href="https://org2.democracyinaction.org/o/7323/donate_page/membership">
   <img class="donate-red" src="/sites/all/modules/farmhack/farmhack_donate/images/donate-red.png">
   <img class="donate-green" src="/sites/all/modules/farmhack/farmhack_donate/images/donate-green.png">
 </a>
