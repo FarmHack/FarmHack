@@ -1,0 +1,171 @@
+diff --git a/editors/aloha.inc b/editors/aloha.inc
+index 50bbf56..ca075da 100644
+--- a/editors/aloha.inc
++++ b/editors/aloha.inc
+@@ -15,35 +15,10 @@ function wysiwyg_aloha_editor() {
+     'download url' => 'http://www.aloha-editor.org/',
+     'library path' => wysiwyg_get_path('aloha') . '/aloha',
+     'libraries' => array(
+-      // @todo jQuery version conflict.
+       'min-bundled' => array(
+         'title' => 'Minified (bundled with jQuery + ExtJS)',
+         'files' => array(
+-          // @todo Bundled jQuery (1.4.2) and Drupal's (1.4.4) are incompatible.
+-          //   Even hacking a var jQuery=jQuery||function... into aloha.js leads
+-          //   to JS errors. However, other dependencies (e.g., ExtJS) are not
+-          //   included otherwise. No idea how aloha.module is able to work...
+-          // Loads directly after jquery.js of core. No error on load, but
+-          // "handler undefined" error on attach. 13/09/2011 sun
+-          'aloha.js' => array('group' => JS_LIBRARY, 'weight' => -20, 'every_page' => TRUE),
+-          // Loads before core. jquery.fn.aloha() undefined. 13/09/2011 sun
+-          #'aloha.js' => array('group' => JS_LIBRARY - 1),
+-          // @todo These are actually optional plugins.
+-          'plugins/com.gentics.aloha.plugins.Format/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.Table/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.List/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.Link/plugin.js',
+-        ),
+-      ),
+-      'min' => array(
+-        'title' => 'Minified',
+-        'files' => array(
+-          'aloha-nodeps.js',
+-          // @todo These are actually optional plugins.
+-          'plugins/com.gentics.aloha.plugins.Format/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.Table/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.List/plugin.js',
+-          'plugins/com.gentics.aloha.plugins.Link/plugin.js',
++          'lib/aloha.js' => array('scope' => 'footer', 'group' => JS_LIBRARY),
+         ),
+       ),
+     ),
+@@ -52,7 +27,7 @@ function wysiwyg_aloha_editor() {
+     'settings callback' => 'wysiwyg_aloha_settings',
+     'plugin callback' => 'wysiwyg_aloha_plugins',
+     'versions' => array(
+-      '0.9.3' => array(
++      '0.10.0' => array(
+         'js files' => array('aloha.js'),
+       ),
+     ),
+@@ -70,14 +45,14 @@ function wysiwyg_aloha_editor() {
+  *   The installed editor version.
+  */
+ function wysiwyg_aloha_version($editor) {
+-  $library = $editor['library path'] . '/VERSION.txt';
++  $library = $editor['library path'] . '/package.json';
+   if (!file_exists($library)) {
+     return;
+   }
+   $library = fopen($library, 'r');
+-  $max_lines = 1;
++  $max_lines = 3;
+   while ($max_lines && $line = fgets($library, 60)) {
+-    if (preg_match('@^([0-9\._-]+)@', $line, $version)) {
++    if (preg_match('@"version"\: "([0-9\._-]+)",@', $line, $version)) {
+       fclose($library);
+       return $version[1];
+     }
+@@ -96,6 +71,16 @@ function wysiwyg_aloha_version($editor) {
+  */
+ function wysiwyg_aloha_load($editor, $library) {
+   drupal_add_css($editor['library path'] . '/css/aloha.css');
++  // It appears that it is impossible to have 2 instances with different controls,
++  // as we need this information before aloha loads
++  $data = "Aloha = window.Aloha || {};";
++  $data .= "Aloha.settings = {";
++  $data .= "  'baseUrl': '/" . wysiwyg_get_path('aloha') . "/aloha/lib',";
++  $data .= "  'plugins': {";
++  $data .= "    'load': 'common/format, common/table, common/list, common/link'";
++  $data .= "  }";
++  $data .= "}";
++  drupal_add_js($data, array('type' => 'inline', 'group' => JS_LIBRARY, 'weight' => JS_LIBRARY));
+ }
+ 
+ /**
+@@ -114,9 +99,8 @@ function wysiwyg_aloha_load($editor, $library) {
+  */
+ function wysiwyg_aloha_settings($editor, $config, $theme) {
+   $settings = array(
+-    'base' => $editor['library path'] . '/',
++    'baseUrl' => base_path() . $editor['library path'] . '/lib',
+     'ribbon' => FALSE,
+-    /*
+     'logLevels' => array(
+       'error' => TRUE,
+       'warn' => TRUE,
+@@ -124,21 +108,9 @@ function wysiwyg_aloha_settings($editor, $config, $theme) {
+       'debug' => FALSE,
+     ),
+     'errorhandling' => FALSE,
+-    'i18n' => array(
+-      'acceptLanguage' => $_SERVER['HTTP_ACCEPT_LANGUAGE']
+-    ),
+-    */
+     'plugins' => array(
+-    // @todo Doesn't belong here.
+-      'com.gentics.aloha.plugins.Link' => array(
+-        'targetregex' => "^(?!.*" . $GLOBALS['base_url'] . ").*",
+-        'target' => '_blank',
+-        'cssclassregex' => "^(?!.*" . $GLOBALS['base_url'] . ").*",
+-        'cssclass' => 'external',
+-      ),
+-      'com.gentics.aloha.plugins.Table' => array(
+-        'config' => array('table'),
+-      ),
++      // @todo: This doesn't really do anything, @see wysiwyg_aloha_load().
++      'load' => 'common/format, common/table, common/list, common/link',
+     ),
+   );
+ 
+diff --git a/editors/js/aloha.js b/editors/js/aloha.js
+index d3a4c0e..1a0c62b 100644
+--- a/editors/js/aloha.js
++++ b/editors/js/aloha.js
+@@ -1,16 +1,28 @@
+ (function($) {
++/**
++ * Rather dirty hack to get the plugins to be loaded in the correct
++ * attribute in a script tag.
++ * Aloha doesn't seem to care what script tag, but placing it on any
++ * random tag causes undefined errors.
++ * Also, for some reason, using the data method doesn't work.
++ */
++$(function() {
++  $('script').eq(0).attr('data-aloha-plugins', Aloha.settings.plugins.load);
++});
+ 
+ /**
+  * Attach this editor to a target element.
+  */
+ Drupal.wysiwyg.editor.attach.aloha = function(context, params, settings) {
+   // Setup configuration.
+-  GENTICS.Aloha.settings = settings;
+-
+-  // @todo Convert textarea into DIV.
++  settings.jQuery = $;
++  Aloha.settings = $.extend(Aloha.settings, settings);
++  // @todo: This is where we would want to reset the editor so it loads with the new settings.
+ 
+   // Attach editor.
+-  $('#' + params.field).aloha();
++  Aloha.ready(function() {
++    Aloha.jQuery('#' + params.field).aloha();
++  });
+ };
+ 
+ /**
+@@ -20,11 +32,11 @@ Drupal.wysiwyg.editor.attach.aloha = function(context, params, settings) {
+  */
+ Drupal.wysiwyg.editor.detach.aloha = function(context, params) {
+   if (typeof params != 'undefined') {
+-    $('#' + params.field).mahalo();
++    Aloha.jQuery('#' + params.field).mahalo();
+   }
+   else {
+     for (var e in GENTICS.Aloha.editables) {
+-      GENTICS.Aloha.editables[e].destroy();
++      window.Aloha.editables[e].destroy();
+     }
+   }
+ };
