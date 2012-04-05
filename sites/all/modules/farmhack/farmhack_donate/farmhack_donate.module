@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the FarmHack Donate feature.
+ */
+
+include_once 'farmhack_donate.features.inc';

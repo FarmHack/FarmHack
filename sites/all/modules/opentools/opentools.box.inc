@@ -10,7 +10,7 @@
 function opentools_default_box() {
   $export = array();
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'events_forum_title';
@@ -58,7 +58,7 @@ print "</div>";
   );
   $export['events_forum_title'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'events_wiki_title';
@@ -107,7 +107,7 @@ print "</div>";
   );
   $export['events_wiki_title'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'license';
@@ -123,7 +123,7 @@ print "</div>";
   );
   $export['license'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'opentools_tool_forum_title';
@@ -175,7 +175,7 @@ print "</div>";
   );
   $export['opentools_tool_forum_title'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'opentools_tool_wiki_title';
@@ -227,7 +227,7 @@ print "</div>";
   );
   $export['opentools_tool_wiki_title'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'tools_forum_title';
@@ -276,7 +276,7 @@ print "</div>";
   );
   $export['tools_forum_title'] = $box;
 
-  $box = new stdClass;
+  $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'tools_wiki_title';
