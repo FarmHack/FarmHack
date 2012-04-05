@@ -1,0 +1,43 @@
+<?php
+
+function farmhack_aloha_init() {
+  $path = arg(0) . '/' . arg(1) . '/' . arg(2);
+  if ($path == "node/add/wiki") {
+    drupal_add_css(drupal_get_path('module', 'farmhack_aloha') . '/css/farmhack_aloha.css');
+  }
+  
+}
+
+/*
+  if(arg(0) == 'node' && is_numeric(arg(1))) {
+      //$node = node_load(arg(1));
+      //dpm($node);
+      $wrapper = entity_metadata_wrapper('node', arg(1));
+      $wrapper->field_documentation->value();
+      $wrapper->field_documentation->set('value', 'The first file');
+      $wrapper->save();
+      $node = $wrapper->value();
+      dpm($node); 
+     
+     
+     /* 
+      if($node->type == "wiki" && count($node->field_documentation['und']) < 1) {
+        $node->field_documentation = array('und' => array('value' => 'new message'));
+        node_save($node);
+      }
+     */
+/*
+}
+}  
+
+/*
+function farmhack_aloha_entity_load($entities, $type) {
+  foreach($entities as $entity) {
+    if($type == 'node' && $entity->type == "wiki") {
+          $wrapper = entity_metadata_wrapper($type, $entity);
+          $wrapper->language('en')->field_documentation->value(array("You saved an entity!"));
+          $wrapper->save();
+      }
+  }
+}
+*/

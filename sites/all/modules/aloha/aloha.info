@@ -1,0 +1,5 @@
+name = Aloha Editor
+description = Allows you to edit content, with the Aloha Editor, without going to the edit page.
+package = User interface
+core = 7.x
+dependencies[] = libraries
