@@ -1,7 +1,7 @@
 
 /*
  * General Elements
- */
+*/
 
 .region {
   position: relative;
@@ -131,6 +131,23 @@ body.node-type-wiki .field-name-field-images {
 } 
 
 /*
+ * Forum topics
+ */
+
+.node-forum .field-name-field-images .field-item {
+  float:left;
+  padding: 3px;
+  margin: 3px;
+}
+
+.node-forum .field-name-field-images .even {
+  clear: left;
+}
+
+.node-forum .field-name-field-images {
+  float: right;
+}
+/*
  * Forum Topic Action links
  */
 #block-views-forum-topic-type-actions-block {
@@ -153,7 +170,6 @@ top: -25px;
 #block-views-41f811dfbd6ec4751785bc1d370afaf6 {
   margin-top: 66px;
 }
-
 /* 
  * They are messed up on Topic pages. Hide them.
  */
