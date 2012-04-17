@@ -14,7 +14,7 @@ font-size: 14px !important;
 #main-menu {
 position: absolute;
 top: 190px;
-z-index: 99999999;
+z-index: 2;
 }
 
 body.node-type-opentools-tool #featured {
