@@ -211,11 +211,11 @@ function opentools_context_default_contexts() {
           'region' => 'content',
           'weight' => '-10',
         ),
-        'views-opentools_wiki_images-block' => array(
-          'module' => 'views',
-          'delta' => 'opentools_wiki_images-block',
+        'boxes-opentools_node_editors' => array(
+          'module' => 'boxes',
+          'delta' => 'opentools_node_editors',
           'region' => 'content',
-          'weight' => '-9',
+          'weight' => '-10',
         ),
         'views-opentools_tool_wiki-block' => array(
           'module' => 'views',

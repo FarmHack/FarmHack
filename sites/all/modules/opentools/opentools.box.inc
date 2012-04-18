@@ -126,50 +126,57 @@ print "</div>";
   $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
+  $box->delta = 'opentools_node_editors';
+  $box->plugin_key = 'simple';
+  $box->title = '';
+  $box->description = 'Node Editors';
+  $box->options = array(
+    'body' => array(
+      'value' => '<?php
+
+$space = opentools_get_active_space();
+
+$nid = $space["wiki"];
+
+$query = "
+SELECT users.name AS users_name, users.uid AS uid, count(*) AS edits
+FROM 
+node
+LEFT JOIN node_revision ON node.nid = node_revision.nid
+LEFT JOIN users ON node_revision.uid = users.uid
+WHERE (( (users.status <> \'0\') AND (node.nid = \'" . $nid . "\' ) ))
+GROUP BY uid
+ORDER BY edits DESC;
+";
+
+$result = db_query($query);
+
+$output = "";
+
+foreach($result as $record) {
+  $output .= l($record->users_name, "user/" . $record->uid)  . " (" . $record->edits . " edits), ";
+}
+
+$output = substr($output, 0, strlen($output)-2);
+
+print "<strong>Wiki Editors</strong>: " . $output;
+
+?>',
+      'format' => 'php_code',
+    ),
+  );
+  $export['opentools_node_editors'] = $box;
+
+  $box = new stdClass();
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
   $box->delta = 'opentools_tool_forum_title';
   $box->plugin_key = 'simple';
   $box->title = '';
   $box->description = 'OpenTools Tool Forum Title';
   $box->options = array(
     'body' => array(
-      'value' => '<div class="tool-wiki-header title-strip">
-  <a name="wiki"></a>
-  <div class="tool-wiki-title">
-    Tool Forum
-  </div>
-  <div class="tool-wiki-subscription subscription-box">
-<?php
-global $user;
-$space = opentools_get_active_space();
-$tid = $space[\'forum\'];
-
-$query = "
-SELECT * FROM notifications_subscription 
-INNER JOIN notifications_subscription_fields 
-WHERE notifications_subscription.uid=" . $user->uid . " 
-AND notifications_subscription_fields.value = \'" . $tid . "\';";
-
-$results = db_query($query);
-$records = array();
-foreach($results as $record) {
-  $records[] = $record;
-}
-
-if(count($records) > 0) {
-$link = "/notifications/unsubscribe/" . $records[0]->sid . "?destination=" . current_path();
-print "<div class=\'subscribe-title\'>";
-print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'unsubscribe-text\'>Unsubscribe from Tool\'s Forum</div></a>";
-print "</div>";
-}
-else {
-$link = "/notifications/subscribe/taxonomy_term?0=" . $tid . "&destination=" . current_path();
-print "<div class=\'subscribe-title\'>";
-print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'subscribe-text\'>Subscribe to Tool\'s Forum</div></a>";
-print "</div>";
-}
-?>
-  </div>
-</div>',
+      'value' => '',
       'format' => 'php_code',
     ),
   );
