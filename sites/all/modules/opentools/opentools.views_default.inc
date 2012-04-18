@@ -2821,15 +2821,26 @@ return $nid;';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['group_rendered'] = 1;
   $handler->display->display_options['style_options']['columns'] = array(
+    'changed' => 'changed',
     'field_image_3' => 'field_image_3',
     'title' => 'title',
     'field_description' => 'field_description',
     'name_1' => 'name_1',
-    'name_2' => 'name_2',
-    'changed' => 'changed',
+    'field_tool_type' => 'field_tool_type',
+    'tid' => 'tid',
+    'php' => 'php',
+    'nid' => 'nid',
+    'php_1' => 'php_1',
   );
   $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_image_3' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
@@ -2858,16 +2869,35 @@ return $nid;';
       'separator' => '',
       'empty_column' => 0,
     ),
-    'name_2' => array(
-      'sortable' => 1,
+    'field_tool_type' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'tid' => array(
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'changed' => array(
+    'php' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'php_1' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -2896,6 +2926,11 @@ Do you know of a tool you would like to collaboratively research and develop wit
   $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['table'] = 'field_data_field_tool_to_wiki';
   $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['field'] = 'field_tool_to_wiki_target_id';
   $handler->display->display_options['relationships']['field_tool_to_wiki_target_id']['required'] = 0;
+  /* Relationship: Field: Forum (field_tool_to_forum) */
+  $handler->display->display_options['relationships']['field_tool_to_forum_tid']['id'] = 'field_tool_to_forum_tid';
+  $handler->display->display_options['relationships']['field_tool_to_forum_tid']['table'] = 'field_data_field_tool_to_forum';
+  $handler->display->display_options['relationships']['field_tool_to_forum_tid']['field'] = 'field_tool_to_forum_tid';
+  $handler->display->display_options['relationships']['field_tool_to_forum_tid']['required'] = 0;
   /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'node';
@@ -3040,6 +3075,148 @@ Do you know of a tool you would like to collaboratively research and develop wit
   $handler->display->display_options['fields']['field_tool_type']['delta_reversed'] = 0;
   $handler->display->display_options['fields']['field_tool_type']['delta_first_last'] = 0;
   $handler->display->display_options['fields']['field_tool_type']['field_api_classes'] = 0;
+  /* Field: Taxonomy term: Term ID */
+  $handler->display->display_options['fields']['tid']['id'] = 'tid';
+  $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['tid']['field'] = 'tid';
+  $handler->display->display_options['fields']['tid']['relationship'] = 'field_tool_to_forum_tid';
+  $handler->display->display_options['fields']['tid']['label'] = 'Forum ID';
+  $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['tid']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['tid']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['tid']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['tid']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['tid']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['tid']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['tid']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['tid']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['tid']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['tid']['format_plural'] = 0;
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = '# of Topics';
+  $handler->display->display_options['fields']['php']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['php']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['php']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['php']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['php']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['php']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['php']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['php']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_value'] = '// dpm($row);
+
+$query = "SELECT count(*) as count
+FROM 
+node
+INNER JOIN field_data_taxonomy_forums ON node.nid = field_data_taxonomy_forums.entity_id 
+WHERE field_data_taxonomy_forums.taxonomy_forums_tid = \'" . $row->tid . "\'
+";
+
+// dpm($query);
+
+$results = db_query($query);
+
+// dpm($results);
+
+foreach ($results as $result) {
+  // dpm($result);
+}
+
+return $result->count;
+';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['relationship'] = 'field_tool_to_wiki_target_id';
+  $handler->display->display_options['fields']['nid']['label'] = 'Wiki Nid';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['nid']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['nid']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php_1']['id'] = 'php_1';
+  $handler->display->display_options['fields']['php_1']['table'] = 'views';
+  $handler->display->display_options['fields']['php_1']['field'] = 'php';
+  $handler->display->display_options['fields']['php_1']['label'] = '# of Wiki Edits';
+  $handler->display->display_options['fields']['php_1']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['php_1']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['php_1']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['php_1']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['php_1']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['php_1']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['php_1']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['php_1']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['php_1']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['php_1']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php_1']['php_value'] = '// dpm($row);
+
+$query = "SELECT count(*) as count
+FROM 
+node
+INNER JOIN node_revision ON node.nid = node_revision.nid 
+WHERE node.nid = \'" . $row->nid . "\'
+";
+
+// dpm($query);
+
+$results = db_query($query);
+
+// dpm($results);
+
+foreach ($results as $result) {
+  // dpm($result);
+}
+
+return $result->count;
+';
+  $handler->display->display_options['fields']['php_1']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php_1']['php_click_sortable'] = '';
   /* Sort criterion: Content: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
   $handler->display->display_options['sorts']['changed']['table'] = 'node';
@@ -3074,6 +3251,20 @@ Do you know of a tool you would like to collaboratively research and develop wit
   $handler->display->display_options['filters']['field_tool_type_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_tool_type_tid']['vocabulary'] = 'tool_types';
   $handler->display->display_options['filters']['field_tool_type_tid']['error_message'] = 1;
+  /* Filter criterion: Field: Stage (field_tool_to_stage) */
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['id'] = 'field_tool_to_stage_tid';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['table'] = 'field_data_field_tool_to_stage';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['field'] = 'field_tool_to_stage_tid';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['expose']['operator_id'] = 'field_tool_to_stage_tid_op';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['expose']['label'] = 'Search by Tool Stage';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['expose']['operator'] = 'field_tool_to_stage_tid_op';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['expose']['identifier'] = 'field_tool_to_stage_tid';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['expose']['reduce'] = 0;
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['vocabulary'] = 'stages';
+  $handler->display->display_options['filters']['field_tool_to_stage_tid']['error_message'] = 1;
 
   /* Display: All Fields */
   $handler = $view->new_display('block', 'All Fields', 'block_1');
