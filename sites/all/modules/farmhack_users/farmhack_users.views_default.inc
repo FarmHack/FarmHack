@@ -118,6 +118,8 @@ function farmhack_users_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['autosubmit'] = 1;
+  $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = 1;
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -408,6 +410,20 @@ function farmhack_users_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'forum' => 'forum',
   );
+  /* Filter criterion: Content: Topic Type (field_forum_topic_type) */
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['id'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['table'] = 'field_data_field_forum_topic_type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['field'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['expose']['operator_id'] = 'field_forum_topic_type_tid_op';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['expose']['label'] = 'Topic Type';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['expose']['operator'] = 'field_forum_topic_type_tid_op';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['expose']['identifier'] = 'field_forum_topic_type_tid';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['expose']['reduce'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['reduce_duplicates'] = 0;
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['vocabulary'] = 'forum_topic_types';
+  $handler->display->display_options['filters']['field_forum_topic_type_tid']['error_message'] = 1;
 
   /* Display: User's Forum Topics */
   $handler = $view->new_display('block', 'User\'s Forum Topics', 'block');
@@ -458,11 +474,35 @@ function farmhack_users_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['group_rendered'] = 1;
   $handler->display->display_options['style_options']['columns'] = array(
-    'timestamp' => 'timestamp',
+    'timestamp_1' => 'timestamp_1',
     'title' => 'title',
+    'name' => 'name',
+    'timestamp' => 'timestamp',
+    'log' => 'log',
+    'title_1' => 'title_1',
+    'title_2' => 'title_2',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
+    'timestamp_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'timestamp' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
@@ -470,7 +510,19 @@ function farmhack_users_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'title' => array(
+    'log' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title_1' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title_2' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
