@@ -176,7 +176,44 @@ print "<strong>Wiki Editors</strong>: " . $output;
   $box->description = 'OpenTools Tool Forum Title';
   $box->options = array(
     'body' => array(
-      'value' => '',
+      'value' => '<div class="tool-wiki-header title-strip">
+  <a name="wiki"></a>
+  <div class="tool-wiki-title">
+    Tool Forum
+  </div>
+  <div class="tool-wiki-subscription subscription-box">
+<?php
+global $user;
+$space = opentools_get_active_space();
+$tid = $space[\'forum\'];
+
+$query = "
+SELECT * FROM notifications_subscription 
+INNER JOIN notifications_subscription_fields 
+WHERE notifications_subscription.uid=" . $user->uid . " 
+AND notifications_subscription_fields.value = \'" . $tid . "\';";
+
+$results = db_query($query);
+$records = array();
+foreach($results as $record) {
+  $records[] = $record;
+}
+
+if(count($records) > 0) {
+$link = "/notifications/unsubscribe/" . $records[0]->sid . "?destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'unsubscribe-text\'>Unsubscribe from Tool\'s Forum</div></a>";
+print "</div>";
+}
+else {
+$link = "/notifications/subscribe/taxonomy_term?0=" . $tid . "&destination=" . current_path();
+print "<div class=\'subscribe-title\'>";
+print "<a href=\'$link\'><img src=\'/sites/all/modules/opentools/images/mail-250-white.png\' width=\'70\'><div class=\'subscribe-text\'>Subscribe to Tool\'s Forum</div></a>";
+print "</div>";
+}
+?>
+  </div>
+</div>',
       'format' => 'php_code',
     ),
   );
