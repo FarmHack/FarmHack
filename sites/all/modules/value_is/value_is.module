@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * All the element validators for #element_validate.
+ *
+ * To do:
+ * * Web address (http/https)
+ */
+
+/**
+ * Checks for valid (and optionally existing) user name.
+ */
+function value_is_username($element, &$form_state, $form) {
+  $value = $element['#value'];
+
+  if ('' != $value) {
+    $must_exist = !empty($element['#exists']);
+
+    if ($must_exist) {
+      $field = isset($element['#field']) ? $element['#field'] : 'name';
+
+      $query = db_select('users', 'u');
+      $query->addExpression('COUNT(1)', 'num');
+      $query->condition($field, $value);
+
+      $exists = (int) $query->execute()->fetchField();
+
+      if (!$exists) {
+        $params = array('%title' => $element['#title']);
+        $message = t('%title must contain an existing user name.', $params);
+        return form_error($element, $message);
+      }
+    }
+    else {
+      $error = user_validate_name($value);
+      if ($error) {
+        return form_error($element, $error);
+      }
+    }
+  }
+}
+
+/**
+ * Checks for e-mail address(es).
+ */
+function value_is_email($element, &$form_state, $form) {
+  $value = $element['#value'];
+
+  if ('' != $value) {
+    // Default is just 1 address.
+    $max = isset($element['#max']) ? (int) $element['#max'] : 1;
+    // The input will be validated as if it were an array.
+    $addresses = explode(',', $value);
+
+    // Too many.
+    if ($max < count($addresses)) {
+      $params = array('%title' => $element['#title'], '@max' => $max);
+      $message = t('%title can contain max @max e-mail addresses.', $params);
+      return form_error($element, $message);
+    }
+
+    // Validate per address.
+    foreach ($addresses as $address) {
+      if (!valid_email_address(trim($address))) {
+        $params = array('%title' => $element['#title']);
+        $message = 1 < $max ?
+          t('%title must be a comma separated list of valid e-mail addresses.', $params) :
+          t('%title must be a valid e-mail address', $params);
+        return form_error($element, $message);
+      }
+    }
+  }
+}
+
+
+/**
+ * Helper: integer.
+ */
+function _value_is_integer($value) {
+  return (string) $value === (string) (int) $value;
+}
+
+/**
+ * Checks for integer (non floating point number).
+ */
+function value_is_integer($element, &$form_state, $form) {
+  $value = $element['#value'];
+
+  // Not even close.
+  if (!_value_is_integer($value)) {
+    return form_error($element, t('Only numbers are allowed in %field.', array(
+      '%field' => $element['#title'],
+    )));
+  }
+
+  // Too low.
+  if (isset($element['#min']) && $value < $element['#min']) {
+    return form_error($element, t('%name: the value may be no less than %min.', array(
+      '%name' => $element['#title'],
+      '%min' => $element['#min'],
+    )));
+  }
+
+  // Too high.
+  if (isset($element['#max']) && $value > $element['#max']) {
+    return form_error($element, t('%name: the value may be no greater than %max.', array(
+      '%name' => $element['#title'],
+      '%max' => $element['#max'],
+    )));
+  }
+
+  // Cast input value to an Int.
+  form_set_value($element, (int) $value, $form_state);
+}
+
+
+/**
+ * Helper: float.
+ */
+function _value_is_number(&$value) {
+  $value = str_replace(',', '.', $value);
+  return is_numeric($value);
+}
+
+/**
+ * Checks for number (floating point number).
+ */
+function value_is_number(&$element, &$form_state, $form) {
+  $value = $element['#value'];
+
+  // Not even close.
+  if (!_value_is_number($value)) {
+    return form_error($element, t('Only numbers and the decimal separator are allowed in %field.', array(
+      '%field' => $element['#title'],
+    )));
+  }
+
+  // Too low.
+  if (isset($element['#min']) && $value < $element['#min']) {
+    return form_error($element, t('%name: the value may be no less than %min.', array(
+      '%name' => $element['#title'],
+      '%min' => $element['#min'],
+    )));
+  }
+
+  // Too high.
+  if (isset($element['#max']) && $value > $element['#max']) {
+    return form_error($element, t('%name: the value may be no greater than %max.', array(
+      '%name' => $element['#title'],
+      '%max' => $element['#max'],
+    )));
+  }
+
+  // Cast input value to a Float.
+  form_set_value($element, (float) $value, $form_state);
+}

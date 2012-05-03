@@ -1,0 +1,10 @@
+name = Value is (form element validators)
+description = Adds functions to use in #element_validate in elements in custom forms
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-03-28
+version = "7.x-1.1"
+core = "7.x"
+project = "value_is"
+datestamp = "1332970260"
+

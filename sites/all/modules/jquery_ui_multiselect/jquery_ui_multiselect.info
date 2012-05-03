@@ -1,0 +1,7 @@
+name = jQuery UI Multiselect
+description = Integrates the jQuery UI Multiselect plugin with existing list widgets.
+package = User interface
+core = 7.x
+
+dependencies[] = jquery_update
+dependencies[] = value_is

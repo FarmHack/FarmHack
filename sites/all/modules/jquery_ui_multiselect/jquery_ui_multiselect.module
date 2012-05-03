@@ -1,0 +1,193 @@
+<?php
+
+/**
+ * @file
+ * Integrates the jQuery UI Multiselect plugin with existing list widgets.
+ */
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function jquery_ui_multiselect_field_info_alter(&$info) {
+  $supported_fields = array('list_float', 'list_integer', 'list_text', 'taxonomy_term_reference');
+  // TODO: Support Entity reference, node reference, user reference fields.
+  
+  foreach ($supported_fields as $field) {
+    if (isset($info[$field])) {
+      // Add a widget toggle to the field instance settings.
+      $info[$field]['instance_settings']['jquery_ui_multiselect'] = array(
+        'enabled' => 0,
+        'sortable' => 1,
+        'dragToAdd' => 1, // Requires fork crdeutsch/multiselect.
+        'searchable' => 1,
+        'doubleClickable' => 1,
+        'includeRemoveAll' => 1, // Requires fork crdeutsch/multiselect.
+        'includeAddAll' => 1, // Requires fork crdeutsch/multiselect.
+        'selectedContainerOnLeft' => 1, // Requires fork crdeutsch/multiselect.
+        'dividerLocation' => 0.5,
+        'width' => 0, // Requires fork crdeutsch/multiselect.
+        'height' => 0, // Requires fork crdeutsch/multiselect.
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds a toggle for enabling/disabling jQuery UI Multiselect.
+ */
+function jquery_ui_multiselect_form_field_ui_field_edit_form_alter(&$form, $form_state) {
+  // If the field instance has the jQuery UI Multiselect setting.
+  if (isset($form['#instance']['settings']['jquery_ui_multiselect'])) {
+    // Build the setting's form.
+    $form['instance']['settings']['jquery_ui_multiselect'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('jQuery UI Multiselect'),
+      '#tree' => TRUE,
+      '#collapsible' => TRUE,
+      '#collapsed' => isset($form['#instance']['settings']['jquery_ui_multiselect']['enabled']) ? !$form['#instance']['settings']['jquery_ui_multiselect']['enabled'] : 1, // Collapse by default only when multiselect is disabled.
+      '#weight' => 10,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use jQuery UI Multiselect'),
+      '#description' => t("When enabled, the regular select list gets replaced by the jQuery UI Multiselect widget. Note that the widget will only show up if the field's <em>Number of values</em> setting is greater than 1."),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['enabled']) ? $form['#instance']['settings']['jquery_ui_multiselect']['enabled'] : 0,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['sortable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Sortable'),
+      '#description' => t('When enabled, selected items can be ordered.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['sortable']) ? $form['#instance']['settings']['jquery_ui_multiselect']['sortable'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['dragToAdd'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Drag to select'),
+      '#description' => t('When enabled, items can be dragged and dropped into the selected list. This only works when <em>Sortable</em> is also enabled.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['dragToAdd']) ? $form['#instance']['settings']['jquery_ui_multiselect']['dragToAdd'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['searchable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Searchable'),
+      '#description' => t('When enabled, the available items can be searched.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['searchable']) ? $form['#instance']['settings']['jquery_ui_multiselect']['searchable'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['doubleClickable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Double-clickable'),
+      '#description' => t('When enabled, items can be selected or deselected by double-clicking.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['doubleClickable']) ? $form['#instance']['settings']['jquery_ui_multiselect']['doubleClickable'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['includeRemoveAll'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Provide "remove all" link'),
+      '#description' => t('When enabled, a link will be provided to empty the current selection.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['includeRemoveAll']) ? $form['#instance']['settings']['jquery_ui_multiselect']['includeRemoveAll'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['includeAddAll'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Provide "add all" link'),
+      '#description' => t('When enabled, a link will be provided to select all available items.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['includeAddAll']) ? $form['#instance']['settings']['jquery_ui_multiselect']['includeAddAll'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['selectedContainerOnLeft'] = array(
+      '#type' => 'radios',
+      '#options' => array(1 => t('Left'), 0 => t('Right')),
+      '#title' => t('Location of the selected list'),
+      '#description' => t('Location of the selected list with respect to the available list.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['selectedContainerOnLeft']) ? $form['#instance']['settings']['jquery_ui_multiselect']['selectedContainerOnLeft'] : 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['dividerLocation'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Divider location'),
+      '#description' => t('Position of the divider separating the selected list from the available list. This must be a value between 0 and 1.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['dividerLocation']) ? $form['#instance']['settings']['jquery_ui_multiselect']['dividerLocation'] : 0.6,
+      '#size' => 6,
+      '#maxlength' => 4,
+      '#element_validate' => array('value_is_number'),
+      '#min' => 0,
+      '#max' => 1,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['width'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Width'),
+      '#field_suffix' => 'px',
+      '#description' => t('Width of the widget. If zero, it will default to the same width as the regular list.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['width']) ? $form['#instance']['settings']['jquery_ui_multiselect']['width'] : 0,
+      '#size' => 6,
+      '#maxlength' => 5,
+      '#element_validate' => array('value_is_integer'),
+      '#min' => 0,
+    );
+    $form['instance']['settings']['jquery_ui_multiselect']['height'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Height'),
+      '#field_suffix' => 'px',
+      '#description' => t('Height of the widget. If zero, it will default to the same height as the regular list.'),
+      '#default_value' => isset($form['#instance']['settings']['jquery_ui_multiselect']['height']) ? $form['#instance']['settings']['jquery_ui_multiselect']['height'] : 0,
+      '#size' => 6,
+      '#maxlength' => 5,
+      '#element_validate' => array('value_is_integer'),
+      '#min' => 0,
+    );
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Injects the JavaScript needed to attach jQuery UI Multiselect to the widget.
+ */
+function jquery_ui_multiselect_field_widget_options_select_form_alter(&$element, &$form_state, $context) {
+  if (isset($context['instance']['settings']['jquery_ui_multiselect']['enabled']) && $context['instance']['settings']['jquery_ui_multiselect']['enabled'] && $context['field']['cardinality'] != 1) {
+    $element['#attached']['library'][] = array('jquery_ui_multiselect', 'jquery_ui_multiselect');
+    $element['#attributes']['class'][] = 'jquery-ui-multiselect';
+
+    // Re-order the form element's options to preserve the selection order.
+    $options = array();
+    foreach ($context['items'] as $item) {
+      foreach ($item as $value) {
+        // Note: Casting as string to avoid numerical ordering of array keys.
+        $options[(string)$value] = $element['#options'][$value];
+        unset($element['#options'][$value]);
+      }
+    }
+    $element['#options'] = $options + $element['#options'];
+
+    // Prepare settings to pass on to JS.
+    $settings = $context['instance']['settings']['jquery_ui_multiselect'];
+    // Remove settings that should not be passed on to JS.
+    unset($settings['enabled']);
+    // Make sure that boolean values are typed as boolean.
+    foreach (array('sortable', 'dragToAdd', 'searchable', 'doubleClickable', 'includeRemoveAll', 'includeAddAll', 'selectedContainerOnLeft') as $key) {
+      $settings[$key] = (bool)$settings[$key];
+    }
+    // Store settings in a data- attribute for convenient retrieval.
+    $element['#attributes']['data-jquery-ui-multiselect'] = drupal_json_encode($settings);
+  }
+}
+
+/**
+ * Implements hook_library().
+ *
+ * Makes the jQuery UI Multiselect library available to other modules.
+ */
+function jquery_ui_multiselect_library() {
+  $libraries['jquery_ui_multiselect'] = array(
+    'title' => 'jQuery UI Multiselect',
+    'website' => 'http://quasipartikel.at/multiselect/',
+    'version' => '0.3',
+    'js' => array(
+      libraries_get_path('jquery_ui_multiselect') . '/js/ui.multiselect.js' => array(),
+      drupal_get_path('module', 'jquery_ui_multiselect') .'/js/jquery_ui_multiselect.js' => array(),
+    ),
+    'css' => array(
+      libraries_get_path('jquery_ui_multiselect') . '/css/ui.multiselect.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  return $libraries;
+}
