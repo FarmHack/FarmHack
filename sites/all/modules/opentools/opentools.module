@@ -38,6 +38,11 @@ function opentools_init() {
   if($_GET['q'] == 'node/add/wiki') {
     drupal_set_message("You are creating a loose Wiki page that nothing links to.  You will need to link to this Wiki page from somewhere after you save it if you want anyone to find it.", 'warning');
    }
+   $context = opentools_get_context();
+   if(arg(0) == 'node' && arg(2) == 'edit' && $context['opentools_space']['id']) {
+     drupal_set_message("Consider <a href='http://sandbox.sb/notifications/subscribe/taxonomy_term?0=" . $context['opentools_space']['forum'] . "&destination=" . $_GET['q'] . "'> subscribing to this forum</a> in case anyone wants to discuss your edit with you.", 'warning');
+   }
+
 }
 
 function opentools_node_presave($node){
