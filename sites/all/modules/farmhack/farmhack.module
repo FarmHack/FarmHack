@@ -7,18 +7,9 @@
 include_once 'farmhack.features.inc';
 
 function farmhack_init() {
-  dsm("yar");
-  drupal_add_js('alert("bar");', 'inline');
-  watchdog("Yar", "Bar");
-
 
 }
 
 function farmhack_form_alter(&$form, &$form_state, $form_id) {
-  print($form_id);
-  dpm("ya");
-  if($form_id == "opentools_tool_node_form") {
-    drupal_add_js('setInterval(\'jQuery("#block-system-main").show()\', 250);', 'inline');
-  }
 
 }
