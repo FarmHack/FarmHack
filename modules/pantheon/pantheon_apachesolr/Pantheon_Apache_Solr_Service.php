@@ -62,7 +62,7 @@
  * methods for pinging, adding, deleting, committing, optimizing and searching.
  */
 
-class PantheonApacheSolrService {
+class PantheonApacheSolrService implements DrupalApacheSolrServiceInterface{
   /**
    * How NamedLists should be formatted in the output.  This specifically effects facet counts. Valid values
    * are 'map' (default) or 'flat'.
@@ -77,6 +77,7 @@ class PantheonApacheSolrService {
   const UPDATE_SERVLET = 'update';
   const SEARCH_SERVLET = 'select';
   const LUKE_SERVLET = 'admin/luke';
+  const SYSTEM_SERVLET = 'admin/system';
   const STATS_SERVLET = 'admin/stats.jsp';
 
   /**
@@ -102,6 +103,8 @@ class PantheonApacheSolrService {
   protected $env_id;
   protected $luke;
   protected $stats;
+  protected $system_info;
+
 
   /**
    * Call the /admin/ping servlet, to test the connection to the server.
@@ -135,6 +138,44 @@ class PantheonApacheSolrService {
   }
 
   /**
+   * Call the /admin/system servlet
+   *
+   * @return
+   *   (array) With all the system info
+   */
+  public function setSystemInfo() {
+    $url = $this->_constructUrl(self::SYSTEM_SERVLET, array('wt' => 'json'));
+    if ($this->env_id) {
+      $this->system_info_cid = $this->env_id . ":system:" . drupal_hash_base64($url);
+      $cache = cache_get($this->system_info_cid, 'cache_apachesolr');
+      if (isset($cache->data)) {
+        $this->system_info = json_decode($cache->data);
+      }
+    }
+    // Second pass to populate the cache if necessary.
+    if (empty($this->system_info)) {
+      $response = $this->_sendRawGet($url);
+      $this->system_info = json_decode($response->data);
+      if ($this->env_id) {
+        cache_set($this->system_info_cid, $response->data, 'cache_apachesolr');
+      }
+    }
+  }
+
+  /**
+   * Get information about the Solr Core.
+   *
+   * @return
+   *   (string) system info encoded in json
+   */
+  public function getSystemInfo() {
+    if (!isset($this->system_info)) {
+      $this->setSystemInfo();
+    }
+    return $this->system_info;
+  }
+
+  /**
    * Sets $this->luke with the meta-data about the index from admin/luke.
    */
   protected function setLuke($num_terms = 0) {
@@ -157,27 +198,21 @@ class PantheonApacheSolrService {
     }
   }
 
- /**
+  /**
    * Get just the field meta-data about the index.
    */
   public function getFields($num_terms = 0) {
-    $facets = variable_get('apachesolr_enabled_facets', array('apachesolr_search' => array('content' => 1)));
-    return (object) $facets['apachesolr_search'];
-    // return $this->getLuke($num_terms)->fields;
+    return $this->getLuke($num_terms)->fields;
   }
 
   /**
    * Get meta-data about the index.
-   *
-   * Can we construct this synthetically?
    */
   public function getLuke($num_terms = 0) {
-    $luke = array(
-      'index' => array(
-        'numDocs' => 10, // toootaly fake
-      ),
-    );
-    return (object) $luke;
+    if (!isset($this->luke[$num_terms])) {
+      $this->setLuke($num_terms);
+    }
+    return $this->luke[$num_terms];
   }
 
   /**
@@ -294,12 +329,15 @@ class PantheonApacheSolrService {
     $this->env_id = $env_id;
 
     // Pantheon-specific URL settings.
-    // Note: we don't pass a port or https at this time, because the parent
-    // SolrPHPClient library assumes http. This data is added later in the
-    // _makeHttpRequest() method.
-    $host = variable_get('apachesolr_host', 'index.getpantheon.com');
-    $path = variable_get('apachesolr_path', 'sites/self/environments/dev/index');
-    $url = 'http://'. $host .'/'. $path;
+    // Note: we don't pass a port at this time, because the parent This data
+    // is added later in the _makeHttpRequest() method.
+    // TODO: get $host from variable_get('pantheon_hyperion_host', 'index.live.getpantheon.com')
+    $host = variable_get('pantheon_hyperion_host', FALSE);
+    if (!$host) {
+      $host = 'index.'. variable_get('pantheon_tier', 'live') .'.getpantheon.com';
+    }
+    $path = 'sites/self/environments/'. variable_get('pantheon_environment', 'dev') .'/index';
+    $url = 'https://'. $host .'/'. $path;
 
 
     $this->setUrl($url);
@@ -318,7 +356,7 @@ class PantheonApacheSolrService {
   }
 
   /**
-   * Check the reponse code and thow an exception if it's not 200.
+   * Check the response code and throw an exception if it's not 200.
    *
    * @param stdClass $response
    *   response object.
@@ -371,7 +409,20 @@ class PantheonApacheSolrService {
    * Central method for making a GET operation against this Solr Server
    */
   protected function _sendRawGet($url, $options = array()) {
-    $response = $this->_makeHttpRequest($url, $options);
+    $cache_id = hash('sha1', $url);
+
+    # Check if this query is cached
+    $query_cache = cache_get($cache_id, 'solr_query_cache');
+    if (!$query_cache) {
+      $response = $this->_makeHttpRequest($url, $options);
+
+      // Solr query cache expiration in second(s)
+      $solr_cache_ttl = REQUEST_TIME + variable_get('solr_cache_ttl', 15);
+      cache_set($cache_id, $response, 'solr_query_cache', $solr_cache_ttl);
+    }
+    else {
+      $response = $query_cache->data;
+    }
     return $this->checkResponse($response);
   }
 
@@ -396,35 +447,34 @@ class PantheonApacheSolrService {
   protected function _makeHttpRequest($url, $options = array()) {
     // Hacking starts here.
     // $result = drupal_http_request($url, $headers, $method, $content);
-    $client_cert = '/etc/pantheon/system.pem';
-    $port = variable_get('apachesolr_port', '443');
-    $ch = curl_init();
-    // Janktastic, but the parent PHPSolrClient library assumes http
-    if (strpos($url, 'index.getpantheon.com') !== FALSE) {
-      $url = str_replace('http://', 'https://', $url);
+    static $ch;
+    $client_cert = '../certs/binding.pem';
+    $port = 449;
+
+    if (!isset($ch)) {
+      $ch = curl_init();
+
+      // The parent PHPSolrClient library assumes http
+      // $url = str_replace('http://', 'https://', $url);
+
+      // These options only need to be set once
       curl_setopt($ch, CURLOPT_SSLCERT, $client_cert);
+      $opts = pantheon_apachesolr_curlopts();
+      $opts[CURLOPT_PORT] = $port;
+      curl_setopt_array($ch, $opts);
     }
+    curl_setopt($ch, CURLOPT_URL, $url);
 
-    // set URL and other appropriate options
-    $opts = array(
-      CURLOPT_URL => $url,
-      CURLOPT_HEADER => 1,
-      CURLOPT_PORT => $port,
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_HTTPHEADER => array('Content-type:text/xml; charset=utf-8', 'Expect:'),
-    );
-    curl_setopt_array($ch, $opts);
-
-    // If we are doing a delete request...
+    // If we are doing a DELETE request...
     if (isset($options['method'])) {
       if ($options['method'] == 'DELETE') {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
       }
-      // If we are doing a put request...
+      // If we are doing a PUT request...
       if ($options['method'] == 'PUT') {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
       }
-      // If we are doing a put request...
+      // If we are doing a POST request...
       if ($options['method'] == 'POST') {
         curl_setopt($ch, CURLOPT_POST, 1);
       }
@@ -441,6 +491,7 @@ class PantheonApacheSolrService {
     }
     else {
       // mimick the $result object from drupal_http_request()
+      // TODO; better error handling
       $result = new stdClass();
       list($split, $result->data) = explode("\r\n\r\n", $response, 2);
       $split = preg_split("/\r\n|\n|\r/", $split);
@@ -583,6 +634,9 @@ class PantheonApacheSolrService {
 
     if (!isset($parsed_url['user'])) {
       $parsed_url['user'] = '';
+    }
+    else {
+      $parsed_url['host'] = '@' . $parsed_url['host'];
     }
     $parsed_url['pass'] = isset($parsed_url['pass']) ? ':' . $parsed_url['pass'] : '';
     $parsed_url['port'] = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
@@ -774,6 +828,15 @@ class PantheonApacheSolrService {
       }
       else {
         $params[] = $key . '=' . rawurlencode($value);
+        if ($key == 'hl.fl') {
+          $params[] = 'hl=true';
+          $params[] = 'hl.simple.pre=' . rawurlencode('<strong>');
+          $params[] = 'hl.simple.post=' . rawurlencode('</strong>');
+          $params[] = 'hl.snippets=3';
+          $params[] = 'f.content.hl.alternateField=teaser';
+          $params[] = 'f.content.hl.maxAlternateFieldLength=256';
+          //$params[] = 'f.content.hl.fragmenter=regex';
+        }
       }
     }
 
@@ -790,7 +853,7 @@ class PantheonApacheSolrService {
    *
    * @throws Exception If an error occurs during the service call
    */
-  public function search($query = '', $params = array(), $method = 'GET') {
+  public function search($query = '', array $params = array(), $method = 'GET') {
     if (!is_array($params)) {
       $params = array();
     }
@@ -819,7 +882,7 @@ class PantheonApacheSolrService {
     else if ($method == 'POST') {
       $searchUrl = $this->_constructUrl(self::SEARCH_SERVLET);
       $options['data'] = $queryString;
-      $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
+      $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
       return $this->_sendRawPost($searchUrl, $options);
     }
     else {
