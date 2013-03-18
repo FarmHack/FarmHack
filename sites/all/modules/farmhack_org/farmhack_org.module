@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the FarmHack Org feature.
+ */
+
+include_once 'farmhack_org.features.inc';
