@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the FarmHack Open Shops feature.
+ */
+
+include_once 'farmhack_open_shops.features.inc';
