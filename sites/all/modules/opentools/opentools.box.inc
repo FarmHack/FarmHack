@@ -177,7 +177,7 @@ print "<strong>Wiki Editors</strong>: " . $output;
   $box->options = array(
     'body' => array(
       'value' => '<div class="tool-wiki-header title-strip">
-  <a name="wiki"></a>
+  <a name="forum"></a>
   <div class="tool-wiki-title">
     Tool Forum
   </div>
@@ -216,6 +216,7 @@ print "</div>";
 </div>',
       'format' => 'php_code',
     ),
+    'additional_classes' => '',
   );
   $export['opentools_tool_forum_title'] = $box;
 

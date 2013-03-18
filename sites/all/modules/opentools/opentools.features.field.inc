@@ -78,7 +78,7 @@ function opentools_field_default_fields() {
           'rows' => '5',
         ),
         'type' => 'text_textarea',
-        'weight' => '3',
+        'weight' => '4',
       ),
     ),
   );
@@ -148,6 +148,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -160,11 +161,100 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => 'image',
+          'insert_styles' => array(
+            'auto' => 'auto',
+            'image' => 0,
+            'image_300x300' => 0,
+            'image_icon' => 0,
+            'image_large' => 0,
+            'image_medium' => 0,
+            'image_thumbnail' => 0,
+            'link' => 0,
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
         'type' => 'image_image',
-        'weight' => '2',
+        'weight' => '3',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-opentools_tool-field_sandbox'
+  $fields['node-opentools_tool-field_sandbox'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_sandbox',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => '',
+          1 => '',
+        ),
+        'allowed_values_function' => '',
+        'profile2_private' => FALSE,
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'opentools_tool',
+      'default_value' => array(
+        0 => array(
+          'value' => 0,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 8,
+        ),
+        'notifications' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_sandbox',
+      'label' => 'Exclude from the Tools list.  This is "sandboxed".',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 1,
+        ),
+        'type' => 'options_onoff',
+        'weight' => 0,
       ),
     ),
   );
@@ -235,6 +325,19 @@ function opentools_field_default_fields() {
       'label' => 'Tags',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -245,7 +348,7 @@ function opentools_field_default_fields() {
           'size' => 60,
         ),
         'type' => 'taxonomy_autocomplete',
-        'weight' => '1',
+        'weight' => '2',
       ),
     ),
   );
@@ -314,6 +417,19 @@ function opentools_field_default_fields() {
       'label' => 'Forum',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -321,7 +437,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -393,6 +509,19 @@ function opentools_field_default_fields() {
       'label' => 'Stage',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -400,7 +529,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '6',
+        'weight' => '7',
       ),
     ),
   );
@@ -416,9 +545,8 @@ function opentools_field_default_fields() {
       'foreign keys' => array(),
       'global_block_settings' => '1',
       'indexes' => array(
-        'target_entity' => array(
-          0 => 'target_type',
-          1 => 'target_id',
+        'target_id' => array(
+          0 => 'target_id',
         ),
       ),
       'module' => 'entityreference',
@@ -482,7 +610,7 @@ function opentools_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'entityreference_autocomplete',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -526,7 +654,7 @@ function opentools_field_default_fields() {
       'bundle' => 'opentools_tool',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => 'To select multiple tool types, hold the "control" button and click on terms that apply.',
+      'description' => 'Select a tool type or many tools type by click the + buttons.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -552,6 +680,19 @@ function opentools_field_default_fields() {
       'label' => 'Type',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 0,
+          'dragToAdd' => 0,
+          'enabled' => 1,
+          'height' => 380,
+          'includeAddAll' => 0,
+          'includeRemoveAll' => 0,
+          'searchable' => 0,
+          'selectedContainerOnLeft' => '0',
+          'sortable' => 0,
+          'width' => 400,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -559,7 +700,7 @@ function opentools_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_select',
-        'weight' => '7',
+        'weight' => '8',
       ),
     ),
   );
@@ -702,6 +843,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 1,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -714,6 +856,20 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 1,
+          'insert_class' => '',
+          'insert_default' => 'image',
+          'insert_styles' => array(
+            'auto' => 'auto',
+            'image' => 'image',
+            'image_300x300' => 0,
+            'image_icon' => 0,
+            'image_large' => 0,
+            'image_medium' => 0,
+            'image_thumbnail' => 0,
+            'link' => 0,
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -789,6 +945,19 @@ function opentools_field_default_fields() {
       'label' => 'Tags',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -1139,6 +1308,19 @@ function opentools_field_default_fields() {
       'label' => 'Focus',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -1226,9 +1408,8 @@ function opentools_field_default_fields() {
       'foreign keys' => array(),
       'global_block_settings' => '1',
       'indexes' => array(
-        'target_entity' => array(
-          0 => 'target_type',
-          1 => 'target_id',
+        'target_id' => array(
+          0 => 'target_id',
         ),
       ),
       'module' => 'entityreference',
@@ -1337,6 +1518,19 @@ function opentools_field_default_fields() {
       'label' => 'Forum',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -1402,6 +1596,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1414,6 +1609,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -1576,6 +1780,7 @@ function opentools_field_default_fields() {
             'parent' => '0',
           ),
         ),
+        'profile2_private' => FALSE,
       ),
       'translatable' => '0',
       'type' => 'taxonomy_term_reference',
@@ -1599,6 +1804,19 @@ function opentools_field_default_fields() {
       'label' => 'Forum Section',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 1,
+          'height' => 500,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => '1',
+          'sortable' => 1,
+          'width' => 500,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -1664,6 +1882,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1676,6 +1895,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -1738,6 +1966,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1750,6 +1979,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -1812,6 +2050,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1824,6 +2063,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -1886,6 +2134,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1898,6 +2147,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -1970,6 +2228,7 @@ function opentools_field_default_fields() {
       'required' => 0,
       'settings' => array(
         'alt_field' => 0,
+        'default_image' => 0,
         'file_directory' => '',
         'file_extensions' => 'png gif jpg jpeg',
         'max_filesize' => '',
@@ -1982,6 +2241,15 @@ function opentools_field_default_fields() {
         'active' => 1,
         'module' => 'image',
         'settings' => array(
+          'insert' => 0,
+          'insert_class' => '',
+          'insert_default' => array(
+            0 => 'auto',
+          ),
+          'insert_styles' => array(
+            0 => 'auto',
+          ),
+          'insert_width' => '',
           'preview_image_style' => 'thumbnail',
           'progress_indicator' => 'throbber',
         ),
@@ -2050,6 +2318,19 @@ function opentools_field_default_fields() {
       'label' => 'Forum',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -2124,6 +2405,19 @@ function opentools_field_default_fields() {
       'label' => 'Origin',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -2194,6 +2488,19 @@ function opentools_field_default_fields() {
       'label' => 'Stage',
       'required' => FALSE,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -2216,9 +2523,8 @@ function opentools_field_default_fields() {
       'foreign keys' => array(),
       'global_block_settings' => '1',
       'indexes' => array(
-        'target_entity' => array(
-          0 => 'target_type',
-          1 => 'target_id',
+        'target_id' => array(
+          0 => 'target_id',
         ),
       ),
       'module' => 'entityreference',
@@ -2344,6 +2650,19 @@ function opentools_field_default_fields() {
       'label' => 'Tool type',
       'required' => 0,
       'settings' => array(
+        'jquery_ui_multiselect' => array(
+          'dividerLocation' => 0.5,
+          'doubleClickable' => 1,
+          'dragToAdd' => 1,
+          'enabled' => 0,
+          'height' => 0,
+          'includeAddAll' => 1,
+          'includeRemoveAll' => 1,
+          'searchable' => 1,
+          'selectedContainerOnLeft' => 1,
+          'sortable' => 1,
+          'width' => 0,
+        ),
         'user_register_form' => FALSE,
       ),
       'widget' => array(
@@ -2369,6 +2688,7 @@ function opentools_field_default_fields() {
   t('Compact Event Name/Location');
   t('Date and Time');
   t('Documentation');
+  t('Exclude from the Tools list.  This is "sandboxed".');
   t('Focus');
   t('Forum');
   t('Forum Section');
@@ -2377,10 +2697,10 @@ function opentools_field_default_fields() {
   t('Location');
   t('Origin');
   t('Season');
+  t('Select a tool type or many tools type by click the + buttons.');
   t('Short description');
   t('Stage');
   t('Tags');
-  t('To select multiple tool types, hold the "control" button and click on terms that apply.');
   t('Tool type');
   t('Two sentences describing what the tools does and the problem the tool is trying to solve.');
   t('Type');
