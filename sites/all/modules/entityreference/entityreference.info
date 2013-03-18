@@ -8,16 +8,24 @@ dependencies[] = ctools
 ; Migrate handler.
 files[] = entityreference.migrate.inc
 
-; Our default entity handler.
-files[] = entityreference.handler.inc
-files[] = handler/base.inc
+; Our plugins interfaces and abstract implementations.
+files[] = plugins/selection/abstract.inc
+files[] = plugins/selection/views.inc
+files[] = plugins/behavior/abstract.inc
+
+files[] = views/entityreference_plugin_display.inc
+files[] = views/entityreference_plugin_style.inc
+files[] = views/entityreference_plugin_row_fields.inc
 
 ; Tests.
 files[] = tests/entityreference.handlers.test
+files[] = tests/entityreference.taxonomy.test
+files[] = tests/entityreference.admin.test
+files[] = tests/entityreference.feeds.test
 
-; Information added by drupal.org packaging script on 2011-12-24
-version = "7.x-1.0-beta3"
+; Information added by drupal.org packaging script on 2013-02-01
+version = "7.x-1.0+4-dev"
 core = "7.x"
 project = "entityreference"
-datestamp = "1324748139"
+datestamp = "1359680274"
 
