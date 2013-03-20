@@ -1,5 +1,17 @@
 <?php
 
+// Remove WWW.
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && 
+  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
+  if ($_SERVER['HTTP_HOST'] == 'www.farmhack.net' || 
+      $_SERVER['HTTP_HOST'] == 'live.farmhack.gotpantheon.com') {
+    header('HTTP/1.0 301 Moved Permanently'); 
+    header('Location: http://farmhack.net'. $_SERVER['REQUEST_URI']); 
+    exit();
+  }
+}
+
+
 /**
  * @file
  * Drupal site-specific configuration file.
