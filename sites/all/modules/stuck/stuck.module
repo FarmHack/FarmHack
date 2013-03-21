@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the stuck feature.
+ */
+
+include_once 'stuck.features.inc';
