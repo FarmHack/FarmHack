@@ -1,0 +1,38 @@
+<?php
+	
+	/**
+	* Implements hook_install().
+	*/
+	function ace_editor_install() {
+	
+		// Create a default text format to use with the editor.
+		$html_editor_format = new stdClass();
+		$html_editor_format->format = 'ace_editor';
+		$html_editor_format->name = 'Ace Editor';
+		$html_editor_format->status = 1;
+		$html_editor_format->weight = 100;
+		filter_format_save($html_editor_format);
+		
+		// Set the newly created text format to use the editor.
+		variable_set('ace_editor_filter_formats', array('ace_editor'));
+		
+		// Set the defaults to other variables.
+		variable_set('ace_editor_theme', 'dark');
+		variable_set('ace_editor_default_syntax', 'html');
+		variable_set('ace_editor_printmargin', false);
+		variable_set('ace_editor_fontsize', '10pt');
+	}
+	
+	/**
+	* Implements hook_install().
+	*/
+	function ace_editor_uninstall() {
+		
+		// Remove the associated variables.
+		variable_del('ace_editor_filter_formats');
+		variable_del('ace_editor_theme');
+		variable_del('ace_editor_default_syntax');
+		variable_del('ace_editor_printmargin');
+		variable_del('ace_editor_fontsize');
+	}
+	

@@ -1,0 +1,60 @@
+
+pre.ace_editor {
+	position: relative;
+	border: 1px solid #ccc;
+	border-bottom: 0;
+	margin: 0 0 0 0;
+	width: 100%;
+}
+
+div.ace-editor-controls {
+	height: 40px;
+	border: 1px solid #ccc;
+	border-top: 0;
+	background-color: #E8E8E8;
+}
+
+div.control {
+	float: left;
+	margin: 9px 20px 0 0;
+}
+
+div.control select {
+	border: 1px solid #9f9f9f;
+}
+
+div.control label, div.control input, div.control select {
+	display: inline;
+}
+
+input.show_hidden {
+	margin: 0 0 0 20px;
+}
+
+select.font_size {
+	width: 60px;
+	border: 1px solid #9f9f9f;
+}
+
+div.control label {
+	margin: 0 0 0 5px;
+	font-family: Monaco, "Menlo", "Courier New", monospace;
+	font-size: 9pt;
+	font-weight: normal;
+}
+
+div.info {
+	float: right;
+	margin: 9px 20px 0 0;
+}
+span.num-lines, a.key-bindings {
+	font-family: Monaco, "Menlo", "Courier New", monospace;
+	font-size: 9pt;
+	margin: 0 0 0 20px;
+	display: block;
+	float: left;
+}
+
+div.ace_print_margin {
+	background-color: #3f3f3f !important;
+}

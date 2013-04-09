@@ -1,0 +1,15 @@
+
+pre.ace_editor {
+	position: relative;
+	border: 1px solid #CCC;
+	background-color: white;
+}
+
+pre.ace-tm {
+	
+}
+
+div.ace_gutter-cell.ace_error,
+div.ace_gutter-cell.ace_warning {
+	background: none;
+}
