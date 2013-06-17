@@ -1,0 +1,397 @@
+<?php
+
+/**
+ * @file
+ * Basic functions for this module.
+ */
+
+/**
+ * Load the necessary include files.
+ */
+module_load_include('inc', 'google_analytics_counter', 'google_analytics_counter_settings');
+module_load_include('inc', 'google_analytics_counter', 'google_analytics_counter_data');
+module_load_include('inc', 'google_analytics_counter', 'google_analytics_counter_auth');
+
+/**
+ * Valid permissions for this module
+ * @return array An array of valid permissions for the test_module module
+ */
+function google_analytics_counter_permission() {
+  return array(
+    /* Perhaps for later:
+    'access google analytics counter' => array(
+      'title' => t('Access Google Analytics Counter'),
+      'description' => t('Set roles that may access the output of Google Analytics Counter.'),
+      ),
+    */
+  'administer google analytics counter' => array(
+    'title' => t('Administer Google Analytics Counter'),
+    'description' => t('Set roles that may access the settings of Google Analytics Counter.'),
+    ),
+  );
+}
+
+/**
+ * Display help and module information
+ * Implements hook_help().
+ * @param path which path of the site we're displaying help
+ * @param arg array that holds the current path as would be returned from arg() function
+ * @return help text for the path
+ */
+function google_analytics_counter_help($path, $arg) {
+  if ($path == 'admin/help#google_analytics_counter') {
+    //admin/modules#description
+    //admin/help/google_analytics_counter
+    // '<p>' . t("Page view counter drawing on data collected by Google Analytics.") . '</p>';
+    $output = file_get_contents(drupal_get_path('module', 'google_analytics_counter') . '/README.txt');
+    return nl2br($output);
+  }
+}
+
+/**
+ * Menu for this module
+ * @return array An array with this module's settings.
+ */
+function google_analytics_counter_menu() {
+  $items = array();
+
+  $items['admin/config/system/google_analytics_counter'] = array(
+    'title' => t('Google Analytics Counter'),
+    'description' => t('Configure Google Analytics Counter module'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('google_analytics_counter_admin'),
+    'access arguments' => array('administer google analytics counter'),
+    //'type' => MENU_NORMAL_ITEM,  // Not necessary since this is the default.
+    'weight' => 0,
+    );
+
+  // For the default local task, we need very little configuration, as the callback and other conditions are handled by the parent callback.
+  $items['admin/config/system/google_analytics_counter/settings'] = array(
+    'title' => t('Settings'),
+    //'description' => 'General settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+    );
+
+  $items['admin/config/system/google_analytics_counter/dashboard'] = array(
+    'title' => t('Dashboard'),
+    'description' => t('More information relevant to Google Analytics statistics for this site.'),
+    'page callback' => 'google_analytics_counter_details',
+    'access arguments' => array('administer google analytics counter'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    );
+
+  $items['admin/config/system/google_analytics_counter/authentication'] = array(
+    'title' => t('GA authentication'),
+    'description' => t('Authenticate access to a Google Analytics profile.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('google_analytics_counter_auth_admin'),
+    'access arguments' => array('administer google analytics counter'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+    );
+
+  // A shortcut to the permissions settings for this module.
+  $items['admin/config/system/google_analytics_counter/permissions'] = array(
+    'title' => t('Permissions'),
+    'description' => t('Configure access permissions'),
+    'page callback' => 'google_analytics_counter_perms',
+    'access arguments' => array('administer google analytics counter'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+    );
+
+  /* OAuth callback from Google */
+  $items['google_analytics_counter/oauth'] = array(
+    'title' => t('Google Analytics Reports OAuth Callback'),
+    'access callback' => TRUE,
+    'page callback' => 'google_analytics_counter_oauth_callback',
+    'type' => MENU_CALLBACK,
+    );
+
+  return $items;
+}
+
+/**
+ * Redirect to the module's permission settings. A callback from hook_menu().
+ */
+function google_analytics_counter_perms() {
+  drupal_goto('admin/people/permissions', array('fragment' => 'module-google_analytics_counter'));
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function google_analytics_counter_block_info() {
+  $block = array();
+
+  // Generate listing of blocks from this module, for the admin/block page
+  $block[0]["info"] = t('Google Analytics Counter');
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function google_analytics_counter_block_view($delta) {
+  $block = array();
+
+  // Generate our block content
+
+  $block_content = google_analytics_counter_display();
+  $block['subject'] = t('Google Analytics Counter');
+  if ($block_content == '') {
+    // If unknown, for some reason.
+    $block['content'] = 0; // Instead of t('N/A'). Suppose better to use 0 because it's true, that path has been recorded zero times by GA. Path may not exist or be private or too new.
+  }
+  else {
+    $block['content'] = $block_content;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function google_analytics_counter_filter_info() {
+  $filters = array();
+  $filters['filter_google_analytics_counter'] = array(
+    'title' => t('Google Analytics Counter tag'),
+    'description' => t('Substitutes a special Google Analytics Counter tag [gac|...] with the actual content.'),
+    'prepare callback' => 'google_analytics_counter_filter_google_analytics_counter_prepare',
+    'process callback' => 'google_analytics_counter_filter_google_analytics_counter_process',
+      //'tips callback' => '_filter_example_filter_time_tips',
+    );
+  return $filters;
+}
+
+/**
+ * Implements hook_filter_FILTER_prepare().
+ */
+function google_analytics_counter_filter_google_analytics_counter_prepare($text, $filter) {
+  return $text;
+}
+
+/**
+ * Implements hook_filter_FILTER_process().
+ */
+function google_analytics_counter_filter_google_analytics_counter_process($text, $filter) {
+  $text = replace_google_analytics_counter_tags($text);
+  return $text;
+}
+
+/**
+ * Finds [gac|...] tags and replaces them by actual values.
+ */
+function replace_google_analytics_counter_tags($str) {
+  // [gac|path/to/page]
+
+  $matchlink = '';
+  $orig_match = '';
+  $matches = '';
+  preg_match_all("/(\[)gac[^\]]*(\])/s", $str, $matches); // This allows more than one pipe sign (|) ... does not hurt and leaves room for possible extension.
+
+  foreach ($matches[0] as $match) {
+
+    // Keep original value.
+    $orig_match[] = $match;
+
+    // Remove wrapping [].
+    $match = substr($match, 1, (strlen($match) - 2));
+
+    // Create an array of parameter attributions.
+    $match = explode("|", $match);
+
+    $path = trim(check_plain(@$match[1]));
+
+    /* So now we can display the count based on the path.
+     * If no path was defined, the function will detect the current page's count.
+     */
+    $matchlink[] = google_analytics_counter_display($path);
+  }
+
+  $str = str_replace($orig_match, $matchlink, $str);
+  return $str;
+}
+
+/**
+ * Displays the count.
+ */
+function google_analytics_counter_display($path = '') {
+
+  if ($path == '') {
+    //$path = $_GET['q'];
+    //dpm($language);
+    //$path = $lprefix.$path;
+    // We need a path that includes the language prefix, if any. E.g. en/my/path (of /en/my/path - the initial slash will be dealt with later).
+    $path = parse_url("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]", PHP_URL_PATH); // @TODO: Works OK on non-Apache servers?
+  }
+  //dpm($path);
+  // Check all paths, to be sure.
+  //$path = check_plain($path);
+
+  $block_content = '';
+  //$block_content .= '<span id="google-analytics-counter-' . md5($path) . '">';
+  $block_content .= '<span class="google-analytics-counter">';
+  $count = google_analytics_counter_get_sum_per_path($path);
+  if ($count == '') {
+    // If unknown, for some reason.
+    $block_content .= 0; // Better than t('N/A').
+  }
+  else {
+    $block_content .= $count;
+  }
+  $block_content .= '</span>';
+
+  return $block_content;
+}
+
+
+/**
+ * Implements hook_cron().
+ *
+ */
+function google_analytics_counter_cron() {
+
+  // Set a watchdog error if there is no Google Analytics profile enabled.
+  // It's a weak test but better than none.
+  if (variable_get('google_analytics_counter_profile_id') == '') {
+    watchdog(t('Google Analytics Counter'), t('No Google Analytics profile has been authenticated! Google Analytics Counter can not fetch any new data. Please authenticate <a href="/admin/config/system/google_analytics_counter/authentication">here</a>.'), NULL, WATCHDOG_ERROR);
+    return;
+  }
+
+  // Defaults to an hourly interval. Of course, cron has to be running at least hourly for this to work.
+  $interval = 60*variable_get('google_analytics_counter_cron_interval', 60); // $interval must contain value in seconds.
+  // We don't want to act every time cron runs (which could be every minute) so keep a time for the next run in a variable.
+  if (REQUEST_TIME >= variable_get('google_analytics_counter_cron_next_execution', 0)) {
+
+    // Important to set it before the job because if they take long and there is another cron triggered...
+    variable_set('google_analytics_counter_cron_next_execution', REQUEST_TIME + $interval);
+
+    // Retrieve path with counts from Google Analytics into a local table.
+    google_analytics_counter_update_path_counts();
+    // Now also update the node_counter table from the local table with the GA data.
+    google_analytics_counter_update_node_counter();
+  }
+
+}
+
+/**
+ * Sets the expiry timestamp for cached queries.
+ * Default is 3 days.
+ * @return The UNIX timestamp to expire the query at.
+ */
+function google_analytics_counter_cache_time() {
+  return time() + variable_get('google_analytics_counter_cache_length', 259200);
+}
+
+/**
+ * More information relevant to Google Analytics statistics for this site.
+ */
+function google_analytics_counter_details() {
+  $result = '';
+
+  $result .= t('<p><h3>More information relevant to Google Analytics statistics for this site:</h3>');
+
+  $authenticated = FALSE;
+    // It's a weak test but better than none.
+  if (variable_get('google_analytics_counter_profile_id') <> '') {
+    $authenticated = TRUE;
+  }
+  else {
+    $result .= t('<font color="red">No Google Analytics profile has been authenticated! Google Analytics Counter can not fetch any new data. Please authenticate <a href="/admin/config/system/google_analytics_counter/authentication">here</a>.</font>');
+    // Don't show anything else.
+    return $result;
+  }
+
+  $result .= t('<p>Total number of hits registered by Google Analytics under this profile: %google_analytics_counter_totalhits. This is cumulative; counts for paths that may no longer exist on the website still have historical traces in Google Analytics.', array('%google_analytics_counter_totalhits' => check_plain(number_format(variable_get('google_analytics_counter_totalhits', 0)))));
+
+  $result .= t('<p>Number of paths on this site as currently recorded by Google Analytics: %google_analytics_counter_totalpaths. This is cumulative; paths that may no longer exist on the website still have historical traces in Google Analytics.', array('%google_analytics_counter_totalpaths' => check_plain(number_format(variable_get('google_analytics_counter_totalpaths', 0)))));
+  $dbresult = db_select('google_analytics_counter', 'gac')
+  ->fields('gac')
+  ->execute();
+  $num_of_results = $dbresult->rowCount();
+  $result .= t('<br />Number of paths currently stored in local database table: %num_of_results. This table is initially built and then regularly updated during cron runs.', array('%num_of_results' => number_format($num_of_results)));
+
+  $apicalls = variable_get('google_analytics_counter_dayquota', array(0, 0));
+  $result .= t('<p>Number of requests made to Google Analytics: %apicalls1. Only calls made by this module are counted here. Other modules and apps may be making more requests. ', array('%apicalls1' => check_plain(number_format($apicalls[1]))));
+  $remainingcalls = variable_get('google_analytics_counter_api_dayquota', 10000)-$apicalls[1];
+  if ($remainingcalls < 1) {
+    $remainingcalls = '?' ;
+  }
+  else{
+    $remainingcalls = number_format($remainingcalls);
+  }
+  $result .= t('Remaining requests available in the current 24-hour period: %remainingcalls. ', array('%remainingcalls' => check_plain($remainingcalls)));
+  if ($apicalls[0] == 0) {
+    $temp = 60*60*24;
+  }
+  else{
+    $temp = 60*60*24-(REQUEST_TIME-$apicalls[0]);
+  }
+  $result .= t('The current 24-hour period ends in: %google_analytics_counter_sec2hms.', array('%google_analytics_counter_sec2hms' => check_plain(google_analytics_counter_sec2hms($temp))));
+
+  $result .= t('<p>Total number of nodes on this site: %google_analytics_counter_totalnodes.', array('%google_analytics_counter_totalnodes' => check_plain(number_format(variable_get('google_analytics_counter_totalnodes', 0)))));
+  $dbresult = db_select('node_counter', 'nc')
+  ->fields('nc')
+  ->execute();
+  $num_of_results = $dbresult->rowCount();
+  $result .= t('<br />Number of nodes with known pageview counts on this site: %num_of_results.', array('%num_of_results' => check_plain(number_format($num_of_results))));
+
+  $temp = variable_get('google_analytics_counter_chunk_process_time', 0) + variable_get('google_analytics_counter_chunk_node_process_time', 0);
+  if ($temp < 0) {
+    $temp = 0;
+  }
+  $result .= t('<p>The most recent retrieval of %google_analytics_counter_chunk_to_fetch paths from Google Analytics and node counts from its local mirror took %google_analytics_counter_sec2hms (%google_analytics_counter_chunk_process_time+%google_analytics_counter_chunk_node_process_times). ', array('%google_analytics_counter_chunk_to_fetch' => check_plain(number_format(variable_get('google_analytics_counter_chunk_to_fetch', 0))), '%google_analytics_counter_sec2hms' => check_plain(google_analytics_counter_sec2hms($temp)), '%google_analytics_counter_chunk_process_time' => check_plain(variable_get('google_analytics_counter_chunk_process_time', 0)), '%google_analytics_counter_chunk_node_process_time' => check_plain(variable_get('google_analytics_counter_chunk_node_process_time', 0))));
+  $temp = variable_get('google_analytics_counter_cron_next_execution', 60*variable_get('google_analytics_counter_cron_interval', 60))-REQUEST_TIME;
+  if ($temp < 0) {
+    $temp = 0;
+  }
+  $result .= t('The next one will take place in %google_analytics_counter_sec2hms.', array('%google_analytics_counter_sec2hms' => check_plain(google_analytics_counter_sec2hms($temp))));
+
+  $result .= t('<p>To run cron immediately: <a href="/admin/reports/status/run-cron?destination=admin/config/system/google_analytics_counter/dashboard">click here</a>.');
+
+  return $result;
+}
+
+
+/**
+ * Convert seconds to hours, minutes and seconds.
+ */
+function google_analytics_counter_sec2hms($sec, $padHours = FALSE) {
+
+  // start with a blank string
+  $hms = "";
+
+  // do the hours first: there are 3600 seconds in an hour, so if we divide
+  // the total number of seconds by 3600 and throw away the remainder, we're
+  // left with the number of hours in those seconds
+  $hours = intval(intval($sec) / 3600);
+
+  // add hours to $hms (with a leading 0 if asked for)
+  $hms .= ($padHours)
+  ? str_pad($hours, 2, "0", STR_PAD_LEFT) . "h "
+  : $hours . "h ";
+
+  // dividing the total seconds by 60 will give us the number of minutes
+  // in total, but we're interested in *minutes past the hour* and to get
+  // this, we have to divide by 60 again and then use the remainder
+  $minutes = intval(($sec / 60) % 60);
+
+  // add minutes to $hms (with a leading 0 if needed)
+  $hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT) . "m ";
+
+  // seconds past the minute are found by dividing the total number of seconds
+  // by 60 and using the remainder
+  $seconds = intval($sec % 60);
+
+  // add seconds to $hms (with a leading 0 if needed)
+  $hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
+
+  // done!
+  return $hms . 's';
+
+}

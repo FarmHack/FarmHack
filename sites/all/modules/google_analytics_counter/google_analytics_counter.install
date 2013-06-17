@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Google Analytics Counter module.
+ */
+
+
+/**
+ * Implements hook_install().
+ *
+ * This hook is called when the user enables the module for the first time
+ * (or on subsequent enables after the module has been uninstalled).
+ */
+/*
+function google_analytics_counter_install() {
+
+}
+*/
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function google_analytics_counter_uninstall() {
+  variable_del('google_analytics_counter_api_dayquota');
+  variable_del('google_analytics_counter_cache_length');
+  variable_del('google_analytics_counter_chunk_node_process_time');
+  variable_del('google_analytics_counter_chunk_process_time');
+  variable_del('google_analytics_counter_chunk_to_fetch');
+  variable_del('google_analytics_counter_cron_interval');
+  variable_del('google_analytics_counter_cron_next_execution');
+  variable_del('google_analytics_counter_cron_next_execution_node_counter');
+  variable_del('google_analytics_counter_data_step');
+  variable_del('google_analytics_counter_dayquota');
+  variable_del('google_analytics_counter_default_page');
+  variable_del('google_analytics_counter_hd');
+  variable_del('google_analytics_counter_node_data_step');
+  variable_del('google_analytics_counter_oauth_token');
+  variable_del('google_analytics_counter_oauth_token_secret');
+  variable_del('google_analytics_counter_profile_id');
+  variable_del('google_analytics_counter_totalhits');
+  variable_del('google_analytics_counter_totalnodes');
+  variable_del('google_analytics_counter_totalpaths');
+}
+
+
+/**
+ * Implements hook_schema().
+ * See http://drupal.org/node/146939
+ */
+function google_analytics_counter_schema() {
+  $schema['google_analytics_counter'] = array(
+    'description' => 'Google Analytics data storage.',
+    'fields' => array(
+      'pagepath_hash' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'description' => 'md5 hash of the relative page path.',
+        'not null' => TRUE,
+        ),
+      'pagepath' => array(
+        'type' => 'varchar', // varchar faster than text on MySQL (not creating temp table on disk); see http://drupal.org/node/146939#comment-2281846
+        'length' => 2048, // see http://stackoverflow.com/a/417184/269383
+        'description' => 'Relative page path, for example "node/1" or "contact", as stored by GA.',
+        'not null' => TRUE,
+        ),
+      'pageviews' => array(
+        'type' => 'int',
+        'size' => 'big', // big int unsigned: 8 B (18446744073709551615)
+        'description' => 'Pageview count.',
+        'unsigned' => TRUE,
+        'default' => 0,
+        'not null' => TRUE,
+        ),
+      ),
+    'primary key' => array('pagepath_hash'),
+    'indexes' => array(
+      'pagepath' => array(array('pagepath', 20)),
+      'pageviews' => array('pageviews'),
+      ),
+    );
+
+return $schema;
+}
+
+
+/**
+ * Add the google_analytics_counter table for the Google Analytics Counter module.
+ */
+function google_analytics_counter_update_7201() {
+  if (!db_table_exists('google_analytics_counter')) {
+    $schema = google_analytics_counter_schema();
+    db_create_table('google_analytics_counter', $schema['google_analytics_counter']);
+    return st('Add the google_analytics_counter table for the Google Analytics Counter module.');
+  }
+}
+
+
+/**
+ * Implements hook_requirements().
+ */
+function google_analytics_counter_requirements($phase) {
+  $requirements = array();
+
+  // Ensure translations don't break at install time
+  $t = get_t();
+
+  // Verify that the user has authenticated with Google Analytics. If not, display a warning on the status page.
+  if ($phase == 'runtime') {
+    $requirements['google_analytics_counter_authentication'] = array(
+      'title' => $t('Google Analytics Counter'),
+      'description' => $t('Google Analytics account ga:%google_analytics_counter_profile_id has been authenticated. You can change it or revoke authentication <a href="/admin/config/system/google_analytics_counter/authentication">here</a>.', array('%google_analytics_counter_profile_id', variable_get('google_analytics_counter_profile_id', 0))),
+      'severity' => REQUIREMENT_OK,
+      'value' => $t('A Google Analytics profile is authenticated: OK'),
+      );
+    $requirements['google_analytics_counter_core_statistics'] = array(
+      'title' => $t('Drupal core statistics counter'),
+      'description' => $t('Drupal core statistics <a href="/admin/config/system/statistics">counter</a> is switched off to allow Google Analytics Counter provide the values.'),
+      'severity' => REQUIREMENT_OK,
+      'value' => $t('Core statistics counter is off: OK'),
+      );
+
+    $authenticated = FALSE;
+    // It's a weak test but better than none.
+    if (variable_get('google_analytics_counter_profile_id') <> '') {
+      $authenticated = TRUE;
+    }
+    if (!$authenticated) {
+      $requirements['google_analytics_counter_authentication']['title'] = $t('Google Analytics Counter requirements');
+      $requirements['google_analytics_counter_authentication']['description'] = $t('No Google Analytics profile has been authenticated. Google Analytics Counter can not fetch any new data. Please authenticate <a href="/admin/config/system/google_analytics_counter/authentication">here</a>.');
+      $requirements['google_analytics_counter_authentication']['severity'] = REQUIREMENT_ERROR;
+      $requirements['google_analytics_counter_authentication']['value'] = $t('No Google Analytics profile has been authenticated!');
+    }
+
+    $corestats = variable_get('statistics_count_content_views');
+    // Core statistics module counter must be switched off
+    if ($corestats == 1) {
+      $requirements['google_analytics_counter_core_statistics']['title'] = $t('Drupal core statistics counter is switched on');
+      $requirements['google_analytics_counter_core_statistics']['description'] = $t('Drupal core statistics counter must be switched off. At the moment its values are being overwritten by those from Google Analytics Counter (and vice versa). Please switch it off <a href="/admin/config/system/statistics">here</a>.');
+      $requirements['google_analytics_counter_core_statistics']['severity'] = REQUIREMENT_ERROR;
+      $requirements['google_analytics_counter_core_statistics']['value'] = $t('Drupal core statistics module must be switched off!');
+    }
+
+  }
+
+  return $requirements;
+}

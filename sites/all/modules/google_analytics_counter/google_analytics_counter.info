@@ -1,0 +1,17 @@
+name = "Google Analytics Counter"
+description = "Lightweight page view counter drawing on data collected by Google Analytics."
+package = Statistics
+core = 7.x
+
+; googleanalytics is not a dependency -- see http://drupal.org/node/1960520
+dependencies[] = oauth_common
+dependencies[] = statistics
+
+configure = admin/config/system/google_analytics_counter
+
+; Information added by drupal.org packaging script on 2013-04-04
+version = "7.x-2.1+1-dev"
+core = "7.x"
+project = "google_analytics_counter"
+datestamp = "1365037403"
+
