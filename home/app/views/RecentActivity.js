@@ -25,7 +25,7 @@ $(function() {
         models[comment.get('changed')] = comment
         models[comment.get('changed')].view = 'Comment'
       })
-      this.modesl = models
+      this.models = models
       this.addAll()
     }
 
