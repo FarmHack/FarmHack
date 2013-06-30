@@ -8,8 +8,8 @@ $(function() {
     addOne: function(model){
       var item = new App.Views[model.view]({model: model})
       item.render()  
-      this.$el.append(item.el)
-      //$('.recent-activity').append(item.el)
+      //this.$el.append(item.el)
+      $('.recent-activity ul').append(item.el)
     },
 
     addAll: function(){
