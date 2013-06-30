@@ -1,6 +1,6 @@
 $(function() {
   App.Views.RecentActivity = Backbone.View.extend({
-    
+
     tagName: "table",
 
     className: "table table-striped",
@@ -8,7 +8,8 @@ $(function() {
     addOne: function(model){
       var item = new App.Views[model.view]({model: model})
       item.render()  
-      this.$el.append(item.el)
+      //this.$el.append(item.el)
+      $('.recent-activity').append(item.el)
     },
 
     addAll: function(){
