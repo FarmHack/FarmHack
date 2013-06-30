@@ -39,7 +39,7 @@ $(function() {
         $('.recent-activity').hide()
         var recentActivity = new App.Views.RecentActivity({nodes:nodes,comments:comments})
         recentActivity.render()
-        $('.recent-activity').fadeIn(1000)
+        $('.recent-activity').fadeIn(800)
         //$('.recent-activity').html(recentActivity.el)
       })
       comments.on('sync', function(){

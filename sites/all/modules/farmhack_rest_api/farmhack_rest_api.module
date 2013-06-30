@@ -41,7 +41,7 @@ function farmhack_rest_api_user() {
  */
 function farmhack_rest_api_nodes_by_changed() {
   $response = array();
-  $results = db_query("SELECT nid, changed FROM {node} ORDER BY changed DESC LIMIT 10");
+  $results = db_query("SELECT nid, changed FROM {node} ORDER BY changed DESC LIMIT 30");
   foreach($results as $result) {
     $response[] = node_load($result->nid);
   }
@@ -58,7 +58,7 @@ function farmhack_rest_api_nodes_by_changed() {
  */
 function farmhack_rest_api_comments_by_changed() {
   $response = array();
-  $results = db_query("SELECT cid, changed FROM comment ORDER BY changed DESC LIMIT 10");
+  $results = db_query("SELECT cid, changed FROM comment ORDER BY changed DESC LIMIT 30");
   foreach($results as $result) {
     $response[] = comment_load($result->cid);
   }
