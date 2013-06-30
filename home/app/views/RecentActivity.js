@@ -1,7 +1,7 @@
 $(function() {
   App.Views.RecentActivity = Backbone.View.extend({
 
-    className: "recent-activity",
+    el: '.recent-activity',
 
     models: {},
 
