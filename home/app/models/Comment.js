@@ -6,8 +6,8 @@ $(function() {
 
     url: function() {
       // No REST API for comments
-      return ''
-    },
+      return 'none'
+    }
 
   })
 
