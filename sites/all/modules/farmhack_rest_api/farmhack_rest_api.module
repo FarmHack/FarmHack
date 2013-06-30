@@ -8,5 +8,5 @@ function farmhack_rest_api_menu() {
 }
 
 function farmhack_rest_api_user() {
-  drupal_json_output(Array('yar'));
+  drupal_json_output(array('foo', 'bar'));
 }
