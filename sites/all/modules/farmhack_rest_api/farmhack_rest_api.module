@@ -6,6 +6,19 @@ function farmhack_rest_api_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => TRUE
   );
+
+  $items['api/nodes/changed'] = array(
+    'page callback' => 'farmhack_nodes_by_changed',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+
+  $items['api/comments/changed'] = array(
+    'page callback' => 'farmhack_comments_by_changed',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+
   return $items;
 }
 
@@ -13,3 +26,28 @@ function farmhack_rest_api_user() {
   global $user;
   drupal_json_output($user);
 }
+
+/*
+ * @todo Get some offset and limit parameters going
+ */
+function farmhack_rest_api_nodes_by_changed() {
+  $response = array();
+  $results = db_query("SELECT nid, changed FROM node ORDER BY changed LIMIT 10");
+  foreach($results as $result) {
+    $response[$result->created] = node_load($result->nid);
+  }
+  drupal_json_output($response);
+}
+
+/*
+ * @todo Get some offset and limit parameters going
+ */
+function farmhack_rest_api_comments_by_changed() {
+  $response = array();
+  $results = db_query("SELECT cid, changed FROM comment ORDER BY changed LIMIT 10");
+  foreach($results as $result) {
+    $response[$result->created] = comment_load($result->cid);
+  }
+  drupal_json_output($response);
+}
+
