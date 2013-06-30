@@ -47,7 +47,7 @@ function farmhack_rest_api_nodes_by_changed() {
     $response[$result->changed] = node_load($result->nid);
   }
   */
-  drupal_json_output($response);
+  drupal_json_output($results);
 }
 
 /*
@@ -66,6 +66,6 @@ function farmhack_rest_api_comments_by_changed() {
     $response[$result->changed] = comment_load($result->cid);
   }
   */
-  drupal_json_output($response);
+  drupal_json_output($results);
 }
 
