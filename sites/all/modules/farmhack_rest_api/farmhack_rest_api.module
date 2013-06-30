@@ -29,6 +29,15 @@ function farmhack_rest_api_user() {
 
 /*
  * @todo Get some offset and limit parameters going
+
+ Get the 
+ type
+ user
+ title
+ body
+ image
+ related forum
+
  */
 function farmhack_rest_api_nodes_by_changed() {
   $response = array();
@@ -41,6 +50,11 @@ function farmhack_rest_api_nodes_by_changed() {
 
 /*
  * @todo Get some offset and limit parameters going
+ Get the
+ title
+ body
+ comment on
+ related forum
  */
 function farmhack_rest_api_comments_by_changed() {
   $response = array();
