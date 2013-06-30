@@ -16,7 +16,7 @@ $(function() {
     },
 
     render: function() {
-      var models 
+      var models = {}
       this.options.nodes.each(function(node){
         models[node.get('changed')] = node
         models[node.get('changed')].view = 'Node'
