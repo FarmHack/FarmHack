@@ -2,13 +2,11 @@
 
 function farmhack_rest_api_menu() {
   $items['api/user'] = array(
-    //'type' => MENU_CALLBACK,
     'page callback' => 'farmhack_rest_api_user',
-    //'access callback' => TRUE,
   );
   return $items;
 }
 
 function farmhack_rest_api_user() {
-  return "yar";
+  drupal_json_output("{'yar'}");
 }
