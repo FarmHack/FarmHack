@@ -22,6 +22,10 @@ body {
   clear: both;
 }
 
+#jumbotron {
+  text-align: center;
+}
+
 #jumbotron .slogan {
   width: 810px;
   margin: 0 auto;
