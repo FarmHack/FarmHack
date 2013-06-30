@@ -21,7 +21,7 @@ $(function() {
         }
         else {
           $('#jumbotron').html("<h1 style='display:none; margin:0;' class='content'>Welcome back " + user.name + "</h1>")
-          $('#jumbotron .content').delay(300).fadeIn()
+          $('#jumbotron .content').delay(500).fadeIn()
         }
       })
     }
