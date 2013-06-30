@@ -4,6 +4,10 @@ body {
   margin: 0px;
 }
 
+.span4 {
+  width: 285px !important;
+}
+
 .container {
   width: 910px;
   margin: 0 auto;
