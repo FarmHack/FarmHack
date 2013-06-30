@@ -25,7 +25,7 @@ $(function() {
         that.models[comment.changed] = comment
         that.models[comment.changed].view = 'Comment'
       })
-      this.addAll()
+      this.addAll(this.models)
     }
 
   })
