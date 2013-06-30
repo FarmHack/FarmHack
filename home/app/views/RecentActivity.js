@@ -12,7 +12,7 @@ $(function() {
     },
 
     addAll: function(){
-      _.each(this.models, this.addOne())
+      _.each(this.models, this.addOne)
     },
 
     render: function() {
