@@ -6,7 +6,7 @@ $(function() {
 
     url: function() {
       // No REST API for nodes
-      return ''
+      return 'api'
     },
 
   })
