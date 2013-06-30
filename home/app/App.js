@@ -18,7 +18,7 @@ $(function() {
           $('#jumbotron').show()
           $('#jumbotron .frame').css('height', '210px')
           $('#jumbotron .frame').delay(500).slideDown(700)
-          $('#jumbotron .content').delay(1500).fadeIn()
+          $('#jumbotron .content').delay(1200).fadeIn()
         }
         else {
 
