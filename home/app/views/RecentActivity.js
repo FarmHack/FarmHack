@@ -1,9 +1,9 @@
 $(function() {
   App.Views.RecentActivity = Backbone.View.extend({
+    
+    tagName: "table",
 
-    models: {},
-
-    tagName: "div",
+    className: "table table-striped",
 
     addOne: function(model){
       var item = new App.Views[model.view]({model: model})
