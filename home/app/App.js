@@ -36,8 +36,10 @@ $(function() {
       var nodes = new App.Collections.Nodes()
       comments.fetch()
       nodes.on('sync', function() {
+        $('.recent-activity').hide()
         var recentActivity = new App.Views.RecentActivity({nodes:nodes,comments:comments})
         recentActivity.render()
+        $('.recent-activity').fadeIn(1500)
         //$('.recent-activity').html(recentActivity.el)
       })
       comments.on('sync', function(){
