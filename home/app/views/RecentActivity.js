@@ -18,12 +18,12 @@ $(function() {
     render: function() {
       var that = this
       this.options.nodes.each(function(node){
-        that.models[node.changed] = node
-        that.models[node.changed].view = 'Node'
+        that.models[node.get('changed')] = node
+        that.models[node.get('changed')].view = 'Node'
       })
       this.options.comments.each(function(comment){
-        that.models[comment.changed] = comment
-        that.models[comment.changed].view = 'Comment'
+        that.models[comment.get('changed')] = comment
+        that.models[comment.get('changed')].view = 'Comment'
       })
       this.addAll(this.models)
     }
