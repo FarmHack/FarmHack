@@ -10,7 +10,8 @@ $(function() {
       //this.$el.append(_.template(this.template(), this.model.toJSON()))
       //$('.recent-activity').append(_.template(this.template(), this.model.toJSON()))
       var template = $("#template-Comment").html()
-      var $el = _.template(template, this.model.toJSON())
+      var vars = this.model.toJSON()
+      var $el = _.template(template, vars)
       $('.recent-activity').append($el)
     }
   })
