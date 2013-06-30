@@ -11,7 +11,7 @@ $(function() {
       return docs
     },
  */    
-    model: App.Models.Comments,
+    model: App.Models.Comment,
 
   })
 
