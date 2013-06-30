@@ -16,16 +16,17 @@ $(function() {
     },
 
     render: function() {
-      var that = this
+      var models 
       this.options.nodes.each(function(node){
-        that.models[node.get('changed')] = node
-        that.models[node.get('changed')].view = 'Node'
+        models[node.get('changed')] = node
+        models[node.get('changed')].view = 'Node'
       })
       this.options.comments.each(function(comment){
-        that.models[comment.get('changed')] = comment
-        that.models[comment.get('changed')].view = 'Comment'
+        models[comment.get('changed')] = comment
+        models[comment.get('changed')].view = 'Comment'
       })
-      this.addAll(this.models)
+      this.modesl = models
+      this.addAll()
     }
 
   })
