@@ -17,11 +17,11 @@ $(function() {
 
     render: function() {
       var that = this
-      this.nodes.each(function(node){
+      this.options.nodes.each(function(node){
         that.models[node.changed] = node
         that.models[node.changed].view = 'Node'
       })
-      this.comments.each(function(comment){
+      this.options.comments.each(function(comment){
         that.models[comment.changed] = comment
         that.models[comment.changed].view = 'Comment'
       })
