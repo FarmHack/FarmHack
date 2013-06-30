@@ -3,6 +3,7 @@
 function farmhack_rest_api_menu() {
   $items['api/user'] = array(
     'page callback' => 'farmhack_rest_api_user',
+    'type' => MENU_CALLBACK
   );
   return $items;
 }
