@@ -1,0 +1,12 @@
+<?php
+
+function farmhack_rest_api_menu() {
+  $items['api/user'] = array(
+    'page callback' => 'farmhack_rest_api_user',
+  );
+  return $items;
+}
+
+function farmhack_rest_api_user() {
+  return "yar";
+}

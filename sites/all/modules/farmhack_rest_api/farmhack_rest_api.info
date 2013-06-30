@@ -1,0 +1,2 @@
+name = "farmhack rest api"
+core = "7.x"
