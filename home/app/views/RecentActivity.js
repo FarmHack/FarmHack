@@ -3,7 +3,7 @@ $(function() {
 
     className: "recent-activity",
 
-    this.models: {},
+    models: {},
 
     addOne: function(model){
       var item = new App.Views[model.view]({model: model})

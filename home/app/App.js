@@ -9,7 +9,7 @@ $(function() {
     start: function(){
       this.renderJumboTron()
       this.renderRecentActivity()
-    }
+    },
 
     renderJumboTron: function () {
       $.getJSON('/api/user', function(user) {
@@ -35,7 +35,7 @@ $(function() {
       var comments = new App.Collections.Comments()
       var nodes = new App.Collections.Nodes()
       comments.fetch()
-      nodes.on('sync', function{
+      nodes.on('sync', function() {
         var recentActivity = new App.Views.RecentActivity({nodes:nodes,comments:comments})
         recentActivity.render()
         $('.recent-activity').html(recentActivity.el)
