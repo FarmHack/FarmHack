@@ -20,14 +20,8 @@ $(function() {
           $('#jumbotron .content').delay(1200).fadeIn()
         }
         else {
-          $('#jumbotron').hide()
-          $('#jumbotron').html("<div class='frame'><h1 class='content'>Welcome back " + user.name + "</h1></div>")
-          $('#jumbotron .frame').hide()
-          $('#jumbotron .content').hide()
-          $('#jumbotron').show()
-          $('#jumbotron .frame').css('height', '80px')
-          $('#jumbotron .frame').delay(500).slideDown(700)
-          $('#jumbotron .content').delay(1200).fadeIn()
+          $('#jumbotron').html("<h1 style='display:none;' class='content'>Welcome back " + user.name + "</h1>")
+          $('#jumbotron .content').delay(300).fadeIn()
         }
       })
     }
