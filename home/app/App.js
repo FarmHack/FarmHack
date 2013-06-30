@@ -20,7 +20,7 @@ $(function() {
           $('#jumbotron .content').delay(1200).fadeIn()
         }
         else {
-          $('#jumbotron').html("<h1 style='display:none;' class='content'>Welcome back " + user.name + "</h1>")
+          $('#jumbotron').html("<h1 style='display:none; margin:0;' class='content'>Welcome back " + user.name + "</h1>")
           $('#jumbotron .content').delay(300).fadeIn()
         }
       })
