@@ -1,0 +1,56 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 0px;
+  margin: 0px;
+}
+
+.container {
+  width: 910px;
+  margin: 0 auto;
+}
+
+#header {
+  width: 100%;
+  text-align: center;
+}
+
+#header .logo {
+  clear: both;
+}
+
+#header .leaf {
+  clear: both;
+}
+
+#jumbotron .slogan {
+  width: 810px;
+  margin: 0 auto;
+  font-size: 49px; 
+  line-height: 55px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#jumbotron .go {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#jumbotron .go a {
+  margin: 0 10px;
+}
+
+#nav {
+
+}
+
+.nav-column {
+  float: left;
+  width: 303px;
+  text-align: center;
+}
+
+.nav-column .getting-started {
+  color:green; 
+  font-decoration: underline;
+}
