@@ -7,7 +7,8 @@ $(function() {
     },
 
     render: function () {
-      this.$el.append(_.template(this.template(), this.model.toJSON()))
+      //this.$el.append(_.template(this.template(), this.model.toJSON()))
+      $('.recent-activity').append(_.template(this.template(), this.model.toJSON()))
     }
   })
 
