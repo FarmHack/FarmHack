@@ -3,19 +3,28 @@ $(function() {
 
     className: "recent-activity",
 
+    this.models: {},
+
     addOne: function(model){
-      var collectionRow = new App.Views.CollectionRow({model: model})
-      collectionRow.render()  
-      this.$el.append(collectionRow.el)
+      var item = new App.Views[model.view]({model: model})
+      item.render()  
+      this.$el.append(item.el)
     },
 
     addAll: function(){
-      // @todo this does not work as expected, either of the lines
-      // _.each(this.collection.models, this.addOne())
-      this.collection.each(this.addOne, this)
+      _.each(this.models, this.addOne())
     },
 
     render: function() {
+      var that = this
+      this.nodes.each(function(node){
+        that.models[node.changed] = node
+        that.models[node.changed].view = 'Node'
+      })
+      this.comments.each(function(comment){
+        that.models[comment.changed] = comment
+        that.models[comment.changed].view = 'Comment'
+      })
       this.addAll()
     }
 
