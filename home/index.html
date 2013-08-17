@@ -11,6 +11,7 @@
     <script type="text/javascript" src="vendor/jquery-2.0.2.min.js"></script>
     <script type="text/javascript" src="vendor/underscore-min.js"></script>
     <script type="text/javascript" src="vendor/backbone.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
     <script type="text/javascript" src="app/App.js"></script>
 
 
@@ -28,39 +29,46 @@
 
   <body>
 
-    <div class="container">
+    <div id="top-container">
+      <div id="top-inner-container">
+        <div id="header">
+          <div class="logo"> 
+            <img src="img/farmhack-logo-transparent.png"> 
+          </div>
+          <div class="leaf">
+            <img src="img/leaf.png">  
+          </div>
+        </div> 
+          
+        <div id="jumbotron">
 
-      <div id="header">
-        <div class="logo"> 
-          <img src="img/farmhack-logo.png"> 
         </div>
-        <div class="leaf">
-          <img src="img/leaf.png">  
-        </div>
-      </div> 
         
-      <div id="jumbotron">
+        <div id="nav-container">
+          <div id="nav">
+            <div class="nav-column">
+              <h2>Resources</h2>
+              <!--h3><a  href="wiki/getting-started" class="getting-started">Getting Started</a></h3-->
+              <h3><a href="/tools">Tools</a></h3>
+              <h3><a href="/forum">Discussions</a></h3>
+            </div>
+            <div class="nav-column">
+              <h2>Events</h2>
+              <h3><a href="/calendar">Calendar</a></h3>
+              <h3><a href="/wiki/host-an-event">Host an event</a></h3>
+            </div>
+            <div class="nav-column">
+              <h2>Profiles</h2>
+              <h3><a href="/shops">Shops</a></h3>
+              <h3><a href="/people">People</a></h3>
+            </div>
+          </div>
+        </div>
 
-      </div>
-      
-      <div id="nav">
-        <div class="nav-column">
-          <h2>Resources</h2>
-          <!--h3><a  href="wiki/getting-started" class="getting-started">Getting Started</a></h3-->
-          <h3><a href="/tools">Tools</a></h3>
-          <h3><a href="/forum">Discussions</a></h3>
-        </div>
-        <div class="nav-column">
-          <h2>Events</h2>
-          <h3><a href="/calendar">Calendar</a></h3>
-          <h3><a href="/wiki/host-an-event">Host an event</a></h3>
-        </div>
-        <div class="nav-column">
-          <h2>Profiles</h2>
-          <h3><a href="/shops">Shops</a></h3>
-          <h3><a href="/people">People</a></h3>
-        </div>
-      </div>
+      </div> <!--  / #top-inner-container -->
+    </div> <!--  / #top-container -->
+
+    <div id="middle-container">
 
       <br><br>
       <div class="recent-hacking-title" style="display:none; text-align:center; clear: both; margin: 150px 170px 0px;">
@@ -73,8 +81,9 @@
         </ul>
 
       </div>
+
+    </div> <!-- / #middle-container -->
       
-    </div> <!-- /container -->
 
   </body>
 
