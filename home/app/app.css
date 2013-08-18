@@ -42,6 +42,8 @@ h3 {
 }
 
 #bottom-container {
+  width: 970px;
+  margin: 0 auto;
   height: 600px;
   position: relative;
   top: -20px;
