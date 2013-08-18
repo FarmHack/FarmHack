@@ -26,7 +26,11 @@ $(function() {
         models[comment.get('changed')] = comment
         models[comment.get('changed')].view = 'Comment'
       })
-      this.models = models
+      var sortedModels = []
+      _.each(models, function(model) {
+        sortedModels.unshift(model)
+      })
+      this.models = sortedModels
       this.addAll()
     }
 
