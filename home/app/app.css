@@ -116,10 +116,17 @@ position: relative;
 .activity-by-line {
   position: absolute;
   bottom: 3px;
+  left: 5px;
   font-size: 15px;
+  width: 298px;
 }
 .activity-user-photo {
   float: left;
+  margin: 0px 3px 0px 0px;
+}
+
+.activity-user-photo img {
+  border-radius: 3px;
 }
 
 .activity-type {

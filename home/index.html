@@ -121,14 +121,16 @@
     </div>
     <div class="activity-body">
       <a href="/node/<%= nid %>"><%= title %></a> <br/>
-      <div class="activity-by-line">
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
         <div class="activity-user-photo">
-          <img height=15 src="/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
         </div>
-        by <a href="/user/<%= uid %>"><%= name %></a> <br/>
-        on <%= changed %>
-      </div>
-    </div
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
   </script>
 
   <script>
