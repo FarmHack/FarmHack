@@ -12,6 +12,9 @@
     <script type="text/javascript" src="vendor/underscore-min.js"></script>
     <script type="text/javascript" src="vendor/backbone.js"></script>
     <script type="text/javascript" src="vendor/spin.min.js"></script>
+    <script type="text/javascript" src="vendor/moment.min.js"></script>
+    <script type="text/javascript" src="vendor/moment-timezone.min.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
     <script type="text/javascript" src="app/App.js"></script>
 
 
@@ -104,16 +107,24 @@
   <script type="text/html" id="template-Comment">
   <li class="span4">
     <div class="thumbnail">
-    comment: <%= subject %>
+      comment <br/>
+      <a href="/comment/<%= cid %>#comment-<%= cid %>">
+        <%= subject %>
+      </a> <br/>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= created %>
     </div>
   </li>
   </script>
 
   <script type="text/html" id="template-Node">
-    <li class="span4">
+  <li class="span4">
     <div class="thumbnail">
-    <%= type %>: <%= title %>
-        </div>
+      <%= type %> <br/>
+      <%= title %> <br/>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
   </li>
   </script>
 
