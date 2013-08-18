@@ -4,10 +4,12 @@ a {
 
 h2{
   font-size: 42px;
+  color: black;
 }
 
 h3 {
   font-size: 32px;
+  color: black;
 }
 
 .btn.btn-success {
@@ -81,6 +83,7 @@ body {
 }
 
 #jumbotron .slogan {
+  color: #000;
   width: 810px;
   margin: 0 auto;
   font-size: 49px; 
@@ -133,7 +136,7 @@ font-weight: bolder;
 }
 
 .recent-hacking-title h2 {
-  width: 300px;
+  text-align: center;
   margin: 0px auto 20px;
 }
 
