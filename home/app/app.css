@@ -23,6 +23,8 @@
 
 #bottom-container {
   height: 600px;
+  position: relative;
+  top: -20px;
 }
 
 #nav-container {
