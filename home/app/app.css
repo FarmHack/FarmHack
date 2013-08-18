@@ -98,6 +98,12 @@ background: #fff;
   width: 909px;
 }
 
+.recent-hacking-title h2 {
+  width: 300px;
+  margin: 28px auto 20px;
+  background: yellow;
+}
+
 .nav-column {
   float: left;
   width: 303px;
