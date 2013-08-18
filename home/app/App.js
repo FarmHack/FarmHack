@@ -9,6 +9,11 @@ $(function() {
     start: function(){
       this.renderJumboTron()
       this.renderRecentActivity()
+
+      window.onscroll = function() {
+          var speed = 7.0;
+          $("#top-container").css("background-position",(-window.pageXOffset / speed) + "px " + (-window.pageYOffset / speed) + "px");
+      }
     },
 
     renderJumboTron: function () {
