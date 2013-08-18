@@ -2,7 +2,10 @@ a {
   color: green;
   text-decoration: none;
 }
-
+a:hover {
+  color: #4fb81c;
+  text-decoration: none;
+}
 h2 {
   font-size: 42px;
   color: black;
@@ -17,6 +20,9 @@ h3 {
   background: green;
 }
 
+a.btn.btn-success:hover {
+  background: #4fb81c;
+}
 #top-container {
   width: 100%;
   background: white url('../img/2.jpg');
