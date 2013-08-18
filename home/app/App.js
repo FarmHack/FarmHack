@@ -11,8 +11,8 @@ $(function() {
       this.renderRecentActivity()
 
       window.onscroll = function() {
-          var speed = 7.0;
-          $("#top-container").css("background-position",(-window.pageXOffset / speed) + "px " + (-window.pageYOffset / speed) + "px");
+        var speed = 7.0;
+        $("#top-container").css("background-position",(window.pageXOffset / speed) + "px " + (window.pageYOffset / speed) + "px");
       }
     },
 
