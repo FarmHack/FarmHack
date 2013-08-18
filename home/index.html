@@ -108,8 +108,10 @@
       <a href="/comment/<%= cid %>#comment-<%= cid %>">
         <%= subject %>
       </a> <br/>
-      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
-      on <%= created %>
+      <div class="activity-by-line">
+        by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+        on <%= created %>
+      </div>
     </div>
   </script>
 
@@ -119,8 +121,10 @@
     </div>
     <div class="activity-body">
       <a href="/node/<%= nid %>"><%= title %></a> <br/>
-      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
-      on <%= changed %>
+      <div class="activity-by-line">
+        by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+        on <%= changed %>
+      </div>
     </div
   </script>
 
