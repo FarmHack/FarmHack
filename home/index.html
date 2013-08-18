@@ -102,25 +102,30 @@
 
   <script type="text/html" id="template-Comment">
     <div class="activity-type">
-      comment <br/>
+      comment
     </div>
     <div class="activity-body">
       <a href="/comment/<%= cid %>#comment-<%= cid %>">
         <%= subject %>
-      </a> <br/>
-      <div class="activity-by-line">
-        by <a href="/user/<%= uid %>"><%= name %></a> <br/>
-        on <%= created %>
-      </div>
+      </a>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= created %>
     </div>
   </script>
 
   <script type="text/html" id="template-Node">
     <div class="activity-type">
-      <%= type %> <br/>
+      <%= type %> 
     </div>
     <div class="activity-body">
-      <a href="/node/<%= nid %>"><%= title %></a> <br/>
+      <a href="/node/<%= nid %>"><%= title %></a>
     </div>
     <div class="activity-by-line">
       <% if (userPhotoFileName) { %>
