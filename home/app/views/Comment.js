@@ -6,7 +6,7 @@ $(function() {
 
     render: function () {
       var vars = this.model.toJSON()
-      vars.created = moment(vars.created, "X").format("MMM D h:mma")
+      vars.created = moment(vars.created, "X").format("MMMM D h:mma")
       this.$el.append(_.template($("#template-Comment").html(), vars))
       //$('.recent-activity').append(_.template(this.template(), this.model.toJSON()))
 
