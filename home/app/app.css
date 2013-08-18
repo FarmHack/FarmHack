@@ -1,3 +1,19 @@
+a {
+  color: green;
+}
+
+h2{
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+.btn.btn-success {
+  background: green;
+}
+
 #top-container {
   width: 100%;
   background: white url('../img/1.jpg');
@@ -17,7 +33,7 @@
   width: 100%;
   background: #FFF;
   box-shadow:  0px 0px 20px 0px #000; 
-  height: 163px;
+  height: 230px;
   position:relative;
 }
 
@@ -75,21 +91,22 @@ body {
 }
 
 .activity-item {   
+border-radius: 5px 5px 0px 0px;
 width: 300px;
-box-shadow: 0px 0px 15px 0px #999;
 float: left;
-height: 95px;
+border: solid #CCC 1px;
+height: 140px;
 margin: 10px;
 padding: 0px;
 background: #fff;
--moz-border-radius: 15px;
-border-radius: 10px;
+font-size:1.4em;
+
 }
 
 .activity-type {
--moz-border-radius: 15px;
-border-radius: 10px 10px 0px 0px;
-background: #DDD;
+color: #fff;
+border-radius: 5px 5px 0px 0px;
+background: green;
 margin-right: 21px;
 width: 296px;
 padding: 2px;
@@ -117,8 +134,7 @@ font-weight: bolder;
 
 .recent-hacking-title h2 {
   width: 300px;
-  margin: 28px auto 20px;
-  background: yellow;
+  margin: 0px auto 20px;
 }
 
 .nav-column {
