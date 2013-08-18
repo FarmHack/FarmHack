@@ -105,19 +105,27 @@
   </script>
 
   <script type="text/html" id="template-Comment">
+    <div class="activity-type">
       comment <br/>
+    </div>
+    <div class="activity-body">
       <a href="/comment/<%= cid %>#comment-<%= cid %>">
         <%= subject %>
       </a> <br/>
       by <a href="/user/<%= uid %>"><%= name %></a> <br/>
       on <%= created %>
+    </div>
   </script>
 
   <script type="text/html" id="template-Node">
+    <div class="activity-type">
       <%= type %> <br/>
+    </div>
+    <div class="activity-body">
       <a href="/node/<%= nid %>"><%= title %></a> <br/>
       by <a href="/user/<%= uid %>"><%= name %></a> <br/>
       on <%= changed %>
+    </div
   </script>
 
   <script>
