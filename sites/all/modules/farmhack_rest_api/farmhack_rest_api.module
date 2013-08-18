@@ -43,7 +43,10 @@ function farmhack_rest_api_nodes_by_changed() {
   $response = array();
   $results = db_query("SELECT nid, changed FROM {node} ORDER BY changed DESC LIMIT 30");
   foreach($results as $result) {
-    $response[] = node_load($result->nid);
+    $node = node_load($result->nid);
+    $user = user_load($node->uid);
+    $node->userPhotoFileName = $user->picture->filename;
+    $response[] = $node;
   }
   drupal_json_output($response);
 }

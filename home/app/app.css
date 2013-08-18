@@ -118,6 +118,9 @@ position: relative;
   bottom: 3px;
   font-size: 15px;
 }
+.activity-user-photo {
+  float: left;
+}
 
 .activity-type {
 color: #fff;

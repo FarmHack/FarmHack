@@ -122,6 +122,9 @@
     <div class="activity-body">
       <a href="/node/<%= nid %>"><%= title %></a> <br/>
       <div class="activity-by-line">
+        <div class="activity-user-photo">
+          <img height=15 src="/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
         by <a href="/user/<%= uid %>"><%= name %></a> <br/>
         on <%= changed %>
       </div>
