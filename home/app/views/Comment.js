@@ -2,6 +2,8 @@ $(function() {
 
   App.Views.Comment = Backbone.View.extend({
 
+    className: "activity-item",
+
     render: function () {
       var vars = this.model.toJSON()
       vars.created = moment(vars.created, "X").format("MMM D h:mma")
