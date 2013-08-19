@@ -8,12 +8,23 @@ $(function() {
 
     start: function(){
       this.renderJumboTron()
+      this.renderUpcomingEvents()
       this.renderRecentActivity()
 
       window.onscroll = function() {
         var speed = 3.0;
         $("#top-container").css("background-position",(window.pageXOffset / speed) + "px " + (window.pageYOffset / speed) + "px");
       }
+    },
+
+    renderUpcomingEvents: function() {
+      var events = new App.Collections.Events()
+      events.on('sync', function(){
+        var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
+        UpcomingEvents.render()
+        $('#upcoming-events').html(UpcomingEvents.el)
+      })
+      events.fetch()
     },
 
     renderJumboTron: function () {

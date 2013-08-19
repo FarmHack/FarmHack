@@ -5,10 +5,11 @@ $(function() {
       var item = new App.Views.Node({model: model})
       item.render()  
       this.$el.append(item.el)
+
     },
 
     addAll: function(){
-      _.each(this.models, this.addOne)
+      _.each(this.collection.models, this.addOne, this)
     },
 
     render: function() {
