@@ -25,7 +25,7 @@ $(function() {
       },
       event: { 
         name: "Event",
-        color: "yellow"
+        color: "#ffee2b"//"#f7e950"
       },
       page: {
         name: "Page",
