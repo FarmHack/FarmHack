@@ -24,6 +24,12 @@ function farmhack_rest_api_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => TRUE
   );
+  $items['api/events/upcoming'] = array(
+    'page callback' => 'farmhack_rest_api_events_upcoming',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+;
 
 
   return $items;
@@ -81,6 +87,19 @@ function farmhack_rest_api_comments_by_changed() {
 function farmhack_rest_api_events() {
   $response = array();
   $results = db_query("SELECT nid, changed FROM {node} WHERE type='event' ORDER BY changed DESC LIMIT 30");
+  foreach($results as $result) {
+    $node = node_load($result->nid);
+    $user = user_load($node->uid);
+    $node->userPhotoFileName = $user->picture->filename;
+    $response[] = $node;
+  }
+  drupal_json_output($response);
+}
+
+
+function farmhack_rest_api_events_upcoming() {
+  $response = array();
+  $results = db_query("SELECT nid, changed FROM {node} WHERE type='event' ORDER BY changed DESC LIMIT 3");
   foreach($results as $result) {
     $node = node_load($result->nid);
     $user = user_load($node->uid);

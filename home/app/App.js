@@ -18,7 +18,7 @@ $(function() {
     },
 
     renderUpcomingEvents: function() {
-      var events = new App.Collections.Events()
+      var events = new App.Collections.UpcomingEvents()
       events.on('sync', function(){
         var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
         UpcomingEvents.render()
