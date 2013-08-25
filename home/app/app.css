@@ -8,12 +8,10 @@ a:hover {
 }
 h2 {
   font-size: 42px;
-  color: black;
 }
 
 h3 {
   font-size: 32px;
-  color: black;
 }
 
 .btn.btn-success {
@@ -23,13 +21,13 @@ h3 {
 a.btn.btn-success:hover {
   background: #4fb81c;
 }
-#top-container {
+#top-region {
   width: 100%;
   background: white url('../img/2.jpg');
   padding-top: 20px;
 }
 
-#top-inner-container {
+#top-inner-region {
   width: 910px;
   margin: 0 auto;
 }
@@ -39,7 +37,7 @@ a.btn.btn-success:hover {
 
 }
 /*0px -12px 8px -10px #000; */
-#middle-container {
+#middle-region {
   width: 100%;
   background: #FFF;
   box-shadow:  0px 0px 20px 0px #000; 
@@ -47,7 +45,7 @@ a.btn.btn-success:hover {
   position:relative;
 }
 
-#bottom-container {
+#bottom-region {
   width: 970px;
   margin: 0 auto;
   height: 600px;
@@ -55,7 +53,7 @@ a.btn.btn-success:hover {
   top: 20px;
 }
 
-#nav-container {
+#nav-region {
 }
 
 body {
@@ -69,7 +67,7 @@ body {
   width: 285px !important;
 }
 
-.container {
+.region {
   width: 910px;
   margin: 0 auto;
 }
@@ -171,9 +169,18 @@ text-shadow: 0px 0px 3px #000;
   width: 909px;
 }
 
-.recent-hacking-title h2 {
+
+
+.title {
   text-align: center;
   margin: 0px auto 20px;
+  background-color: #565656;
+  font-weight: bolder;
+  color: transparent;
+  text-shadow: 0px 2px 2px rgba(255,255,255,0.5);
+  -webkit-background-clip: text;
+     -moz-background-clip: text;
+          background-clip: text;
 }
 
 .nav-column {

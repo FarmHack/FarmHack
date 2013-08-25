@@ -8,6 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <!-- 
+      Vendor Scripts 
+    -->
+
     <script type="text/javascript" src="vendor/jquery-2.0.2.min.js"></script>
     <script type="text/javascript" src="vendor/underscore-min.js"></script>
     <script type="text/javascript" src="vendor/backbone.js"></script>
@@ -17,6 +21,9 @@
     <script type="text/javascript" src="vendor/spin.min.js"></script>
     <script type="text/javascript" src="app/App.js"></script>
 
+    <!-- 
+      App Scripts 
+    --> 
 
     <script type="text/javascript" src="app/models/Comment.js"></script>
     <script type="text/javascript" src="app/models/Node.js"></script>
@@ -29,31 +36,39 @@
     <script type="text/javascript" src="app/views/RecentActivity.js"></script>
     <script type="text/javascript" src="app/views/UpcomingEvents.js"></script>
 
+    <!-- 
+      Vender CSS 
+    -->
+
     <link href="vendor/Flat-UI-master/css/flat-ui.css" rel="stylesheet">
+
+    <!-- 
+      App CSS 
+    -->
+
     <link href="app/app.css" rel="stylesheet">
+
   </head>
+
+  <!-- 
+    Regions
+  -->
 
   <body>
 
-    <div id="top-container">
-      <div id="top-inner-container">
+    <div id="top-region">
+      <div id="top-inner-region">
         <div id="header">
           <div class="logo"> 
             <img src="img/farmhack-logo-transparent.png"> 
           </div>
         </div> 
-          
-        <div id="jumbotron">
+        <div id="jumbotron">  </div>
+      </div> 
+    </div> 
 
-        </div>
-        
-
-
-      </div> <!--  / #top-inner-container -->
-    </div> <!--  / #top-container -->
-
-    <div id="middle-container">
-      <div id="nav-container">
+    <div id="middle-region">
+      <div id="nav-region">
         <div id="nav">
           <div class="nav-column">
             <h2>Resources</h2>
@@ -73,30 +88,18 @@
           </div>
         </div>
       </div>
+    </div> 
 
-    </div> <!-- / #middle-container -->
-
-    <div id="bottom-container">
-
-      <div class="recent-hacking-title" style="display:none; text-align:center; clear: both; margin-top:18px ">
-        <h2>Upcoming Events</h2>
-      </div>
-
-      <div id="upcoming-events">
-
-      </div>
-
-      <div class="recent-hacking-title" style="display:none; text-align:center; clear: both; margin-top:20px">
-        <h2>Recent Online Activity</h2>
-      </div>
-
-      <div class="recent-activity">
-
-      </div>
+    <div id="bottom-region">
+      <div class="row-1"> </div>
+      <div class="row-2"> </div>
     </div>
       
-
   </body>
+
+  <!-- 
+    Templates 
+  -->
 
   <script type="text/template" id="jumbotron-anonymous">
     <div class="frame">
@@ -149,6 +152,30 @@
       on <%= changed %>
     </div>
   </script>
+
+  <script type="text/html" id="template-block-Upcoming-Events">
+    <div class="title">
+      <h2>
+        Upcoming Events
+      </h2>
+    </div>
+    <div class="content">
+
+    </div>      
+  </script>
+
+  <script type="text/html" id="template-block-Recent-Online-Activity">
+    <div class="title">
+      <h2>
+        Recent Online Activity
+      </h2>
+    </div>
+    <div class="content"> </div>      
+  </script>
+
+  <!--
+    Start the App
+  -->
 
   <script>
     $(document).ready(function() {
