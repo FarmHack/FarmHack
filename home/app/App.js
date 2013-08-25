@@ -17,16 +17,6 @@ $(function() {
       }
     },
 
-    renderUpcomingEvents: function() {
-      var events = new App.Collections.UpcomingEvents()
-      events.on('sync', function(){
-        var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
-        UpcomingEvents.render()
-        $('#bottom-region .row-1').html(UpcomingEvents.el)
-      })
-      events.fetch()
-    },
-
     renderJumboTron: function () {
       $.getJSON('/api/user', function(user) {
         if (user.uid == 0) {
@@ -47,16 +37,30 @@ $(function() {
       })
     },
 
+    renderUpcomingEvents: function() {
+      $('#bottom-region .row-1').spin()
+      var events = new App.Collections.UpcomingEvents()
+      events.on('sync', function(){
+        var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
+        UpcomingEvents.render()
+        UpcomingEvents.$el.css('display', 'none')
+        $('#bottom-region .row-1').html(UpcomingEvents.el)
+        UpcomingEvents.$el.fadeIn(800)
+      })
+      events.fetch()
+    },
+
     renderRecentActivity: function() {
+      $('#bottom-region .row-2').spin()
       var comments = new App.Collections.Comments()
       var nodes = new App.Collections.Nodes()
       comments.fetch()
       nodes.on('sync', function() {
-        $('#bottom-region .row-2').hide()
         var recentActivity = new App.Views.RecentActivity({nodes:nodes,comments:comments})
         recentActivity.render()
+        recentActivity.$el.css('display', 'none')
         $('#bottom-region .row-2').html(recentActivity.el)
-        $('#bottom-region .row-2').fadeIn(800)
+        recentActivity.$el.fadeIn(800)
       })
       comments.on('sync', function(){
         nodes.fetch()
