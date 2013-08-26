@@ -29,7 +29,10 @@ $(function() {
       this.$content.fadeOut(400)
       var that = this
       setTimeout(function() {
-        that.spin(false)
+        that.$content
+          .css('margin', '0px auto')
+          .css('width', that.collection.models.length*320 + 'px')
+          .spin(false)
         that.addAll()
         that.$content.fadeIn(800)
       }, 400)
