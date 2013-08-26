@@ -99,7 +99,7 @@ function farmhack_rest_api_events() {
 
 function farmhack_rest_api_events_upcoming() {
   $response = array();
-  $results = db_query("SELECT * FROM field_revision_field_dates WHERE entity_type='node' && bundle='event' && field_dates_value2 > UNIX_TIMESTAMP() ORDER BY n.changed DESC LIMIT 3");
+  $results = db_query("SELECT * FROM field_revision_field_dates WHERE entity_type='node' && bundle='event' && field_dates_value2 > UNIX_TIMESTAMP() ORDER BY field_data_value DESC LIMIT 3");
   foreach($results as $result) {
     $node = node_load($result->entity_id);
     $user = user_load($node->uid);
