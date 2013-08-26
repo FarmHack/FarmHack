@@ -1,11 +1,19 @@
 $(function() {
   App.Views.RecentActivity = Backbone.View.extend({
 
-    tagName: "table",
+    template: $('#template--collection-view').html(),
 
-    className: "table table-striped",
+    className: 'block block--upcoming-events',
 
-    template: $('#template-block-Recent-Online-Activity').html(),
+    title: 'RECENT ONLINE ACTIVITY',
+
+    initialize: function() {
+      vars = {
+        title: this.title
+      }
+      this.$el.html(_.template(this.template, vars))
+      this.$content = this.$el.children('.content')
+    },
 
     addOne: function(model){
       var item = new App.Views[model.view]({model: model})
@@ -14,28 +22,26 @@ $(function() {
     },
 
     addAll: function(){
-      _.each(this.models, this.addOne, this)
+      _.each(this.collection.models, this.addOne, this)
     },
 
     render: function() {
-      this.$el.html(_.template(this.template))
-      // Merge the nodes and comments collections
-      var models = {}
-      this.options.nodes.each(function(node){
-        models[node.get('changed')] = node
-        models[node.get('changed')].view = 'Node'
-      })
-      this.options.comments.each(function(comment){
-        models[comment.get('changed')] = comment
-        models[comment.get('changed')].view = 'Comment'
-      })
-      // Sort the merged collection
-      var sortedModels = []
-      _.each(models, function(model) {
-        sortedModels.unshift(model)
-      })
-      this.models = sortedModels
-      this.addAll()
+      this.$content.fadeOut(400)
+      var that = this
+      setTimeout(function() {
+        that.spin(false)
+        that.addAll()
+        that.$content.fadeIn(800)
+      }, 400)
+    },
+
+    spin: function(status) {
+      if (status == null || status == true) {
+        this.$content.spin()
+      }
+      if (status == false) {
+        this.$content.spin(false)
+      }
     }
 
   })

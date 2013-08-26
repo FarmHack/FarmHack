@@ -38,33 +38,25 @@ $(function() {
     },
 
     renderUpcomingEvents: function() {
-      $('#bottom-region .row-1').spin()
       var events = new App.Collections.UpcomingEvents()
+      var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
+      $('#bottom-region .row-1').html(UpcomingEvents.el)
+      UpcomingEvents.spin()
       events.on('sync', function(){
-        var UpcomingEvents = new App.Views.UpcomingEvents({collection: events})
         UpcomingEvents.render()
-        UpcomingEvents.$el.css('display', 'none')
-        $('#bottom-region .row-1').html(UpcomingEvents.el)
-        UpcomingEvents.$el.fadeIn(800)
       })
       events.fetch()
     },
 
     renderRecentActivity: function() {
-      $('#bottom-region .row-2').spin()
-      var comments = new App.Collections.Comments()
-      var nodes = new App.Collections.Nodes()
-      comments.fetch()
-      nodes.on('sync', function() {
-        var recentActivity = new App.Views.RecentActivity({nodes:nodes,comments:comments})
-        recentActivity.render()
-        recentActivity.$el.css('display', 'none')
-        $('#bottom-region .row-2').html(recentActivity.el)
-        recentActivity.$el.fadeIn(800)
+      var recentActivityCollection = new App.Collections.RecentActivity()
+      var recentActivityView = new App.Views.RecentActivity({collection: recentActivityCollection})
+      $('#bottom-region .row-2').html(recentActivityView.el)
+      recentActivityView.spin()
+      recentActivityCollection.on('sync', function() {
+        recentActivityView.render()
       })
-      comments.on('sync', function(){
-        nodes.fetch()
-      })
+      recentActivityCollection.fetch()
     }
 
   }))

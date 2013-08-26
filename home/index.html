@@ -32,6 +32,7 @@
     <script type="text/javascript" src="app/collections/Nodes.js"></script>
     <script type="text/javascript" src="app/collections/Events.js"></script>
     <script type="text/javascript" src="app/collections/UpcomingEvents.js"></script>
+    <script type="text/javascript" src="app/collections/RecentActivity.js"></script>
     <script type="text/javascript" src="app/views/Comment.js"></script>
     <script type="text/javascript" src="app/views/Node.js"></script>
     <script type="text/javascript" src="app/views/RecentActivity.js"></script>
@@ -47,7 +48,8 @@
       App CSS 
     -->
 
-    <link href="app/app.css" rel="stylesheet">
+    <link href="app/css/app.css" rel="stylesheet">
+    <link href="app/css/block.css" rel="stylesheet">
 
   </head>
 
@@ -154,15 +156,13 @@
     </div>
   </script>
 
-  <script type="text/html" id="template-block-Upcoming-Events">
+  <script type="text/html" id="template--collection-view">
     <div class="title">
       <h2>
-        Upcoming Events
+        <%= title %>
       </h2>
     </div>
-    <div class="content">
-
-    </div>      
+    <div class="content">  </div>      
   </script>
 
   <script type="text/html" id="template-block-Recent-Online-Activity">
