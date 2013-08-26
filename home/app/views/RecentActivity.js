@@ -5,7 +5,7 @@ $(function() {
 
     className: 'block block--upcoming-events',
 
-    title: 'RECENT ONLINE ACTIVITY',
+    title: 'Recent Online Activity',
 
     initialize: function() {
       vars = {

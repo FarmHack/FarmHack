@@ -5,7 +5,7 @@ $(function() {
 
     className: 'block block--upcoming-events',
 
-    title: 'UPCOMING EVENTS',
+    title: 'Upcoming Events',
 
     initialize: function() {
       vars = {
