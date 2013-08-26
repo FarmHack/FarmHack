@@ -31,8 +31,15 @@ $(function() {
           $('#jumbotron .content').delay(1200).fadeIn()
         }
         else {
-          $('#jumbotron').html("<h1 style='display:none; margin:0;' class='content'>Welcome back " + user.name + "</h1>")
-          $('#jumbotron .content').delay(500).fadeIn()
+          $('#jumbotron').hide()
+          var $template = $('#jumbotron-user').html()
+          $('#jumbotron').html(_.template($template, {name: user.name}))
+          $('#jumbotron .frame').hide()
+          $('#jumbotron .content').hide()
+          $('#jumbotron').show()
+          $('#jumbotron .frame').css('height', '150px')
+          $('#jumbotron .frame').delay(500).slideDown(700)
+          $('#jumbotron .content').delay(1200).fadeIn()
         }
       })
     },
