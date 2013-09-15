@@ -78,7 +78,9 @@ function farmhack_rest_api_comments_by_changed() {
   foreach($results as $result) {
     $comment = comment_load($result->cid);
     $user = user_load($comment->uid);
-    $comment->userPhotoFileName = $user->picture->filename;
+    if(is_object($user->picture)) {
+      $comment->userPhotoFileName = $user->picture->filename;
+    }
     $response[] = $comment;
   }
   drupal_json_output($response);
