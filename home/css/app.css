@@ -110,19 +110,23 @@ a.btn.btn-success:hover {
   text-shadow: 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF;
 }
 
-.activity-item {   
-border-radius: 3px 3px 3px 3px;
-box-shadow:  0px 0px 5px 0px #555; 
+.activity-item {  
 width: 300px;
 float: left;
 /*border: solid #CCC 1px;*/
-min-height: 110px;
+min-height: 115px;
 margin: 10px;
 padding: 0px 0px 35px;
-background: #fff;
+background: #f1f3f2 url('../img/wedge.jpg');
+background-position: bottom right;
+background-repeat: no-repeat;
 font-size:1.4em;
 position: relative;
 
+}
+
+.activity-item a {
+  color: #333;
 }
 
 .activity-by-line {
@@ -131,6 +135,8 @@ position: relative;
   left: 5px;
   font-size: 15px;
   width: 298px;
+  color: #AAA;
+  font-weight: lighter;
 }
 .activity-user-photo {
   float: left;
@@ -143,20 +149,20 @@ position: relative;
 }
 
 .activity-type {
-color: #fff;
+color: #333;
 border-radius: 3px 3px 0px 0px;
-background: green;
+background: #f1f3f2 !important;
 margin-right: 21px;
-width: 296px;
-padding: 2px;
-text-align: center;
+width: 288px;
+padding: 6px;
+text-align: left;
 font-weight: bolder;
-font-size: 18px;
-text-shadow: 0px 0px 3px #000;
+font-size: 14px;
 }
 
 .activity-body {
   padding: 5px;
+  font-weight: lighter;
 }
 
 #jumbotron .go {

@@ -8,31 +8,31 @@ $(function() {
 
     typeMap: {
       opentools_tool: {
-        name: "Tool",
+        name: "TOOL",
         color: "brown"
       },
       wiki: {
-        name: "Wiki Page",
+        name: "WIKI",
         color: "blue"
       },
       organization: {
-        name: "Open Shop",
+        name: "OPEN SHOP",
         color: "purple"
       },
       user_profile: {
-        name: "Farm Hacker",
+        name: "FARM HACKER",
         color: "orange"
       },
       event: { 
-        name: "Event",
+        name: "EVENT",
         color: "#ffee2b"//"#f7e950"
       },
       page: {
-        name: "Page",
+        name: "PAGE",
         color: "black"
       },
       forum: {
-        name: "Forum Topic",
+        name: "FORUM TOPIC",
         color: "red"
       }
     },

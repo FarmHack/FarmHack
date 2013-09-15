@@ -5,7 +5,7 @@ $(function() {
 
     className: 'block block--upcoming-events',
 
-    title: 'Recent Online Activity',
+    title: '<img style="position: relative; left: -30px;" src="img/activities-header.jpg">',
 
     initialize: function() {
       vars = {
