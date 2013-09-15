@@ -1,3 +1,10 @@
+body {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin: 0px;
+  background: #FFF;
+}
+
 a {
   color: green;
   text-decoration: none;
@@ -22,9 +29,15 @@ a.btn.btn-success:hover {
   background: #4fb81c;
 }
 #top-region {
-  width: 100%;
-  background: white url('../img/3.png');
-  padding-top: 20px;
+  margin: 0px auto;
+  width: 1024px;
+  position:relative;
+}
+
+#movie {
+  position: absolute;
+  top: 227px;
+  left: 30px;
 }
 
 #top-inner-region {
@@ -56,12 +69,7 @@ a.btn.btn-success:hover {
 #nav-region {
 }
 
-body {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  margin: 0px;
-  background: #e6e4e7;
-}
+
 
 .span4 {
   width: 285px !important;
