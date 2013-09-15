@@ -81,6 +81,9 @@ function farmhack_rest_api_comments_by_changed() {
     if(is_object($user->picture)) {
       $comment->userPhotoFileName = $user->picture->filename;
     }
+    else {
+      $comment->userPhotoFileName = "";
+    }
     $response[] = $comment;
   }
   drupal_json_output($response);
