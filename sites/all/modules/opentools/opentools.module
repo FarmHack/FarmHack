@@ -40,7 +40,7 @@ function opentools_init() {
    }
    $context = opentools_get_context();
    if(arg(0) == 'node' && arg(2) == 'edit' && $context['opentools_space']['id']) {
-     drupal_set_message("Consider <a href='/notifications/taxonomy_term?0=" . $context['opentools_space']['forum'] . "&destination=" . $_GET['q'] . "'> subscribing to this forum</a> in case anyone wants to discuss your edit with you. Also consider <a href='/notifications/subscribe/content_thread?0=" . $context['opentools_space']['wiki'] . "&destination=" . $_GET['q'] . "'>subscribing to future edits</a> on this wiki.", 'warning');
+     drupal_set_message("Consider <a href='/notifications/subscribe/taxonomy_term?0=" . $context['opentools_space']['forum'] . "&destination=" . $_GET['q'] . "'> subscribing to this forum</a> in case anyone wants to discuss your edit with you. Also consider <a href='/notifications/subscribe/content_thread?0=" . $context['opentools_space']['wiki'] . "&destination=" . $_GET['q'] . "'>subscribing to future edits</a> on this wiki.", 'warning');
    }
 
 }
