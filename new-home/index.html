@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Farm Hack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- 
+      Vendor Scripts 
+    -->
+
+    <script type="text/javascript" src="vendor/jquery-2.0.2.min.js"></script>
+    <script type="text/javascript" src="vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="vendor/backbone.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
+    <script type="text/javascript" src="vendor/moment.min.js"></script>
+    <script type="text/javascript" src="vendor/moment-timezone.min.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
+    <script type="text/javascript" src="vendor/jquery.spin.js"></script>
+
+    <!-- 
+      App Scripts 
+    --> 
+
+    <script type="text/javascript" src="app/App.js"></script>
+    <script type="text/javascript" src="app/models/Comment.js"></script>
+    <script type="text/javascript" src="app/models/Node.js"></script>
+    <script type="text/javascript" src="app/collections/Comments.js"></script>
+    <script type="text/javascript" src="app/collections/Nodes.js"></script>
+    <script type="text/javascript" src="app/collections/Events.js"></script>
+    <script type="text/javascript" src="app/collections/UpcomingEvents.js"></script>
+    <script type="text/javascript" src="app/collections/RecentActivity.js"></script>
+    <script type="text/javascript" src="app/views/Comment.js"></script>
+    <script type="text/javascript" src="app/views/Node.js"></script>
+    <script type="text/javascript" src="app/views/RecentActivity.js"></script>
+    <script type="text/javascript" src="app/views/UpcomingEvents.js"></script>
+
+    <!-- 
+      Vender CSS 
+    -->
+
+    <link href="vendor/Flat-UI-master/css/flat-ui.css" rel="stylesheet">
+
+    <!-- 
+      App CSS 
+    -->
+
+    <link href="css/app.css" rel="stylesheet">
+    <link href="css/block.css" rel="stylesheet">
+
+  </head>
+
+  <!-- 
+    Regions
+  -->
+
+  <body>
+
+    <div id="top-region">
+      <div id="top-inner-region">
+        <div id="header">
+          <div class="logo"> 
+            <img src="img/farmhack-logo-transparent.png"> 
+          </div>
+        </div> 
+        <div id="jumbotron">  </div>
+      </div> 
+    </div> 
+
+    <div id="middle-region">
+      <div id="nav-region">
+        <div id="nav">
+          <div class="nav-column">
+            <h2>Resources</h2>
+            <!--h3><a  href="wiki/getting-started" class="getting-started">Getting Started</a></h3-->
+            <h3><a href="/tools">Tools</a></h3>
+            <h3><a href="/forum">Discussions</a></h3>
+          </div>
+          <div class="nav-column">
+            <h2>Events</h2>
+            <h3><a href="/calendar">Calendar</a></h3>
+            <h3><a href="/wiki/host-an-event">Host an event</a></h3>
+          </div>
+          <div class="nav-column">
+            <h2>Profiles</h2>
+            <h3><a href="/shops">Shops</a></h3>
+            <h3><a href="/people">People</a></h3>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <div id="bottom-region">
+      <div class="row row-1"> </div>
+      <div class="row row-2"> </div>
+    </div>
+      
+  </body>
+
+  <!-- 
+    Templates 
+  -->
+
+  <script type="text/template" id="jumbotron-anonymous">
+    <div class="frame">
+      <div class="content">
+        <div class="slogan">
+          An open source community for resilient agriculture.
+        </div>
+        <div class="go">
+          <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
+          <a class="btn btn-large btn-success" href="/user">Sign in or create an account</a>
+        </div>
+      </div> 
+    </div>
+  </script>
+
+  <script type="text/template" id="jumbotron-user">
+    <div class="frame">
+      <div class="content">
+        <div class="slogan">
+          Welcome back <%= name %>
+        </div>
+        <div class="go">
+          <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
+          <a class="btn btn-large btn-success" href="/user">Go to your account</a>
+        </div>
+      </div> 
+    </div>
+  </script>
+
+  <script type="text/html" id="template-Comment">
+    <div class="activity-type">
+      comment
+    </div>
+    <div class="activity-body">
+      <a href="/comment/<%= cid %>#comment-<%= cid %>">
+        <%= subject %>
+      </a>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= created %>
+    </div>
+  </script>
+
+  <script type="text/html" id="template-Node">
+    <div class="activity-type" style="background: <%= typeColor %>;">
+      <%= typeName %> 
+    </div>
+    <div class="activity-body">
+      <a href="/node/<%= nid %>"><%= title %></a>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
+  </script>
+
+  <script type="text/html" id="template--collection-view">
+    <h2 class="title">
+      <%= title %>
+    </h2>
+    <div class="content">  </div>      
+  </script>
+
+  <script type="text/html" id="template-block-Recent-Online-Activity">
+    <div class="title">
+      <h2>
+        Recent Online Activity
+      </h2>
+    </div>
+    <div class="content"> </div>      
+  </script>
+
+  <!--
+    Start the App
+  -->
+
+  <script>
+    $(document).ready(function() {
+      App.start()
+    })
+  </script>
+
+</html>

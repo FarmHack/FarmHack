@@ -1,0 +1,10 @@
+
+.block .title {
+  text-align: center;
+  margin: 0px auto;
+}
+
+.block .content {
+  min-height: 150px;
+  width: 100%;
+}

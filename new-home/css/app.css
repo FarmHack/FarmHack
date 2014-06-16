@@ -1,0 +1,189 @@
+a {
+  color: green;
+  text-decoration: none;
+}
+a:hover {
+  color: #4fb81c;
+  text-decoration: none;
+}
+h2 {
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+.btn.btn-success {
+  background: green;
+}
+
+a.btn.btn-success:hover {
+  background: #4fb81c;
+}
+#top-region {
+  width: 100%;
+  background: white url('../img/3.png');
+  padding-top: 20px;
+}
+
+#top-inner-region {
+  width: 910px;
+  margin: 0 auto;
+}
+
+.logo img {
+  margin-top: 30px;
+
+}
+/*0px -12px 8px -10px #000; */
+#middle-region {
+  width: 100%;
+  background: #FFF;
+  box-shadow:  0px 0px 20px 0px #000; 
+  height: 215px;
+  position:relative;
+}
+
+#bottom-region {
+  width: 970px;
+  margin: 0 auto;
+  height: 600px;
+  position: relative;
+  top: 20px;
+}
+
+#nav-region {
+}
+
+body {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin: 0px;
+  background: #e6e4e7;
+}
+
+.span4 {
+  width: 285px !important;
+}
+
+.region {
+  width: 910px;
+  margin: 0 auto;
+}
+
+#header {
+  width: 100%;
+  text-align: center;
+}
+
+#header .logo {
+  clear: both;
+}
+
+#header .leaf {
+  clear: both;
+}
+
+#jumbotron {
+  margin-top: 10px;
+  text-align: center;
+  min-height: 60px;
+}
+
+#jumbotron .slogan {
+  color: #000;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 49px; 
+  line-height: 55px;
+  margin-bottom: 30px;
+  text-align: center;
+  text-shadow: 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF, 0 0 1em #FFF;
+}
+
+.activity-item {   
+border-radius: 3px 3px 3px 3px;
+box-shadow:  0px 0px 5px 0px #555; 
+width: 300px;
+float: left;
+/*border: solid #CCC 1px;*/
+min-height: 110px;
+margin: 10px;
+padding: 0px 0px 35px;
+background: #fff;
+font-size:1.4em;
+position: relative;
+
+}
+
+.activity-by-line {
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  font-size: 15px;
+  width: 298px;
+}
+.activity-user-photo {
+  float: left;
+  margin: 0px 3px 0px 0px;
+}
+
+.activity-user-photo img {
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px 0px #000; 
+}
+
+.activity-type {
+color: #fff;
+border-radius: 3px 3px 0px 0px;
+background: green;
+margin-right: 21px;
+width: 296px;
+padding: 2px;
+text-align: center;
+font-weight: bolder;
+font-size: 18px;
+text-shadow: 0px 0px 3px #000;
+}
+
+.activity-body {
+  padding: 5px;
+}
+
+#jumbotron .go {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#upcoming-events {
+  height: 165px;
+}
+
+#jumbotron .go a {
+  margin: 0 10px;
+}
+
+#nav {
+  margin: 0 auto;
+  width: 909px;
+}
+
+
+.row {
+  float: left;
+  clear: both;
+  min-height: 200px;
+  width: 100%;
+}
+
+.nav-column {
+  float: left;
+  width: 303px;
+  text-align: center;
+}
+
+.nav-column .getting-started {
+  color:green; 
+  font-decoration: underline;
+}
