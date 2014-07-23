@@ -7,8 +7,8 @@ function farmhack_rest_api_menu() {
     'access callback' => TRUE
   );
 
-  $items['api/blog'] = array(
-    'page callback' => 'farmhack_rest_api_blog',
+  $items['api/blogs'] = array(
+    'page callback' => 'farmhack_rest_api_blogs',
     'type' => MENU_CALLBACK,
     'access callback' => TRUE
   );
@@ -47,15 +47,17 @@ function farmhack_rest_api_user() {
 }
 
 
-function farmhack_rest_api_blog() {
+function farmhack_rest_api_blogs() {
   $response = array();
   $results = db_query("SELECT nid, changed FROM {node} WHERE node.type = \"blog\" ORDER BY changed DESC LIMIT 1");
+  $return = [];
   foreach($results as $result) {
     $node = node_load($result->nid);
     $user = user_load($node->uid);
     $node->userPhotoFileName = $user->picture->filename;
+    $response[] = $node
   }
-  drupal_json_output($node);
+  drupal_json_output($response);
 }
 
 /*
