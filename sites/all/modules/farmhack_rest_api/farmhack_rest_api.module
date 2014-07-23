@@ -54,7 +54,7 @@ function farmhack_rest_api_blogs() {
     $node = node_load($result->nid);
     $user = user_load($node->uid);
     $node->userPhotoFileName = $user->picture->filename;
-    $response[] = $node
+    $response[] = $node;
   }
   drupal_json_output($response);
 }
