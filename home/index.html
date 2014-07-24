@@ -28,15 +28,18 @@
     <script type="text/javascript" src="app/App.js"></script>
     <script type="text/javascript" src="app/models/Comment.js"></script>
     <script type="text/javascript" src="app/models/Node.js"></script>
+    <script type="text/javascript" src="app/models/Blog.js"></script>
     <script type="text/javascript" src="app/collections/Comments.js"></script>
     <script type="text/javascript" src="app/collections/Nodes.js"></script>
     <script type="text/javascript" src="app/collections/Events.js"></script>
     <script type="text/javascript" src="app/collections/UpcomingEvents.js"></script>
     <script type="text/javascript" src="app/collections/RecentActivity.js"></script>
+    <script type="text/javascript" src="app/collections/Blogs.js"></script>
     <script type="text/javascript" src="app/views/Comment.js"></script>
     <script type="text/javascript" src="app/views/Node.js"></script>
     <script type="text/javascript" src="app/views/RecentActivity.js"></script>
     <script type="text/javascript" src="app/views/UpcomingEvents.js"></script>
+    <script type="text/javascript" src="app/views/JumboBlog.js"></script>
 
     <!-- 
       Vender CSS 
@@ -62,6 +65,10 @@
     <div id="top-region">
       <div id="movie">
         <iframe src="//player.vimeo.com/video/73504647?portrait=0" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> 
+      </div>
+
+      <div id="jumboblog">
+
       </div>
 
 
@@ -97,6 +104,22 @@
   <!-- 
     Templates 
   -->
+
+  <script type="text/template" id="template-JumboBlog">
+    <img src="http://dev.farmhack.gotpantheon.com/sites/default/files/<%= fileName %>">
+    <div class="activity-body">
+      <h1><a href="/node/<%= nid %>"><%= title %></a></h1>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
+  </script>
 
   <script type="text/template" id="jumbotron-anonymous">
     <div class="frame">

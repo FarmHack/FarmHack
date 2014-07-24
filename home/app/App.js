@@ -7,9 +7,10 @@ $(function() {
     Collections: {},
 
     start: function(){
-      this.renderJumboTron()
-      this.renderUpcomingEvents()
+      //this.renderJumboTron()
+      //this.renderUpcomingEvents()
       this.renderRecentActivity()
+      this.renderJumboBlog()
 
       window.onscroll = function() {
         var speed = 3.0;
@@ -17,7 +18,18 @@ $(function() {
       }
     },
 
-    renderJumboTron: function () {
+    renderJumboBlog: function() {
+      var blogsCollection = new App.Collections.Blogs()
+      var blogView = new App.Views.JumboBlog()
+      blogsCollection.on('sync', function() {
+        blogView.model = blogsCollection.models[0]
+        blogView.render()
+        $('#jumboblog').html(blogView.el)
+      })
+      blogsCollection.fetch()
+    },
+
+    renderJumboTron: function() {
       $.getJSON('/api/user', function(user) {
         if (user.uid == 0) {
           // @todo I could simplify this using transparency instead of tricky hides and css?

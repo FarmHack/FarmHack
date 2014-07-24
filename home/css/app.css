@@ -93,6 +93,28 @@ a.btn.btn-success:hover {
   clear: both;
 }
 
+#jumboblog {
+  position: absolute;
+  top: 193px;
+  right: 13px;
+  background: white;
+  height: 345px;
+  width: 360px;
+}
+#jumboblog img {
+  max-width: 360px;
+  max-height: 200px;
+}
+#jumboblog .activity-item {
+  width: 360px;
+  height: 310px;
+  margin: 0px;
+}
+#jumboblog h1 {
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
 #jumbotron {
   margin-top: 10px;
   text-align: center;
