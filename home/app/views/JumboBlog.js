@@ -11,6 +11,7 @@ $(function() {
       vars.created = moment(vars.created, "X").format("MMMM D h:mma")
       vars.changed = moment(vars.changed, "X").format("MMMM D h:mma")
       vars.fileName = this.model.attributes.field_main_image.und[0].filename
+      vars.typeName = "RECENT BLOG"
       this.$el.append(_.template(this.template, vars))
     }
     
