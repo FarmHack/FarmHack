@@ -49,7 +49,7 @@ function farmhack_rest_api_user() {
 
 function farmhack_rest_api_blogs() {
   $response = array();
-  $results = db_query('SELECT nid, changed FROM node WHERE type="blog" ORDER BY changed DESC LIMIT 1');
+  $results = db_query('SELECT nid, changed FROM node WHERE type=:type ORDER BY changed DESC LIMIT 1', array('type'=>'blog'));
   foreach($results as $result) {
     $node = node_load($result->nid);
     $user = user_load($node->uid);
