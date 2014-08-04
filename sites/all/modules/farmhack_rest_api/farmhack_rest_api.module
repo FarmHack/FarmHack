@@ -13,6 +13,12 @@ function farmhack_rest_api_menu() {
     'access callback' => TRUE
   );
 
+  $items['api/featured-tools'] = array(
+    'page callback' => 'farmhack_rest_api_featured_tools',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+
   $items['api/nodes/changed'] = array(
     'page callback' => 'farmhack_rest_api_nodes_by_changed',
     'type' => MENU_CALLBACK,
@@ -44,6 +50,18 @@ function farmhack_rest_api_menu() {
 function farmhack_rest_api_user() {
   global $user;
   drupal_json_output($user);
+}
+
+function farmhack_rest_api_featured_tools() {
+  $response = array();
+  $results = db_query('SELECT nid, changed FROM node WHERE type=:type ORDER BY changed DESC LIMIT 1', array('type'=>'tools'));
+  foreach($results as $result) {
+    $node = node_load($result->nid);
+    $user = user_load($node->uid);
+    $node->userPhotoFileName = $user->picture->filename;
+    $response[] = $node;
+  }
+  drupal_json_output($response);
 }
 
 
