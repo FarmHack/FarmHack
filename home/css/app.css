@@ -113,7 +113,10 @@ a.btn.btn-success:hover {
 #jumboblog h1 {
   margin-top: 5px;
   margin-left: 10px;
+  font-size: 23px;
+  line-height: 20px;
 }
+
 
 #jumbotron {
   margin-top: 10px;
