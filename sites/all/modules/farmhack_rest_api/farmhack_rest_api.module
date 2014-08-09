@@ -41,6 +41,19 @@ function farmhack_rest_api_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => TRUE
   );
+  
+  // Redirects
+  $items['content/new-problem-statement-wiki'] = array(
+    'page callback' => 'new_problem_statement_wiki_redirect',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+  $items['content/new-event-topic'] = array(
+    'page callback' => 'new_event_topic_redirect',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE
+  );
+
 ;
 
 
@@ -128,13 +141,6 @@ function farmhack_rest_api_comments_by_changed() {
 
 function farmhack_rest_api_events() {
   $response = array();
-  $results = db_query("SELECT nid, changed FROM {node} WHERE type='event' ORDER BY changed DESC LIMIT 30");
-  foreach($results as $result) {
-    $node = node_load($result->nid);
-    $user = user_load($node->uid);
-    $node->userPhotoFileName = $user->picture->filename;
-    $response[] = $node;
-  }
   drupal_json_output($response);
 }
 
@@ -151,4 +157,10 @@ function farmhack_rest_api_events_upcoming() {
   drupal_json_output($response);
 }
 
+function new_problem_statement_wiki_redirect() {
+  header('Location: /node/add/wiki?edit[field_tags][und]=problem%20statement');
+}
 
+function new_event_topic_redirect() {
+  header('Location: /node/add/forum?edit[field_forum_topic_type][und]=32');
+}
