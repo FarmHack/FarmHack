@@ -7,7 +7,7 @@ function farmhack_rest_api_menu() {
     'access callback' => TRUE
   );
 
-  $items['api/blogs'] = array(
+  $items['api/blogs/recent'] = array(
     'page callback' => 'farmhack_rest_api_blogs',
     'type' => MENU_CALLBACK,
     'access callback' => TRUE
