@@ -1,0 +1,7 @@
+name = "Farm Hack Views"
+core = "7.x"
+package = "Farm Hack"
+dependencies[] = "profile2"
+dependencies[] = "views"
+features[ctools][] = "views:views_default:3.0"
+features[views_view][] = "farmhack_people"
