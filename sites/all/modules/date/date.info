@@ -4,22 +4,17 @@ dependencies[] = date_api
 package = Date/Time
 core = 7.x
 php = 5.2
-files[] = date_admin.inc
-files[] = date_content_generate.inc
-files[] = date_elements.inc
-files[] = date.install
-files[] = date.module
-files[] = date.theme
-files[] = date.tokens.inc
-files[] = date.views.inc
+files[] = date.migrate.inc
 files[] = tests/date_api.test
 files[] = tests/date.test
 files[] = tests/date_field.test
+files[] = tests/date_migrate.test
 files[] = tests/date_validation.test
 files[] = tests/date_timezone.test
-; Information added by drupal.org packaging script on 2011-12-20
-version = "7.x-2.0-rc1"
+
+; Information added by Drupal.org packaging script on 2014-07-29
+version = "7.x-2.8"
 core = "7.x"
 project = "date"
-datestamp = "1324415138"
+datestamp = "1406653438"
 
