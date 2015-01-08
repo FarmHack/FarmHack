@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the default summary style plugin, which displays items in an HTML list.
@@ -28,7 +29,6 @@ class views_plugin_style_summary extends views_plugin_style {
   }
 
   function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
     $form['base_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Base path'),

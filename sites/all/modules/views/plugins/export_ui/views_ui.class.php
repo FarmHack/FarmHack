@@ -376,6 +376,11 @@ class views_ui extends ctools_export_ui {
   }
 
   function list_page($js, $input) {
+    // Remove filters values from session if filters are hidden.
+    if (!variable_get('views_ui_show_listing_filters', FALSE) && isset($_SESSION['ctools_export_ui'][$this->plugin['name']])) {
+      unset($_SESSION['ctools_export_ui'][$this->plugin['name']]);
+    }
+
     // wrap output in a div for CSS
     $output = parent::list_page($js, $input);
     if (is_string($output)) {
@@ -425,8 +430,8 @@ function views_ui_clone_form($form, &$form_state) {
     '#title' => t('View name'),
     '#type' => 'machine_name',
     '#required' => TRUE,
-    '#maxlength' => 32,
-    '#size' => 32,
+    '#maxlength' => 128,
+    '#size' => 128,
     '#machine_name' => array(
       'exists' => 'ctools_export_ui_edit_name_exists',
       'source' => array('human_name'),
