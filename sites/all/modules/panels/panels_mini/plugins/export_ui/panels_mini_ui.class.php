@@ -87,6 +87,8 @@ class panels_mini_ui extends ctools_export_ui {
     $layout = !empty($this->layouts[$item->display->layout]) ? $this->layouts[$item->display->layout]['title'] : t('Missing layout');
     $category = $item->category ? check_plain($item->category) : t('Mini panels');
 
+    $ops = theme('links__ctools_dropbutton', array('links' => $operations, 'attributes' => array('class' => array('links', 'inline'))));
+
     $this->rows[$item->name] = array(
       'data' => array(
         array('data' => check_plain($item->admin_title), 'class' => array('ctools-export-ui-title')),
@@ -94,7 +96,7 @@ class panels_mini_ui extends ctools_export_ui {
         array('data' => $category, 'class' => array('ctools-export-ui-category')),
         array('data' => $layout, 'class' => array('ctools-export-ui-layout')),
         array('data' => $item->type, 'class' => array('ctools-export-ui-storage')),
-        array('data' => theme('links', array('links' => $operations)), 'class' => array('ctools-export-ui-operations')),
+        array('data' => $ops, 'class' => array('ctools-export-ui-operations')),
       ),
       'title' => !empty($item->admin_description) ? check_plain($item->admin_description) : '',
       'class' => array(!empty($item->disabled) ? 'ctools-export-ui-disabled' : 'ctools-export-ui-enabled'),
@@ -115,6 +117,13 @@ class panels_mini_ui extends ctools_export_ui {
   function edit_form(&$form, &$form_state) {
     // Get the basic edit form
     parent::edit_form($form, $form_state);
+
+    // Set the admin title machine name length.
+    // We need to do this because the system block name length is
+    // limited to 32 chars.
+    $form['info']['name']['#maxlength'] = 32;
+    $form['info']['name']['#size'] = 34;
+    $form['info']['name']['#description'] .= ' ' . t('The machine name length is limited to 32 characters, due to a limitation in the core block system.');
 
     $form['category'] = array(
       '#type' => 'textfield',
@@ -280,8 +289,6 @@ class panels_mini_ui extends ctools_export_ui {
     $form_state['display_title'] = !empty($cache->display_title);
 
     $form = panels_edit_display_form($form, $form_state);
-    // Make sure the theme will work since our form id is different.
-    $form['#theme'] = 'panels_edit_display_form';
   }
 
   function edit_form_content_submit(&$form, &$form_state) {

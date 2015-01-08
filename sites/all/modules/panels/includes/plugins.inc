@@ -129,10 +129,7 @@ class panels_cache_object {
     $this->head = drupal_add_html_head();
     $this->css = drupal_add_css();
     $this->tokens = ctools_set_page_token();
-
-    foreach (array('header', 'footer') as $scope) {
-      $this->js[$scope] = drupal_add_js(NULL, NULL, $scope);
-    }
+    $this->js = drupal_add_js();
   }
 
   /**
@@ -167,35 +164,42 @@ class panels_cache_object {
 
     foreach ($css as $name => $data) {
       if (!isset($start[$name])) {
-        $this->css[$name] = array($data['data'], $data['type'], $data['media'], $data['preprocess']);
+        $this->css[$name] = $data;
       }
     }
 
-    $js = array();
-    // A little less simple for js
-    foreach (array('header', 'footer') as $scope) {
-      $js[$scope] = drupal_add_js(NULL, NULL, $scope);
-    }
+    $js = drupal_add_js();
 
     $start = $this->js;
     $this->js = array();
 
-    foreach ($js as $scope => $scopes) {
-      foreach ($scopes as $type => $types) {
-        foreach ($types as $id => $info) {
-          if (!isset($start[$scope][$type][$id])) {
-            switch ($type) {
-              case 'setting':
-                $this->js[] = array($info, $type, $scope);
-                break;
+    // Use the advanced mapping function from Drupal >= 7.23 if available.
+    $array_mapping_func = function_exists('drupal_array_diff_assoc_recursive') ? 'drupal_array_diff_assoc_recursive' : 'array_diff_assoc';
 
-              case 'inline':
-                $this->js[] = array($info['code'], $type, $scope, $info['defer']);
-                break;
-
-              default:
-                $this->js[] = array($id, $type, $scope, $info['defer'], $info['cache']);
+    // If there are any differences between the old and the new javascript then
+    // store them to be added later.
+    if ($diff = $array_mapping_func($js, $start)) {
+      // Iterate over the diff to ensure we keep the keys on merge and don't add
+      // unnecessary items.
+      foreach ($diff as $key => $diff_data) {
+        // Special case the settings key and get the difference of the data.
+        if ($key === 'settings') {
+          // Iterate over the diff to ensure we keep the keys on merge and don't
+          // add unnecessary items.
+          if (isset($diff[$key]['data'])) {
+            foreach ($diff[$key]['data'] as $settings_key => $settings_data) {
+              // Merge the changes with the base to get a complete settings
+              // array.
+              $this->js[$key]['data'][] = drupal_array_merge_deep($settings_data, $diff[$key]['data'][$settings_key]);
             }
+          }
+        }
+        else {
+          $this->js[$key] = $diff_data;
+          // Check if the key was present already and if so merge the changes
+          // with the original data to get the full settings array.
+          if (isset($start[$key])) {
+            $this->js[$key] = drupal_array_merge_deep($start[$key], $this->js[$key]);
           }
         }
       }
@@ -205,7 +209,7 @@ class panels_cache_object {
     $tokens = ctools_set_page_token();
     foreach ($this->tokens as $token => $argument) {
       if (isset($tokens[$token])) {
-        unset($tokens);
+        unset($tokens[$token]);
       }
     }
 
@@ -221,12 +225,19 @@ class panels_cache_object {
     }
     if (!empty($this->css)) {
       foreach ($this->css as $args) {
-        call_user_func_array('drupal_add_css', $args);
+        drupal_add_css($args['data'], $args);
       }
     }
     if (!empty($this->js)) {
-      foreach ($this->js as $args) {
-        call_user_func_array('drupal_add_js', $args);
+      foreach ($this->js as $key => $args) {
+        if ($key !== 'settings') {
+          drupal_add_js($args['data'], $args);
+        }
+        else {
+          foreach ($args['data'] as $setting) {
+            drupal_add_js($setting, 'setting');
+          }
+        }
       }
     }
 
