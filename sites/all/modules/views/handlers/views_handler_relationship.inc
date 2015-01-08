@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @file
  * Views' relationship handlers.
  */
 
 /**
- * @defgroup views_relationship_handlers Views' relationship handlers
+ * @defgroup views_relationship_handlers Views relationship handlers
  * @{
  * Handlers to tell Views how to create alternate relationships.
  */
@@ -31,6 +32,8 @@
  * - label: The default label to provide for this relationship, which is
  *   shown in parentheses next to any field/sort/filter/argument that uses
  *   the relationship.
+ *
+ * @ingroup views_relationship_handlers
  */
 class views_handler_relationship extends views_handler {
   /**
@@ -72,7 +75,7 @@ class views_handler_relationship extends views_handler {
     }
 
     $options['label'] = array('default' => $label, 'translatable' => TRUE);
-    $options['required'] = array('default' => FALSE);
+    $options['required'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -118,6 +121,10 @@ class views_handler_relationship extends views_handler {
       $def['type'] = 'INNER';
     }
 
+    if (!empty($this->definition['extra'])) {
+      $def['extra'] = $this->definition['extra'];
+    }
+
     if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
       $join = new $def['join_handler'];
     }
@@ -152,6 +159,8 @@ class views_handler_relationship extends views_handler {
 
 /**
  * A special handler to take the place of missing or broken handlers.
+ *
+ * @ingroup views_relationship_handlers
  */
 class views_handler_relationship_broken extends views_handler_relationship {
   function ui_name($short = FALSE) {

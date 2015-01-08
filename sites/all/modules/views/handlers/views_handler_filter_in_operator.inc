@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Definition of views_handler_filter_in_operator.
+ */
+
 /**
  * Simple filter to handle matching of multiple options selectable via checkboxes
  *
@@ -6,6 +12,7 @@
  * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
+ * @ingroup views_filter_handlers
  */
 class views_handler_filter_in_operator extends views_handler_filter {
   var $value_form_type = 'checkboxes';
@@ -73,7 +80,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
 
     $options['operator']['default'] = 'in';
     $options['value']['default'] = array();
-    $options['expose']['contains']['reduce'] = array('default' => FALSE);
+    $options['expose']['contains']['reduce'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -283,6 +290,9 @@ class views_handler_filter_in_operator extends views_handler_filter {
   }
 
   function admin_summary() {
+    if ($this->is_a_group()) {
+      return t('grouped');
+    }
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }

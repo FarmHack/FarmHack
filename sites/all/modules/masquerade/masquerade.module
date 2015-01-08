@@ -28,13 +28,20 @@ function masquerade_permission() {
       'title' => t('Masquerade as user'),
       'description' => t('Masquerade as another user.'),
     ),
+    'masquerade as any user' => array(
+      'title' => t('Masquerade as any user'),
+      'description' => t('Masquerade as any user.'),
+      'restrict access' => TRUE,
+    ),
     'masquerade as admin' => array(
       'title' => t('Masquerade as admin'),
       'description' => t('Masquerade as the site admin (UID 1).'),
+      'restrict access' => TRUE,
     ),
     'administer masquerade' => array(
       'title' => t('Administer Masquerade'),
       'description' => t('Perform administration tasks and configure the Masquerade module.'),
+      'restrict access' => TRUE,
     ),
   );
 }
@@ -227,7 +234,7 @@ function masquerade_menu_access($type, $uid = NULL) {
       break;
     case 'user':
       global $user;
-      return db_query("SELECT TRUE FROM {masquerade_users} WHERE uid_from = :uid_from", array(':uid_from' => $user->uid))->fetchField();
+      return db_query("SELECT 1 FROM {masquerade_users} WHERE uid_from = :uid_from", array(':uid_from' => $user->uid))->fetchField();
       break;
     case 'switch':
       $switch_to_account = FALSE;
@@ -236,11 +243,12 @@ function masquerade_menu_access($type, $uid = NULL) {
         if (!is_numeric($uid)) {
           return FALSE;
         }
-        $account = user_load($uid);
-        $switch_to_account = db_query("SELECT TRUE FROM {masquerade_users} WHERE uid_from = :uid_from AND uid_to = :uid_to", array(
-          ':uid_from' => $user->uid,
-          ':uid_to' => $account->uid
-        ))->fetchField();
+        if ($account = user_load($uid)) {
+          $switch_to_account = db_query("SELECT 1 FROM {masquerade_users} WHERE uid_from = :uid_from AND uid_to = :uid_to", array(
+            ':uid_from' => $user->uid,
+            ':uid_to' => $account->uid
+          ))->fetchField();
+        }
       }
       return !isset($_SESSION['masquerading']) && (user_access('masquerade as user') || user_access('masquerade as admin') || $switch_to_account);
       break;
@@ -370,6 +378,30 @@ function masquerade_user_logout($account) {
 }
 
 /**
+ * Implements hook_field_extra_fields().
+ */
+function masquerade_field_extra_fields() {
+  $return['user']['user']  = array(
+    'form' => array(
+      'masquerade' => array(
+        'label' => t('Masquerade'),
+        'description' => t('User masquerade settings.'),
+        'weight' => 50,
+      ),
+    ),
+    'display' => array(
+      'masquerade' => array(
+        'label' => t('Masquerade'),
+        'description' => t('Masquerade as user link.'),
+        'weight' => 50,
+      ),
+    ),
+  );
+
+  return $return;
+}
+
+/**
  * Implements hook_user_view().
  */
 function masquerade_user_view($account, $view_mode, $langcode) {
@@ -381,14 +413,20 @@ function masquerade_user_view($account, $view_mode, $langcode) {
 
   global $user;
 
-  if (user_access($perm) && empty($account->masquerading) && $user->uid != $account->uid) {
+  // Query allowed uids so the "masquerade as <user>" link can be shown or
+  // hidden.
+  $allowed_uids = db_query("SELECT uid_to FROM {masquerade_users} WHERE uid_from = :uid_from", array(':uid_from' => $user->uid))
+    ->fetchCol();
+  $can_masquerade_as_user = in_array($account->uid, $allowed_uids) || user_access('masquerade as any user');
+
+  if (user_access($perm) && empty($account->masquerading) && $user->uid != $account->uid && $can_masquerade_as_user) {
     $account->content['masquerade'] = array(
       '#markup' => l(t('Masquerade as !user', array('!user' => $account->name)),
         'masquerade/switch/' . $account->uid,
         array('query' => array(
           'token' => drupal_get_token('masquerade/switch/' . $account->uid)),
           'destination' => $_GET['q'],
-          'attributes' => array('class' => 'masquerade-switch'),
+          'attributes' => array('class' => array('masquerade-switch')),
         )),
       '#weight' => 10,
     );
@@ -615,14 +653,33 @@ function masquerade_block_1_validate($form, &$form_state) {
   global $user;
   //unset($form);
   $name = $form_state['values']['masquerade_user_field'];
+  $allowed = FALSE;
+  $to_uid = db_select('users', 'u')
+    ->fields('u', array('uid'))
+    ->condition('u.name', $name, '=')
+    ->execute()
+    ->fetchField();
+  if ($to_uid !== FALSE) {
+    $allowed = user_access('masquerade as any user') ||
+               db_select('masquerade_users', 'm')
+                  ->fields('m', array('uid_to'))
+                  ->condition('m.uid_to', $to_uid, '=')
+                  ->condition('m.uid_from', $user->uid, '=')
+                  ->execute()
+                  ->fetchField();
+  }
   if (isset($_SESSION['masquerading'])) {
     form_set_error('masquerade_user_field', t('You are already masquerading. Please <a href="@unswitch">switch back</a> to your account to masquerade as another user.', array('@unswitch' => url('masquerade/unswitch', array('query' => array('token' => drupal_get_token('masquerade/unswitch')))))));
   }
+  if ($allowed === FALSE) {
+    form_set_error('masquerade_user_field', t('You are not allowed to masquerade as the selected user.'));
+  }
+
   if ($name != variable_get('anonymous', t('Anonymous')) && module_exists('alt_login')) {
     $alt_login = db_query("SELECT u.name FROM {users} u INNER JOIN {alt_login} al ON u.uid = al.uid WHERE al.alt_login = :alt_login", array(
       ':alt_login' => $name
     ))->fetchObject();
-    if ($alt_login->name) {
+    if (isset($alt_login->name)) {
       $name = $alt_login->name;
     }
   }
@@ -633,8 +690,8 @@ function masquerade_block_1_validate($form, &$form_state) {
   elseif ($masq_user->uid == $user->uid) {
     form_set_error('masquerade_user_field', t('You cannot masquerade as yourself. Please choose a different user to masquerade as.'));
   }
-  elseif (variable_get('maintenance_mode', 0) && !user_access('administer site configuration', $masq_user)) {
-    form_set_error('masquerade_user_field', t('It is not possible to masquerade in off-line mode as !user does not have the %config-perm permission. Please <a href="@site-maintenance">set the site status</a> to "online" to masquerade as !user.', array('!user' => theme('username', array('account' => $masq_user)), '%config-perm' => 'administer site configuration', '@site-maintenance' => url('admin/settings/site-maintenance'))));
+  elseif (variable_get('maintenance_mode', 0) && !user_access('access site in maintenance mode', $masq_user)) {
+    form_set_error('masquerade_user_field', t('It is not possible to masquerade in off-line mode as !user does not have the %config-perm permission. Please <a href="@site-maintenance">set the site status</a> to "online" to masquerade as !user.', array('!user' => theme('username', array('account' => $masq_user)), '%config-perm' => 'use the site in maintenance mode', '@site-maintenance' => url('admin/settings/site-maintenance'))));
   }
   else {
     $form_state['values']['masquerade_user_field'] = $name;
@@ -781,10 +838,14 @@ function masquerade_switch_user($uid) {
     return FALSE;
   }
 
-  if (variable_get('maintenance_mode', 0) && !user_access('administer site configuration', $new_user)) {
-    drupal_set_message(t('It is not possible to masquerade in off-line mode as %user does not have the %config-perm permission. Please <a href="@site-maintenance">set the site status</a> to "online" to masquerade as %user.', array('%user' => $new_user->name, '%config-perm' => 'administer site configuration', '@site-maintenance' => url('admin/settings/site-maintenance'))));
+  if (variable_get('maintenance_mode', 0) && !user_access('access site in maintenance mode', $new_user)) {
+    drupal_set_message(t('It is not possible to masquerade in off-line mode as %user does not have the %config-perm permission. Please <a href="@site-maintenance">set the site status</a> to "online" to masquerade as %user.', array('%user' => $new_user->name, '%config-perm' => 'use the site in maintenance mode', '@site-maintenance' => url('admin/settings/site-maintenance'))));
     return FALSE;
   }
+
+  // Call logout hooks when switching from original user.
+  module_invoke_all('user_logout', $user);
+  drupal_session_regenerate();
 
   $query = db_insert('masquerade');
   $query->fields(array(
@@ -799,6 +860,11 @@ function masquerade_switch_user($uid) {
   drupal_set_message(t('You are now masquerading as !masq_as.', array('!masq_as' => theme('username', array('account' => $new_user)))));
   $user->masquerading = $new_user->uid;
   $user = $new_user;
+
+  // Call all login hooks when switching to masquerading user.
+  $edit = array(); // Passed by reference.
+  user_module_invoke('login', $edit, $user);
+
   return TRUE;
 }
 
@@ -830,13 +896,22 @@ function masquerade_switch_back() {
     ':uid_as' => $user->uid,
   ))->fetchField();
   // erase record
-  $conditions = db_or();
-  $conditions->condition('sid', session_id());
-  $conditions->condition('uid_as', $user->uid);
-  $query = db_delete('masquerade');
-  $query->condition($conditions);
-  $query->execute();
+  db_delete('masquerade')
+    ->condition('sid', session_id())
+    ->condition('uid_as', $user->uid)
+    ->execute();
+
   $oldname = ($user->uid == 0 ? variable_get('anonymous', t('Anonymous')) : $user->name);
+
+  // Call logout hooks when switching from masquerading user.
+  module_invoke_all('user_logout', $user);
+  drupal_session_regenerate();
+
   $user = user_load($uid);
+
+  // Call all login hooks when switching back to original user.
+  $edit = array(); // Passed by reference.
+  user_module_invoke('login', $edit, $user);
+
   watchdog('masquerade', 'User %user no longer masquerading as %masq_as.', array('%user' => $user->name, '%masq_as' => $oldname), WATCHDOG_INFO);
 }

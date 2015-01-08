@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_field_prerender_list.
+ */
+
+/**
  * Field handler to provide a list of items.
  *
  * The items are expected to be loaded by a child object during pre_render,
@@ -11,6 +16,16 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_prerender_list extends views_handler_field {
+  /**
+   * Stores all items which are used to render the items.
+   * It should be keyed first by the id of the base table, for example nid.
+   * The second key is the id of the thing which is displayed multiple times
+   * per row, for example the tid.
+   *
+   * @var array
+   */
+  var $items = array();
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -74,7 +89,7 @@ class views_handler_field_prerender_list extends views_handler_field {
   function render_items($items) {
     if (!empty($items)) {
       if ($this->options['type'] == 'separator') {
-        return implode($this->sanitize_value($this->options['separator']), $items);
+        return implode($this->sanitize_value($this->options['separator'], 'xss_admin'), $items);
       }
       else {
         return theme('item_list',

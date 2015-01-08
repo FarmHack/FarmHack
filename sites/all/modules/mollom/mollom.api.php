@@ -248,6 +248,12 @@
  *     confirmation form constructor to assign the mapped post_id key in $form
  *     as a #value. See http://drupal.org/node/645374 for examples. Optionally
  *     limit access to report options by defining 'report access' permissions.
+ *   - report path: (optional) A Drupal system path pattern to be used for
+ *     reporting an entity to Mollom via a "Report to Mollom" link in e-mail
+ *     notifications. This typically points to the menu router path that allows
+ *     to delete an entity. The placeholder '%id' is dynamically replaced with
+ *     the entity ID. For example, user_mollom_form_list() specifies
+ *     'user/%id/cancel'.
  *   - report access: (optional) A list containing user permission strings, from
  *     which the current user needs to have at least one. Should only be used if
  *     no "report access callback" was defined.
@@ -255,7 +261,15 @@
  *     access to Mollom's dedicated "report to Mollom" form, which should return
  *     either TRUE or FALSE (similar to menu access callbacks).
  *   - report delete callback: (optional) A function name to invoke to delete an
- *     entity after reporting it to Mollom.
+ *     entity after reporting it to Mollom.  The callback will receive the
+ *     entity id as an argument.
+ *   - entity report access callback: (optional) A function name to invoke to
+ *     determine if a user has access to report the entity that the form is for.
+ *     In order for a user to have the option to flag content as inappropriate,
+ *     the user must have the "report to mollom" permission as well as access to
+ *     report the specific entity.
+ *     Note: This function is required if the flag is inappropriate feature is
+ *     desired on the form.
  *
  * @see hook_mollom_form_info()
  */
@@ -272,6 +286,7 @@ function hook_mollom_form_list() {
     // integration below instead.
     'report access callback' => 'mymodule_comment_report_access',
     'report delete callback' => 'mymodule_comment_report_delete',
+    'entity report access callback' => 'mymodule_comment_report_access',
   );
   // Mymodule's user registration form.
   $forms['mymodule_user_register'] = array(
@@ -290,6 +305,8 @@ function hook_mollom_form_list() {
     'delete form file' => array(
       'name' => 'mymodule.pages',
     ),
+    // Specify where to find the delete confirmation form for e-mails.
+    'report path' => 'user/%id/cancel',
     // Optionally limit access to report options on the delete confirmation form.
     'report access' => array('administer users', 'bypass node access'),
   );
@@ -322,6 +339,7 @@ function hook_mollom_form_list_alter(&$form_list) {
  *     - MOLLOM_MODE_ANALYSIS: Text analysis of submitted form values with
  *       fallback to CAPTCHA.
  *     - MOLLOM_MODE_CAPTCHA: CAPTCHA-only protection.
+ *   - type: Internal use only.
  *   - bypass access: (optional) A list of user permissions to check for the
  *     current user to determine whether to protect the form with Mollom or do
  *     not validate submitted form values. If the current user has at least one
@@ -330,6 +348,10 @@ function hook_mollom_form_list_alter(&$form_list) {
  *     submission would normally be discarded. This allows modules to put such
  *     posts into a moderation queue (i.e., to accept but not publish them) by
  *     altering the $form or $form_state that are passed by reference.
+ *   - context created callback: (optional) A function to invoke to determine
+ *     the creation of the context for this form for textual analysis.  The
+ *     function receives the id of the entity being processed and should
+ *     return the UNIX timestamp for the creation date or FALSE if unavailable.
  *   - mail ids: (optional) An array of mail IDs that will be sent as a result
  *     of this form being submitted. When these mails are sent, a 'report to
  *     Mollom' link will be included at the bottom of the mail body. Be sure to
@@ -370,6 +392,11 @@ function hook_mollom_form_list_alter(&$form_list) {
  *       'author_id', if no explicit form element value mapping was specified.
  *     - author_ip: Mollom automatically assigns the user's IP address if no
  *       explicit form element value mapping was specified.
+ *     - context_id: The form element value that should be used to determine the
+ *       post's parent context.  In the case of a comment, this would be the
+ *       node where the comment was posted.  This is passed to the 'context
+ *       created callback' to determine the context creation date and both
+ *       must be set in order to take advantage of creation date checking.
  */
 function hook_mollom_form_info($form_id) {
   switch ($form_id) {
@@ -383,12 +410,14 @@ function hook_mollom_form_info($form_id) {
           'subject' => t('Subject'),
           'body' => t('Body'),
         ),
+        'context created callback' => 'mollom_node_created',
         'mapping' => array(
           'post_id' => 'cid',
           'post_title' => 'subject',
           'author_name' => 'name',
           'author_mail' => 'mail',
           'author_url' => 'homepage',
+          'context_id' => 'nid',
         ),
       );
       return $form_info;

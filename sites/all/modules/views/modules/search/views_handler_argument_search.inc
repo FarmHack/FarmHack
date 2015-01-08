@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_argument_search.
+ */
+
+/**
  * Argument that accepts query keys for search.
+ *
+ * @ingroup views_argument_handlers
  */
 class views_handler_argument_search extends views_handler_argument {
 

@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_argument_taxonomy.
+ */
+
+/**
  * Argument handler for basic taxonomy tid.
+ *
+ * @ingroup views_argument_handlers
  */
 class views_handler_argument_taxonomy extends views_handler_argument_numeric {
 

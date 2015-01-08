@@ -1,9 +1,17 @@
 <?php
+
+/**
+ * @file
+ * Definition of views_handler_field_profile_date.
+ */
+
 /**
  * Field handler display a profile date
  *
  * The dates are stored serialized, which makes them mostly useless from
  * SQL. About all we can do is unserialize and display them.
+ *
+ * @ingroup views_field_handlers
  */
 class views_handler_field_profile_date extends views_handler_field_date {
   function options_form(&$form, &$form_state) {
@@ -43,20 +51,21 @@ class views_handler_field_profile_date extends views_handler_field_date {
 
     // But we *can* deal with non-year stuff:
     $date = gmmktime(0, 0, 0, $value['month'], $value['day'], $value['year']);
+
     $replace = array(
       // day
       'd' => sprintf('%02d', $value['day']),
       'D' => NULL,
       'l' => NULL,
       'N' => NULL,
-      'S' => date('S', $date),
+      'S' => gmdate('S', $date),
       'w' => NULL,
       'j' => $value['day'],
       // month
-      'F' => date('F', $date),
+      'F' => gmdate('F', $date),
       'm' => sprintf('%02d', $value['month']),
-      'M' => date('M', $date),
-      'n' => date('n', $date),
+      'M' => gmdate('M', $date),
+      'n' => gmdate('n', $date),
 
       'Y' => $value['year'],
       'y' => substr($value['year'], 2, 2),

@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @file
+ * Definition of views_handler_field_user_permissions.
+ */
+
 /**
  * Field handler to provide a list of permissions.
+ *
+ * @ingroup views_field_handlers
  */
 class views_handler_field_user_permissions extends views_handler_field_prerender_list {
   function construct() {

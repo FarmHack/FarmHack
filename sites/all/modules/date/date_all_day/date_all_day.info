@@ -4,11 +4,10 @@ dependencies[] = date_api
 dependencies[] = date
 package = Date/Time
 core = 7.x
-files[] = date_all_day.module
 
-; Information added by drupal.org packaging script on 2011-12-20
-version = "7.x-2.0-rc1"
+; Information added by Drupal.org packaging script on 2014-07-29
+version = "7.x-2.8"
 core = "7.x"
 project = "date"
-datestamp = "1324415138"
+datestamp = "1406653438"
 

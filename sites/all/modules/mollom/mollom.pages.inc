@@ -23,6 +23,17 @@
  * @todo Add error handling.
  */
 function mollom_captcha_js($type, $form_build_id, $contentId = NULL) {
+  // Deny GET requests to make automated security audit tools not complain
+  // about a JSON Hijacking possibility.
+  // @see http://capec.mitre.org/data/definitions/111.html
+  // @see http://haacked.com/archive/2009/06/24/json-hijacking.aspx
+  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
+    // A HTTP 405 response MUST specify allowed methods.
+    header('Allow: POST');
+    drupal_exit();
+  }
+
   // Load $form_state from cache or create a dummy state.
   $cid = 'form_state_' . $form_build_id;
   if ($cache = cache_get($cid, 'cache_form')) {
@@ -31,7 +42,7 @@ function mollom_captcha_js($type, $form_build_id, $contentId = NULL) {
   else {
     $form_state['mollom'] = array();
     if (isset($contentId)) {
-      $form_state['mollom']['response']['content']['id'] = $contentId;
+      $form_state['values']['mollom']['contentId'] = $contentId;
     }
   }
   $form_state['mollom']['captcha_type'] = $type;
@@ -102,7 +113,7 @@ function mollom_report_form_submit($form, &$form_state) {
 
     // Send feedback to Mollom, if we have session data.
     if ((!empty($data->contentId) || !empty($data->captchaId)) && !empty($form_state['values']['mollom']['feedback'])) {
-      if (_mollom_send_feedback($data, $form_state['values']['mollom']['feedback'])) {
+      if (_mollom_send_feedback($data, $form_state['values']['mollom']['feedback'], 'moderate', 'mollom_report_form_submit')) {
         drupal_set_message(t('The content was successfully reported as inappropriate.'));
       }
     }
@@ -121,6 +132,6 @@ function mollom_report_form_submit($form, &$form_state) {
       }
     }
 
-    $form_state['redirect'] = '<front>';
+   $form_state['redirect'] = '<front>';
   }
 }

@@ -2,7 +2,13 @@
 
 /**
  * @file
+ * Definition of views_handler_area_view.
+ */
+
+/**
  * Views area handlers. Insert a view inside of an area.
+ *
+ * @ingroup views_area_handlers
  */
 class views_handler_area_view extends views_handler_area {
 
@@ -10,7 +16,7 @@ class views_handler_area_view extends views_handler_area {
     $options = parent::option_definition();
 
     $options['view_to_insert'] = array('default' => '');
-    $options['inherit_arguments'] = array('default' => FALSE, 'boolean' => TRUE);
+    $options['inherit_arguments'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
@@ -24,7 +30,7 @@ class views_handler_area_view extends views_handler_area {
     $view_display = $this->view->name . ':' . $this->view->current_display;
 
     $options = array('' => t('-Select-'));
-    $options += views_get_views_as_options(FALSE, 'all', $view_display);
+    $options += views_get_views_as_options(FALSE, 'all', $view_display, FALSE, TRUE);
     $form['view_to_insert'] = array(
       '#type' => 'select',
       '#title' => t('View to insert'),

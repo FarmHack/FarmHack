@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_sort_search_score.
+ */
+
+/**
  * Field handler to provide simple renderer that allows linking to a node.
+ *
+ * @ingroup views_sort_handlers
  */
 class views_handler_sort_search_score extends views_handler_sort {
   function query() {

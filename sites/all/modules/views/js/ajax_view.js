@@ -1,6 +1,5 @@
 /**
- * @file ajaxView.js
- *
+ * @file
  * Handles AJAX fetching of views, including filter submission and response.
  */
 (function ($) {
@@ -12,13 +11,13 @@ Drupal.behaviors.ViewsAjaxView = {};
 Drupal.behaviors.ViewsAjaxView.attach = function() {
   if (Drupal.settings && Drupal.settings.views && Drupal.settings.views.ajaxViews) {
     $.each(Drupal.settings.views.ajaxViews, function(i, settings) {
-      // @todo: Figure out where to store the object.
-      new Drupal.views.ajaxView(settings);
+      Drupal.views.instances[i] = new Drupal.views.ajaxView(settings);
     });
   }
 };
 
 Drupal.views = {};
+Drupal.views.instances = {};
 
 /**
  * Javascript object for a certain view.
@@ -35,8 +34,19 @@ Drupal.views.ajaxView = function(settings) {
     ajax_path = ajax_path[0];
   }
 
+  // Check if there are any GET parameters to send to views.
+  var queryString = window.location.search || '';
+  if (queryString !== '') {
+    // Remove the question mark and Drupal path component if any.
+    var queryString = queryString.slice(1).replace(/q=[^&]+&?|&?render=[^&]+/, '');
+    if (queryString !== '') {
+      // If there is a '?' in ajax_path, clean url are on and & should be used to add parameters.
+      queryString = ((/\?/.test(ajax_path)) ? '&' : '?') + queryString;
+    }
+  }
+
   this.element_settings = {
-    url: ajax_path + window.location.search,
+    url: ajax_path + queryString,
     submit: settings,
     setClick: true,
     event: 'click',
@@ -56,10 +66,15 @@ Drupal.views.ajaxView = function(settings) {
     // to a given element.
     .filter(jQuery.proxy(this.filterNestedViews, this))
     .once(jQuery.proxy(this.attachPagerAjax, this));
+
+  // Add a trigger to update this view specifically.
+  var self_settings = this.element_settings;
+  self_settings.event = 'RefreshView';
+  this.refreshViewAjax = new Drupal.ajax(this.selector, this.$view, self_settings);
 };
 
 Drupal.views.ajaxView.prototype.attachExposedFormAjax = function() {
-  var button = $('input[type=submit], input[type=image]', this.$exposed_form);
+  var button = $('input[type=submit], button[type=submit], input[type=image]', this.$exposed_form);
   button = button[0];
 
   this.exposedFormAjax = new Drupal.ajax($(button).attr('id'), button, this.element_settings);
@@ -115,7 +130,7 @@ Drupal.ajax.prototype.commands.viewsScrollTop = function (ajax, response, status
   // and scroll the first element that has a non-zero top.
   var scrollTarget = response.selector;
   while ($(scrollTarget).scrollTop() == 0 && $(scrollTarget).parent()) {
-    scrollTarget = $(scrollTarget).parent()
+    scrollTarget = $(scrollTarget).parent();
   }
   // Only scroll upward
   if (offset.top - 10 < $(scrollTarget).scrollTop()) {

@@ -1,9 +1,19 @@
 <?php
 
 /**
- * Filter by term id
+ * @file
+ * Definition of views_handler_filter_term_node_tid.
+ */
+
+/**
+ * Filter by term id.
+ *
+ * @ingroup views_filter_handlers
  */
 class views_handler_filter_term_node_tid extends views_handler_filter_many_to_one {
+  // Stores the exposed input for this filter.
+  var $validated_exposed_input = NULL;
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['vocabulary'])) {
@@ -11,7 +21,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     }
 
     // Convert legacy vid option to machine name vocabulary.
-    if (!empty($this->options['vid']) & empty($this->options['vocabulary'])) {
+    if (isset($this->options['vid']) && !empty($this->options['vid']) & empty($this->options['vocabulary'])) {
       $vocabularies = taxonomy_get_vocabularies();
       $vid = $this->options['vid'];
       if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
@@ -28,23 +38,24 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     $options = parent::option_definition();
 
     $options['type'] = array('default' => 'textfield');
-    $options['limit'] = array('default' => TRUE);
+    $options['limit'] = array('default' => TRUE, 'bool' => TRUE);
     $options['vocabulary'] = array('default' => 0);
     $options['hierarchy'] = array('default' => 0);
-    $options['error_message'] = array('default' => TRUE);
+    $options['error_message'] = array('default' => TRUE, 'bool' => TRUE);
 
     return $options;
   }
 
   function extra_options_form(&$form, &$form_state) {
     $vocabularies = taxonomy_get_vocabularies();
+    $options = array();
     foreach ($vocabularies as $voc) {
       $options[$voc->machine_name] = check_plain($voc->name);
     }
 
     if ($this->options['limit']) {
       // We only do this when the form is displayed.
-      if ($this->options['vocabulary'] == 0) {
+      if (empty($this->options['vocabulary'])) {
         $first_vocabulary = reset($vocabularies);
         $this->options['vocabulary'] = $first_vocabulary->machine_name;
       }
@@ -87,15 +98,12 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     if ($this->options['type'] == 'textfield') {
       $default = '';
       if ($this->value) {
-        $result = db_select('taxonomy_term_data', 'td')
-          ->fields('td')
-          ->condition('td.tid', $this->value)
-          ->execute();
-        foreach ($result as $term) {
+        $result = taxonomy_term_load_multiple($this->value);
+        foreach ($result as $entity_term) {
           if ($default) {
             $default .= ', ';
           }
-          $default .= $term->name;
+          $default .= entity_label('taxonomy_term', $entity_term);
         }
       }
 
@@ -111,13 +119,14 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     }
     else {
       if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = taxonomy_get_tree($vocabulary->vid);
+        $tree = taxonomy_get_tree($vocabulary->vid, 0, NULL, TRUE);
         $options = array();
 
         if ($tree) {
+          // Translation system needs full entity objects, so we have access to label.
           foreach ($tree as $term) {
             $choice = new stdClass();
-            $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
+            $choice->option = array($term->tid => str_repeat('-', $term->depth) . entity_label('taxonomy_term', $term));
             $options[] = $choice;
           }
         }
@@ -136,8 +145,14 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
           $query->condition('tv.machine_name', $vocabulary->machine_name);
         }
         $result = $query->execute();
+
+        $tids = array();
         foreach ($result as $term) {
-          $options[$term->tid] = $term->name;
+          $tids[] = $term->tid;
+        }
+        $entities = taxonomy_term_load_multiple($tids);
+        foreach ($entities as $entity_term) {
+          $options[$entity_term->tid] = entity_label('taxonomy_term', $entity_term);
         }
       }
 
@@ -162,6 +177,11 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
             $keys = array_keys($options);
             $default_value = array_shift($keys);
           }
+          // Due to #1464174 there is a chance that array('') was saved in the admin ui.
+          // Let's choose a safe default value.
+          elseif ($default_value == array('')) {
+            $default_value = 'All';
+          }
           else {
             $copy = $default_value;
             $default_value = array_shift($copy);
@@ -177,7 +197,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
         '#default_value' => $default_value,
       );
 
-      if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
+      if (!empty($form_state['exposed']) && isset($identifier) && !isset($form_state['input'][$identifier])) {
         $form_state['input'][$identifier] = $default_value;
       }
     }
@@ -222,7 +242,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     $rc = parent::accept_exposed_input($input);
     if ($rc) {
       // If we have previously validated input, override.
-      if (isset($this->validated_exposed_input)) {
+      if (!$this->is_a_group() && isset($this->validated_exposed_input)) {
         $this->value = $this->validated_exposed_input;
       }
     }
@@ -261,6 +281,14 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
    * Validate the user string. Since this can come from either the form
    * or the exposed filter, this is abstracted out a bit so it can
    * handle the multiple input sources.
+   *
+   * @param $form
+   *   The form which is used, either the views ui or the exposed filters.
+   * @param $values
+   *   The taxonomy names which will be converted to tids.
+   *
+   * @return array
+   *   The taxonomy ids fo all validated terms.
    */
   function validate_term_strings(&$form, $values) {
     if (empty($values)) {
@@ -268,16 +296,15 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     }
 
     $tids = array();
-    $placeholders = array();
-    $args = array();
-    $results = array();
+    $names = array();
+    $missing = array();
     foreach ($values as $value) {
       $missing[strtolower($value)] = TRUE;
       $names[] = $value;
     }
 
     if (!$names) {
-      return;
+      return FALSE;
     }
 
     $query = db_select('taxonomy_term_data', 'td');
@@ -323,12 +350,10 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     $this->value_options = array();
 
     if ($this->value) {
-      $result = db_select('taxonomy_term_data', 'td')
-        ->fields('td')
-        ->condition('td.tid', $this->value)
-        ->execute();
-      foreach ($result as $term) {
-        $this->value_options[$term->tid] = $term->name;
+      $this->value = array_filter($this->value);
+      $result = taxonomy_term_load_multiple($this->value);
+      foreach ($result as $entity_term) {
+        $this->value_options[$entity_term->tid] = entity_label('taxonomy_term', $entity_term);
       }
     }
     return parent::admin_summary();

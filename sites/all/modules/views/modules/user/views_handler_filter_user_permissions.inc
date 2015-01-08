@@ -1,6 +1,14 @@
 <?php
+
 /**
- * Filter handler for user roles
+ * @file
+ * Definition of views_handler_filter_user_permissions.
+ */
+
+/**
+ * Filter handler for user roles.
+ *
+ * @ingroup views_filter_handlers
  */
 class views_handler_filter_user_permissions extends views_handler_filter_many_to_one {
   function get_value_options() {

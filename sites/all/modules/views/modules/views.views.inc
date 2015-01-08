@@ -1,17 +1,14 @@
 <?php
+
 /**
  * @file
  * Provide views data and handlers that aren't tied to any other module.
- */
-
-/**
- * @defgroup views_views_module miscellaneous handlers
  *
- * @{
+ * @ingroup views_module_handlers
  */
 
 /**
- * Implements hook_views_data()
+ * Implements hook_views_data().
  */
 function views_views_data() {
   $data['views']['table']['group'] = t('Global');
@@ -60,11 +57,53 @@ function views_views_data() {
     ),
   );
 
+  $data['views']['area_text_custom'] = array(
+    'title' => t('Unfiltered text'),
+    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
+    'area' => array(
+      'handler' => 'views_handler_area_text_custom',
+    ),
+  );
+
   $data['views']['view'] = array(
     'title' => t('View area'),
     'help' => t('Insert a view inside an area.'),
     'area' => array(
       'handler' => 'views_handler_area_view',
+    ),
+  );
+
+  $data['views']['result'] = array(
+    'title' => t('Result summary'),
+    'help' => t('Shows result summary, for example the items per page.'),
+    'area' => array(
+      'handler' => 'views_handler_area_result',
+    ),
+  );
+
+  $data['views']['messages'] = array(
+    'title' => t('Messages'),
+    'help' => t('Displays messages in the area.'),
+    'area' => array(
+      'handler' => 'views_handler_area_messages',
+    ),
+  );
+
+  if (module_exists('contextual')) {
+    $data['views']['contextual_links'] = array(
+      'title' => t('Contextual Links'),
+      'help' => t('Display fields in a contextual links menu.'),
+      'field' => array(
+        'handler' => 'views_handler_field_contextual_links',
+      ),
+    );
+  }
+
+  $data['views']['combine'] = array(
+   'title' => t('Combine fields filter'),
+    'help' => t('Combine two fields together and search by them.'),
+    'filter' => array(
+      'handler' => 'views_handler_filter_combine',
     ),
   );
 
@@ -79,9 +118,14 @@ function views_views_data() {
     );
   }
 
+  $data['views']['fields_compare'] = array(
+    'title' => t('Fields comparison'),
+    'help' => t('Compare database fields against eachother.'),
+    'filter' => array(
+      'help' => t('Use fields comparison to filter the result of the view.'),
+      'handler' => 'views_handler_filter_fields_compare',
+    )
+  );
+
   return $data;
 }
-
-/**
- * @}
- */

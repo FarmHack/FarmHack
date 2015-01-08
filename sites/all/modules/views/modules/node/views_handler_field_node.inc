@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the basic 'node' field handler.
@@ -8,13 +9,15 @@
  * Field handler to provide simple renderer that allows linking to a node.
  * Definition terms:
  * - link_to_node default: Should this field have the checkbox "link to node" enabled by default.
+ *
+ * @ingroup views_field_handlers
  */
 class views_handler_field_node extends views_handler_field {
 
   function init(&$view, &$options) {
     parent::init($view, $options);
     // Don't add the additional fields to groupby
-    if (!empty($this->options['link_to_node']) && !$this->view->display_handler->use_group_by()) {
+    if (!empty($this->options['link_to_node'])) {
       $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
       if (module_exists('translation')) {
         $this->additional_fields['language'] = array('table' => 'node', 'field' => 'language');
@@ -24,7 +27,7 @@ class views_handler_field_node extends views_handler_field {
 
   function option_definition() {
     $options = parent::option_definition();
-    $options['link_to_node'] = array('default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE);
+    $options['link_to_node'] = array('default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE, 'bool' => TRUE);
     return $options;
   }
 

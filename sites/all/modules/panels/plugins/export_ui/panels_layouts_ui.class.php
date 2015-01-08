@@ -69,7 +69,6 @@ class panels_layouts_ui extends ctools_export_ui {
     else {
       $content_types = ctools_content_get_available_types();
 
-      $display->cache_key = $cache_key;
       panels_cache_clear('display', $cache_key);
       $cache = new stdClass();
 
@@ -117,8 +116,6 @@ class panels_layouts_ui extends ctools_export_ui {
     $form_state['renderer']->cache = &$cache;
 
     $form = panels_edit_display_form($form, $form_state);
-    // Make sure the theme will work since our form id is different.
-    $form['#theme'] = 'panels_edit_display_form';
 
     // If we leave the standard submit handler, it'll try to reconcile
     // content from the input, but we've not exposed that to the user. This
@@ -128,7 +125,17 @@ class panels_layouts_ui extends ctools_export_ui {
 
   function edit_form_submit(&$form, &$form_state) {
     parent::edit_form_submit($form, $form_state);
+
+    // While we short circuited the main submit hook, we need to keep this one.
+    panels_edit_display_settings_form_submit($form, $form_state);
     $form_state['item']->settings = $form_state['display']->layout_settings;
+  }
+
+  function edit_form_validate(&$form, &$form_state) {
+    parent::edit_form_validate($form, $form_state);
+
+    // While we short circuited the main validate hook, we need to keep this one.
+    panels_edit_display_settings_form_validate($form, $form_state);
   }
 
   function list_form(&$form, &$form_state) {
@@ -210,13 +217,16 @@ class panels_layouts_ui extends ctools_export_ui {
 
     $type = !empty($this->builders[$item->plugin]) ? $this->builders[$item->plugin]['title'] : t('Broken/missing plugin');
     $category = $item->category ? check_plain($item->category) : t('Miscellaneous');
+
+    $ops = theme('links__ctools_dropbutton', array('links' => $operations, 'attributes' => array('class' => array('links', 'inline'))));
+
     $this->rows[$item->name] = array(
       'data' => array(
         array('data' => check_plain($type), 'class' => array('ctools-export-ui-type')),
         array('data' => check_plain($item->name), 'class' => array('ctools-export-ui-name')),
         array('data' => check_plain($item->admin_title), 'class' => array('ctools-export-ui-title')),
         array('data' => $category, 'class' => array('ctools-export-ui-category')),
-        array('data' => theme('links', array('links' => $operations)), 'class' => array('ctools-export-ui-operations')),
+        array('data' => $ops, 'class' => array('ctools-export-ui-operations')),
       ),
       'title' => check_plain($item->admin_description),
       'class' => array(!empty($item->disabled) ? 'ctools-export-ui-disabled' : 'ctools-export-ui-enabled'),

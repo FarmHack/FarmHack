@@ -2,7 +2,13 @@
 
 /**
  * @file
+ * Definition of views_handler_field_term_node_tid.
+ */
+
+/**
  * Field handler to display all taxonomy terms of a node.
+ *
+ * @ingroup views_field_handlers
  */
 class views_handler_field_term_node_tid extends views_handler_field_prerender_list {
   function init(&$view, &$options) {
@@ -29,8 +35,8 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
   function option_definition() {
     $options = parent::option_definition();
 
-    $options['link_to_taxonomy'] = array('default' => TRUE);
-    $options['limit'] = array('default' => FALSE);
+    $options['link_to_taxonomy'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['limit'] = array('default' => FALSE, 'bool' => TRUE);
     $options['vocabularies'] = array('default' => array());
 
     return $options;
@@ -50,7 +56,6 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
       '#type' => 'checkbox',
       '#title' => t('Limit terms by vocabulary'),
       '#default_value'=> $this->options['limit'],
-      '#fieldset' => 'more',
     );
 
     $options = array();
@@ -67,7 +72,6 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
       '#options' => $options,
       '#default_value' => $this->options['vocabularies'],
       '#dependency' => array('edit-options-limit' => array(TRUE)),
-      '#fieldset' => 'more',
     );
 
     parent::options_form($form, $form_state);

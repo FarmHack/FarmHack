@@ -36,11 +36,95 @@ abstract class Mollom {
   const RESPONSE_ERROR = 511;
 
   /**
-   * Server communication failure code: Authentication error.
+   * Client communication failure code: Bad request.
+   *
+   * Used in case of a too large system time offset from UTC.
+   *
+   * @see MollomBadRequestException
+   * @see Mollom::TIME_OFFSET_MAX
+   */
+  const REQUEST_ERROR = 400;
+
+  /**
+   * Client communication failure code: Authentication error.
    *
    * @see MollomAuthenticationException
    */
   const AUTH_ERROR = 401;
+
+  /**
+   * Maximum allowed time offset from UTC in seconds allowed for the client's local time.
+   *
+   * @see Mollom::handleRequest()
+   * @see MollomBadRequestException
+   *
+   * @var integer
+   */
+  const TIME_OFFSET_MAX = 300;
+
+  /**
+   * List of ISO 639-1 language codes supported by Mollom.
+   *
+   * If your application has a predefined list of ISO 639-1 languages already,
+   * intersect your list with this via strtok($langcode, '-').
+   *
+   * Should be a constant, but PHP does not support arrays for constants.
+   */
+  public static $LANGUAGES_SUPPORTED = array(
+    'af',
+    'ar',
+    'bg',
+    'bn',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'en',
+    'es',
+    'et',
+    'fa',
+    'fi',
+    'fr',
+    'gu',
+    'he',
+    'hi',
+    'hr',
+    'hu',
+    'id',
+    'it',
+    'ja',
+    'kn',
+    'ko',
+    'lt',
+    'lv',
+    'mk',
+    'ml',
+    'mr',
+    'ne',
+    'nl',
+    'no',
+    'pa',
+    'pl',
+    'pt',
+    'ro',
+    'ru',
+    'sk',
+    'sl',
+    'so',
+    'sq',
+    'sv',
+    'sw',
+    'ta',
+    'te',
+    'th',
+    'tl',
+    'tr',
+    'uk',
+    'ur',
+    'vi',
+    'zh-cn',
+    'zh-tw',
+  );
 
   /**
    * The public Mollom API key to use for request authentication.
@@ -111,6 +195,7 @@ abstract class Mollom {
    * If not TRUE, then the value is either one of
    * - Mollom::NETWORK_ERROR
    * - Mollom::RESPONSE_ERROR
+   * - Mollom::REQUEST_ERROR
    * - Mollom::AUTH_ERROR
    * or the actual HTTP status code returned by the server.
    *
@@ -165,6 +250,7 @@ abstract class Mollom {
    *   The configuration setting name to load, one of:
    *   - publicKey: The public API key for Mollom authentication.
    *   - privateKey: The private API key for Mollom authentication.
+   *   - expectedLanguages: List of expected language codes for site content.
    *
    * @return mixed
    *   The stored configuration value or NULL if there is none.
@@ -265,7 +351,7 @@ abstract class Mollom {
    * @see Mollom::handleRequest()
    * @see Mollom::request()
    */
-  protected function query($method, $path, array $data = array(), array $expected = array()) {
+  public function query($method, $path, array $data = array(), array $expected = array()) {
     // Reset list response properties.
     $this->listCount = NULL;
     $this->listOffset = 0;
@@ -274,17 +360,22 @@ abstract class Mollom {
     // Send the request to the server.
     $server = 'http://' . $this->server;
     $max_attempts = $this->requestMaxAttempts;
-    while ($max_attempts--) {
+    while ($max_attempts-- > 0) {
       try {
         $result = $this->handleRequest($method, $server, $path, $data, $expected);
       }
+      catch (MollomBadRequestException $e) {
+        // Irrecoverable error, so don't try further.
+        break;
+      }
       catch (MollomAuthenticationException $e) {
-        // This is an irrecoverable error, so don't try further.
+        // Irrecoverable error, so don't try further.
         break;
       }
       catch (MollomException $e) {
-        // If the resource does not exist, there is no point in trying further.
-        if ($e->getCode() === 404) {
+        // If the requested resource does not exist, or the request was
+        // malformed, there is no point in trying further.
+        if ($e->getCode() >= 400 && $e->getCode() < 500) {
           break;
         }
       }
@@ -332,9 +423,9 @@ abstract class Mollom {
     if ($this->lastResponseCode === self::AUTH_ERROR) {
       return $this->lastResponseCode;
     }
-    // Return a not found error, which always needs to be handled by the calling
-    // code.
-    if ($this->lastResponseCode === 404) {
+    // Return a request error, which always requires client-side measures to
+    // resolve the problem.
+    if ($this->lastResponseCode >= self::REQUEST_ERROR && $this->lastResponseCode < 500) {
       return $this->lastResponseCode;
     }
 
@@ -380,6 +471,7 @@ abstract class Mollom {
    * @see json_decode()
    */
   protected function handleRequest($method, $server, $path, $data, $expected = array()) {
+    $time_start = microtime(TRUE);
     if (!empty($this->publicKey) && !empty($this->privateKey)) {
       // @todo Move into class property.
       $headers['Accept'] = 'application/xml, application/json;q=0.8, */*;q=0.5';
@@ -405,6 +497,7 @@ abstract class Mollom {
       $response->isError = TRUE;
       $response->body = NULL;
     }
+    $time_stop = microtime(TRUE);
 
     // Parse the response body string into an array.
     $response->data = array();
@@ -413,8 +506,14 @@ abstract class Mollom {
         $response->data = json_decode($response->body, TRUE);
       }
       elseif (strstr($response->headers['content-type'], 'application/xml')) {
-        $response->elements = new SimpleXmlIterator($response->body);
-        $response->data = $this->parseXML($response->elements);
+        try {
+          $response->elements = new SimpleXmlIterator($response->body);
+          $response->data = $this->parseXML($response->elements);
+        }
+        catch (Exception $e) {
+          // Invalid XML so just set the data back to blank.
+          $response->data = array();
+        }
       }
     }
 
@@ -458,12 +557,26 @@ abstract class Mollom {
       'response_code' => $response->code,
       'response_message' => $response->message,
       'response' => !empty($response->data) ? $response->data : $response->body,
+      'response_time' => $time_stop - $time_start,
     );
     if ($response->isError) {
       if ($response->code <= 0) {
         throw new MollomNetworkException('Network error.', self::NETWORK_ERROR, NULL, $this, $request_info);
       }
       if ($response->code == self::AUTH_ERROR) {
+        // Check whether authentication failed due to a too large time offset.
+        if (isset($response->headers['date'])) {
+          // Parse the 'Date' HTTP header in the response into a UNIX timestamp;
+          // strtotime() normally performs poorly on date operations, but in
+          // this case, there is a standardized date format and timezone
+          // conversion, so it is safe to use.
+          $offset = abs(time() - strtotime($response->headers['date']));
+          // The abs() above turns a negative offset into an absolute integer
+          // value, so the difference is always positive.
+          if ($offset > self::TIME_OFFSET_MAX) {
+            throw new MollomBadRequestException(sprintf('Invalid client system time: Too large offset from UTC: %s seconds.', $offset), self::REQUEST_ERROR, NULL, $this, $request_info);
+          }
+        }
         throw new MollomAuthenticationException('Invalid authentication.', self::AUTH_ERROR, NULL, $this, $request_info);
       }
       if ($response->code == self::RESPONSE_ERROR || $response->code >= 500) {
@@ -475,8 +588,8 @@ abstract class Mollom {
       $this->lastResponseCode = TRUE;
       // No message is logged in case of success.
       $this->log[] = array(
-        'severity' => 'debug',
-      ) + $request_info;
+          'severity' => 'debug',
+        ) + $request_info;
 
       return $response->data;
     }
@@ -724,7 +837,14 @@ abstract class Mollom {
 
       // Recurse into children.
       if (is_array($value)) {
-        $params[] = self::httpBuildQuery($value, $key);
+        if (!empty($value)) {
+          $params[] = self::httpBuildQuery($value, $key);
+        }
+        // An empty array means that the parameter accepts a list of values, but
+        // the list is empty and no value should be assigned, so pass NULL.
+        else {
+          $params[] = $key . '=';
+        }
       }
       // If a query parameter value is NULL, only append its key, followed by
       // "=" (3.4.1.3.2).
@@ -805,6 +925,80 @@ abstract class Mollom {
   }
 
   /**
+   * Retrieves GET/HEAD or POST/PUT parameters of an inbound HTTP request.
+   *
+   * @return array
+   *   An array containing either GET/HEAD query string parameters or POST/PUT
+   *   post body parameters. Parameter parsing accounts for multiple request
+   *   parameters in non-PHP format; e.g., 'foo=one&foo=bar'.
+   */
+  public static function getServerParameters() {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') {
+      $data = self::httpParseQuery($_SERVER['QUERY_STRING']);
+    }
+    elseif ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'PUT') {
+      $data = self::httpParseQuery(file_get_contents('php://input'));
+    }
+    return $data;
+  }
+
+  /**
+   * Retrieves the OAuth Authorization header of an inbound HTTP request.
+   *
+   * @return array
+   *   An array containing all key/value pairs extracted out of the
+   *   'Authorization' HTTP header, if any.
+   */
+  public static function getServerAuthentication() {
+    $header = array();
+    // PHP as Apache module provides a SAPI function.
+    // PHP 5.4+ enables getallheaders() also for FastCGI.
+    if (function_exists('getallheaders')) {
+      $headers = getallheaders();
+      if (isset($headers['Authorization'])) {
+        $input = $headers['Authorization'];
+      }
+    }
+    // PHP as CGI with server/.htaccess configuration (e.g., via mod_rewrite)
+    // may transfer/forward HTTP request data into server variables.
+    elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+      $input = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    // PHP as CGI may provide HTTP request data as environment variables.
+    elseif (isset($_ENV['HTTP_AUTHORIZATION'])) {
+      $input = $_ENV['HTTP_AUTHORIZATION'];
+    }
+    if (isset($input)) {
+      preg_match_all('@([^, =]+)="([^"]*)"@', $input, $header);
+      if (!empty($header[1]) && !empty($header[2])) {
+        $header = array_combine($header[1], $header[2]);
+      }
+    }
+    return $header;
+  }
+
+  /**
+   * Pings the Mollom API to validate keys and connectivity.
+   *
+   * @param string $callback
+   *   A callback URL to receive the "pong" response from Mollom.
+   * @param string publicKey
+   *   (Optional) A public key to use.  If not provided, the current class's
+   *   publicKey will be used.
+   *
+   * @return int
+   *   The status code returned from the server.
+   */
+  public function ping($callback, $publicKey = NULL) {
+    if (!isset($publicKey)) {
+      $publicKey = $this->publicKey;
+    }
+    $publicKey = rawurlencode($publicKey);
+    $result = $this->query('POST', 'site/' . $publicKey . '/ping', array('url' => $callback));
+    return $result;
+  }
+
+  /**
    * Retrieves a list of sites accessible to this client.
    *
    * Used by Mollom resellers only.
@@ -830,8 +1024,6 @@ abstract class Mollom {
    *   - privateKey: The private Mollom API key of the site.
    *   - url: The URL of the site.
    *   - email: The e-mail address of the primary contact of the site.
-   *   - languages: (optional) An array of language ISO codes, content is
-   *     expected to submitted in on the site.
    *   - platformName: (optional) The name of the platform running the site
    *     (e.g., "Drupal").
    *   - platformVersion: (optional) The version of the platform running the
@@ -840,12 +1032,15 @@ abstract class Mollom {
    *     (e.g., "Mollom").
    *   - clientVersion: (optional) The version of the Mollom client plugin used
    *     (e.g., "6.15").
+   *   - expectedLanguages: (optional) An array of language ISO codes, content
+   *     is expected to be submitted in on the site.
    *   On failure, the error response code returned by the server.
    */
   public function getSite($publicKey = NULL) {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
+    $publicKey = rawurlencode($publicKey);
     $result = $this->query('GET', 'site/' . $publicKey, array(), array('site', 'publicKey'));
     return isset($result['site']) ? $result['site'] : $result;
   }
@@ -878,7 +1073,7 @@ abstract class Mollom {
    * and may need to set other site properties.
    *
    * @param array $data
-   *   An associative array of properties to set for the site. See
+   *   (optional) An associative array of properties to set for the site. See
    *   Mollom::getSite() for details.
    * @param string $publicKey
    *   (optional) The public Mollom API key of the site to update. Defaults to
@@ -893,7 +1088,8 @@ abstract class Mollom {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
-    $result = $this->query('POST', 'site/' . $this->publicKey, $data, array('site', 'publicKey'));
+    $publicKey = rawurlencode($publicKey);
+    $result = $this->query('POST', 'site/' . $publicKey, $data, array('site', 'publicKey'));
     return isset($result['site']) ? $result['site'] : $result;
   }
 
@@ -907,12 +1103,14 @@ abstract class Mollom {
    *
    * @return mixed
    *   TRUE on success. On failure, the error response code returned by the
-   *   server; either Mollom::AUTH_ERROR or Mollom::NETWORK_ERROR.
+   *   server; either Mollom::REQUEST_ERROR, Mollom::AUTH_ERROR or
+   *   Mollom::NETWORK_ERROR.
    */
   public function verifyKeys() {
     $data = $this->getClientInformation();
     $result = $this->updateSite($data);
-    // lastResponseCode will either be TRUE, AUTH_ERROR, or NETWORK_ERROR.
+    // lastResponseCode will either be TRUE, REQUEST_ERROR, AUTH_ERROR, or
+    // NETWORK_ERROR.
     return $this->lastResponseCode === TRUE ? TRUE : $this->lastResponseCode;
   }
 
@@ -926,6 +1124,7 @@ abstract class Mollom {
    *   TRUE on success, FALSE otherwise.
    */
   public function deleteSite($publicKey) {
+    $publicKey = rawurlencode($publicKey);
     $result = $this->query('POST', 'site/' . $publicKey . '/delete');
     return $this->lastResponseCode === TRUE;
   }
@@ -950,6 +1149,13 @@ abstract class Mollom {
    *   - checks: An indexed array of strings denoting the checks to perform, one
    *     or more of: 'spam', 'quality', 'profanity', 'language', 'sentiment'.
    *     Defaults to 'spam'.
+   *   - type: An optional string identifier to request a special content
+   *     classification behavior. Possible values are:
+   *     - 'user': Enables classification of 'author*' request parameters as
+   *       primary content. postTitle and postBody may be left empty without
+   *       negative impact on the classification result. Use this for checking
+   *       user registration forms. Optionally pass additional user profile text
+   *       fields as postBody.
    *   - unsure: Integer denoting whether a "unsure" response should be allowed
    *     (1) for the 'spam' check (which should lead to CAPTCHA) or not (0).
    *     Defaults to 1.
@@ -969,6 +1175,12 @@ abstract class Mollom {
    *   - contextTitle: The title of the parent/context content of the stored
    *     content; e.g., the title of the article or forum thread a comment is
    *     posted on (not the parent comment that was replied to).
+   *   - contextCreated: The creation date of the parent/context content of the
+   *     stored content as a unix timestamp in seconds; e.g., the creation date
+   *     of the article or forum thread a comment is posted on (not the parent
+   *     comment that was replied to).
+   *   - trackingImageId: An optional string identifier used to request an
+   *     image beacon.  This is used for form behavior analysis.
    *
    * @return mixed
    *   On success, an associative array representing the full content record,
@@ -997,7 +1209,12 @@ abstract class Mollom {
   public function checkContent(array $data = array()) {
     $path = 'content';
     if (!empty($data['id'])) {
-      $path .= '/' . $data['id'];
+      // The ID originates from raw form input. Ensure we hit the right endpoint
+      // in case a bogus bot fills in even hidden input fields with random
+      // strings, by performing a basic syntax validation.
+      if (preg_match('@^[a-z0-9-]+$@i', $data['id'])) {
+        $path .= '/' . rawurlencode($data['id']);
+      }
       unset($data['id']);
     }
     $result = $this->query('POST', $path, $data, array('content', 'id'));
@@ -1074,7 +1291,13 @@ abstract class Mollom {
     if (empty($data['id'])) {
       return FALSE;
     }
-    $path = 'captcha/' . $data['id'];
+    // The ID originates from raw form input. Ensure we hit the right endpoint
+    // in case a bogus bot fills in even hidden input fields with random
+    // strings, by performing a basic syntax validation.
+    if (!preg_match('@^[a-z0-9-]+$@i', $data['id'])) {
+      return FALSE;
+    }
+    $path = 'captcha/' . rawurlencode($data['id']);
     unset($data['id']);
     $result = $this->query('POST', $path, $data, array('captcha', 'id'));
 
@@ -1092,6 +1315,10 @@ abstract class Mollom {
    *     - profanity: The content contains obscene, violent, profane language.
    *     - quality: The content is of low quality.
    *     - unwanted: The content is unwanted, taunting, off-topic.
+   *  - type (optional): A string denoting the type of feedback submitted.
+   *     - moderate: Feedback from the admin moderation process (default).
+   *     - flag: feedback from end users flagging content as inappropriate
+   *   - source (optional): A string denoting the user-interface source of the feedback.
    *   and at least one of:
    *   - contentId: A Mollom content ID associated with the content.
    *   - captchaId: A Mollom CAPTCHA ID associated with the content.
@@ -1127,6 +1354,7 @@ abstract class Mollom {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
+    $publicKey = rawurlencode($publicKey);
     $result = $this->query('GET', 'blacklist/' . $publicKey, array(), array('list'));
     return isset($result['list']) ? $result['list'] : $result;
   }
@@ -1164,7 +1392,8 @@ abstract class Mollom {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
-    $result = $this->query('GET', 'blacklist/' . $publicKey . '/' . $entryId, array(), array('entry', 'id'));
+    $path = 'blacklist/' . rawurlencode($publicKey) . '/' . rawurlencode($entryId);
+    $result = $this->query('GET', $path, array(), array('entry', 'id'));
     return isset($result['entry']) ? $result['entry'] : $result;
   }
 
@@ -1188,9 +1417,9 @@ abstract class Mollom {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
-    $path = 'blacklist/' . $publicKey;
+    $path = 'blacklist/' . rawurlencode($publicKey);
     if (!empty($data['id'])) {
-      $path .= '/' . $data['id'];
+      $path .= '/' . rawurlencode($data['id']);
       unset($data['id']);
     }
     $result = $this->query('POST', $path, $data, array('entry', 'id'));
@@ -1213,8 +1442,32 @@ abstract class Mollom {
     if (!isset($publicKey)) {
       $publicKey = $this->publicKey;
     }
-    $result = $this->query('POST', 'blacklist/' . $publicKey . '/' . $entryId . '/delete');
+    $path = 'blacklist/' . rawurlencode($publicKey) . '/' . rawurlencode($entryId) . '/delete';
+    $result = $this->query('POST', $path);
     return $this->lastResponseCode === TRUE;
+  }
+
+  /**
+   * Generates a URL to a tracking image.
+   *
+   * This image can be used by form behavior analysis to analyze the
+   * humanity of the content author.
+   *
+   * @return array
+   *   An associative array of tracking information generated.
+   *   - tracking_url: the url to the tracking image (without any http protocol)
+   *   - tracking_id: the tracking id generated
+   */
+  public function getTrackingImage() {
+    $public_key = $this->publicKey;
+    $ts = time();
+    $tracking_id = hash_hmac('sha1', $public_key . $ts, $this->privateKey);
+
+    $result = array(
+      'tracking_url' => '//' . $this->server . '/v1/tracking/' . urlencode($tracking_id) . '.png?public_key=' . $public_key . "&timestamp=" . $ts,
+      'tracking_id' => $tracking_id,
+    );
+    return $result;
   }
 }
 
@@ -1287,12 +1540,20 @@ class MollomException extends Exception {
     $mollom->lastResponseCode = $code;
 
     // Log the exception.
+    // To aid Mollom technical support, include the IP address of the server we
+    // tried to reach in case a request fails.
+    // PHP's native gethostbyname() is available on all platforms, but its DNS
+    // lookup and caching behavior is undocumented and unclear. User comments on
+    // php.net mention that it does not have an own cache and also does not use
+    // the OS/platform's native DNS name resolver. Due to that, we only use it
+    // under error conditions.
     $message = array(
       'severity' => $this->severity,
-      'message' => 'Error @code: %message',
+      'message' => 'Error @code: %message (@server-ip)',
       'arguments' => array(
         '@code' => $code,
         '%message' => $message,
+        '@server-ip' => gethostbyname($mollom->server),
       ),
     );
     // Add HTTP request information, if available.
@@ -1327,6 +1588,18 @@ class MollomAuthenticationException extends MollomException {
 }
 
 /**
+ * Mollom error due to bad client request exception.
+ *
+ * Thrown in case the local time diverges too much from UTC.
+ *
+ * @see Mollom::TIME_OFFSET_MAX
+ * @see Mollom::REQUEST_ERROR
+ * @see Mollom::handleRequest()
+ */
+class MollomBadRequestException extends MollomException {
+}
+
+/**
  * Mollom server response exception.
  *
  * Thrown when a request to a Mollom server succeeds, but the response does not
@@ -1344,4 +1617,3 @@ class MollomResponseException extends MollomException {
    */
   protected $severity = 'debug';
 }
-
