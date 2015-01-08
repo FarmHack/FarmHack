@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the freelinking module.
+ */
+
+/**
+ * Implements hook_update_N().
+ *
+ * Check that plugin freelinking_path.inc has been deleted.
+ */
+function freelinking_update_7001() {
+  // Nothing here.
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Input formats using Freelinking filters should not be cached.
+ */
+function freelinking_update_7000() {
+  $formats = db_select('filter', 'f')
+    ->fields('f', array('format'))
+    ->condition('module', 'freelinking')
+    ->condition('status', 1);
+  db_update('filter_format')
+    ->expression('cache', 0)
+    ->condition('format', $formats, 'IN')
+    ->execute();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function freelinking_requirements($phase) {
+  $requirements = array();
+  if ('update' == $phase) {
+    $removed = (!file_exists(drupal_get_path('module', 'freelinking') . '/plugins/freelinking_path.inc'));
+    $sevr = ($removed) ? REQUIREMENT_OK : REQUIREMENT_ERROR;
+    $t = get_t();
+    $requirements['freelinking'] = array(
+      'title' => $t('Freelinking'),
+      'value' => 'Enabled',
+      'description' => $t('Please make sure that the file "freelinking_path.inc" is removed from the "plugins" directory.'),
+      'severity' => $sevr,
+    );
+  }
+  return $requirements;
+}
