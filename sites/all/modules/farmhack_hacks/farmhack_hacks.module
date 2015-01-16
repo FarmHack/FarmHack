@@ -5,3 +5,25 @@
  */
 
 include_once 'farmhack_hacks.features.inc';
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function farmhack_hacks_preprocess_html(&$vars) {
+
+  $inline_script = <<<EOL
+<script type='text/javascript'>
+(function (d, t) {
+  var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+  bh.type = 'text/javascript';
+  bh.src = '//www.bugherd.com/sidebarv2.js?apikey=o5pl0xpkxhndeiwx4jmnmq';
+  s.parentNode.insertBefore(bh, s);
+  })(document, 'script');
+</script>
+EOL;
+  $element = array(
+    '#type' => 'markup',
+    '#markup' => $inline_script,
+  );
+  drupal_add_html_head($element, 'bugherd');
+}
