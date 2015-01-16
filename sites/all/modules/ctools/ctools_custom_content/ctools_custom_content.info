@@ -3,3 +3,10 @@ description = Create custom, exportable, reusable content panes for applications
 core = 7.x
 package = Chaos tool suite
 dependencies[] = ctools
+
+; Information added by Drupal.org packaging script on 2014-11-19
+version = "7.x-1.5"
+core = "7.x"
+project = "ctools"
+datestamp = "1416423525"
+
