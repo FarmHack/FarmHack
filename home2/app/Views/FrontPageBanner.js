@@ -13,7 +13,7 @@ $(function() {
       </p>',
 
     render: function() {
-      this.$el.append(_.template(this.template))
+      this.$el.append(this.template)
     }
 
   })
