@@ -51,6 +51,13 @@ function rules_action_data_set_info_alter(&$element_info, $element) {
  * Action: Calculate a value.
  */
 function rules_action_data_calc($input1, $op, $input2, $settings, $state, $element) {
+  $info = $element->pluginParameterInfo();
+  // Make sure to apply date offsets intelligently.
+  if ($info['input_1']['type'] == 'date' && $info['input_2']['type'] == 'duration') {
+    $input2 = ($op == '-') ? $input2 * -1 : $input2;
+    return array('result' => (int) RulesDateOffsetProcessor::applyOffset($input1, $input2));
+  }
+
   switch ($op) {
     case '+':
       $result = $input1 + $input2;
@@ -64,11 +71,18 @@ function rules_action_data_calc($input1, $op, $input2, $settings, $state, $eleme
     case '/':
       $result = $input1 / $input2;
       break;
+    case 'min':
+      $result = min($input1, $input2);
+      break;
+    case 'max':
+      $result = max($input1, $input2);
+      break;
   }
   if (isset($result)) {
     // Ensure results are valid integer values if necessary.
-    $var_info = rules_array_key($element->providesVariables());
-    if (in_array($var_info['type'], array('integer', 'date', 'duration'))) {
+    $variables = $element->providesVariables();
+    $var_info = reset($variables);
+    if ($var_info['type'] == 'integer') {
       $result = (int) $result;
     }
     return array('result' => $result);
@@ -169,6 +183,81 @@ function rules_action_variable_add_info_alter(&$element_info, RulesAbstractPlugi
 }
 
 /**
+ * Action: Convert a value.
+ */
+function rules_action_data_convert($arguments, RulesPlugin $element, $state) {
+
+  $value_info = $element->getArgumentInfo('value');
+  $from_type = $value_info['type'];
+  $target_type = $arguments['type'];
+
+  // First apply the rounding behavior if given.
+  if (isset($arguments['rounding_behavior'])) {
+    switch ($arguments['rounding_behavior']) {
+      case 'up':
+        $arguments['value'] = ceil($arguments['value']);
+        break;
+      case 'down':
+        $arguments['value'] = floor($arguments['value']);
+        break;
+      default:
+      case 'round':
+        $arguments['value'] = round($arguments['value']);
+        break;
+    }
+  }
+
+  switch ($target_type) {
+    case 'decimal':
+      $result = floatval($arguments['value']);
+      break;
+    case 'integer':
+      $result = intval($arguments['value']);
+      break;
+    case 'text':
+      $result = strval($arguments['value']);
+      break;
+    case 'token':
+      $result = strval($arguments['value']);
+      break;
+  }
+
+  return array('conversion_result' => $result);
+}
+
+/**
+ * Info alteration callback for variable add action.
+ */
+function rules_action_data_convert_info_alter(&$element_info, RulesAbstractPlugin $element) {
+
+  if (isset($element->settings['type']) && $type = $element->settings['type']) {
+    $element_info['provides']['conversion_result']['type'] = $type;
+
+    if ($type != 'integer') {
+      // Only support the rounding behavior option for integers.
+      unset($element_info['parameter']['rounding_behavior']);
+    }
+
+    // Configure compatible source-types:
+    switch ($type) {
+      case 'integer':
+        $sources = array('decimal', 'text', 'token', 'uri', 'date', 'duration', 'boolean');
+        break;
+      case 'decimal':
+        $sources = array('integer', 'text', 'token', 'uri', 'date', 'duration', 'boolean');
+        break;
+      case 'text':
+        $sources = array('integer', 'decimal', 'token', 'uri', 'date', 'duration', 'boolean');
+        break;
+      case 'token':
+        $sources = array('integer', 'decimal', 'text', 'uri', 'date', 'duration', 'boolean');
+        break;
+    }
+    $element_info['parameter']['value']['type'] = $sources;
+  }
+}
+
+/**
  * Action: Create data.
  */
 function rules_action_data_create($args, $element) {
@@ -208,9 +297,10 @@ function rules_action_data_create_info_alter(&$element_info, RulesAbstractPlugin
       // Add the data type's properties as parameters.
       foreach ($type_info['property info'] as $property => $property_info) {
         // Prefix parameter names to avoid name clashes with existing parameters.
-        $element_info['parameter']['param_' . $property] = array_intersect_key($property_info, array_flip(array('type', 'label')));
+        $element_info['parameter']['param_' . $property] = array_intersect_key($property_info, array_flip(array('type', 'label', 'allow null')));
         if (empty($property_info['required'])) {
           $element_info['parameter']['param_' . $property]['optional'] = TRUE;
+          $element_info['parameter']['param_' . $property]['allow null'] = TRUE;
         }
       }
     }
@@ -281,6 +371,20 @@ function rules_condition_data_list_contains($list, $item, $settings, $state) {
     return FALSE;
   }
   return in_array($item, $list);
+}
+
+/**
+* Condition: List count comparison.
+*/
+function rules_condition_data_list_count_is($list, $op = '==', $value) {
+  switch ($op) {
+    case '==':
+      return count($list) == $value;
+    case '<';
+      return count($list) < $value;
+    case '>';
+      return count($list) > $value;
+  }
 }
 
 /**
