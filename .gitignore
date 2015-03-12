@@ -1,6 +1,7 @@
 # Ignore paths that contain user-generated content.
 /sites/*/files
 /sites/*/private
+sites/*/settings.local.inc
 /files/*
 /cache
 
