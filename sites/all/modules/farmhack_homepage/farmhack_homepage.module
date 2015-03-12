@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the farmhack_homepage feature.
+ */
+
+include_once 'farmhack_homepage.features.inc';
