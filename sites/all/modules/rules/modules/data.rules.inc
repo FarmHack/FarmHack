@@ -8,6 +8,19 @@
  */
 
 /**
+ * Implements hook_rules_category_info() on behalf of the pseudo data module.
+ */
+function rules_data_category_info() {
+  return array(
+    'rules_data' => array(
+      'label' => t('Data'),
+      'equals group' => t('Data'),
+      'weight' => -50,
+    ),
+  );
+}
+
+/**
  * Implements hook_rules_file_info() on behalf of the pseudo data module.
  * @see rules_core_modules()
  */
@@ -192,7 +205,69 @@ function rules_data_action_info() {
       ),
     );
   }
+  $return['data_convert'] = array(
+    'label' => t('Convert data type'),
+    'parameter' => array(
+      'type' => array(
+        'type' => 'token',
+        'label' => t('Target type'),
+        'description' => t('The data type to convert a value to.'),
+        'options list' => 'rules_action_data_convert_types_options',
+        'restriction' => 'input',
+      ),
+      'value' => array(
+        'type' => array('decimal', 'integer', 'text', 'token'),
+        'label' => t('Value to convert'),
+        'default mode' => 'selector',
+      ),
+      // For to-integer conversion only.
+      'rounding_behavior' => array(
+        'type' => 'token',
+        'label' => t('Rounding behavior'),
+        'description' => t('The rounding behavior the conversion should use.'),
+        'options list' => 'rules_action_data_convert_rounding_behavior_options',
+        'restriction' => 'input',
+        'default value' => 'round',
+        'optional' => TRUE,
+      ),
+    ),
+    'provides' => array(
+      'conversion_result' => array(
+        'type' => 'unknown',
+        'label' => t('Conversion result'),
+      ),
+    ),
+    'group' => t('Data'),
+    'base' => 'rules_action_data_convert',
+    'named parameter' => TRUE,
+    'callbacks' => array(
+      'form_alter' => 'rules_action_type_form_alter',
+    ),
+  );
   return $return;
+}
+
+/**
+ * Data conversation action: Options list callback for the target type.
+ */
+function rules_action_data_convert_types_options(RulesPlugin $element, $param_name) {
+  return array(
+    'decimal' => t('Decimal'),
+    'integer' => t('Integer'),
+    'text' => t('Text'),
+    'token' => t('Token'),
+  );
+}
+
+/**
+ * Data conversation action: Options list callback for rounding behavior.
+ */
+function rules_action_data_convert_rounding_behavior_options(RulesPlugin $element, $param_name) {
+  return array(
+    'down' => t('Always down (9.5 -> 9)'),
+    'round' => t('Round, half up (9.5 -> 10)'),
+    'up' => t('Always up (9.5 -> 10)'),
+  );
 }
 
 /**
@@ -381,6 +456,8 @@ function rules_action_data_calc_operator_options(RulesPlugin $element, $param_na
     '-' => '( - )',
     '*' => '( * )',
     '/' => '( / )',
+    'min' => 'min',
+    'max' => 'max',
   );
   // Only show +/- in case a date has been selected.
   if (($info = $element->getArgumentInfo('input_1')) && $info['type'] == 'date') {
@@ -478,6 +555,32 @@ function rules_data_condition_info() {
         'info_alter' => 'rules_data_list_info_alter',
         'form_alter' => 'rules_data_list_form_alter',
       ),
+    ),
+    'list_count_is' => array(
+      'label' => t('List count comparison'),
+      'parameter' => array(
+        'list' => array(
+          'type' => 'list',
+          'label' => t('List to check'),
+          'description' => t('A multi value data element to have its count compared, specified by using a data selector, eg node:author:roles.'),
+        ),
+        'op' => array(
+          'type' => 'text',
+          'label' => t('Operator'),
+          'description' => t('The comparison operator.'),
+          'optional' => TRUE,
+          'default value' => '==',
+          'options list' => 'rules_condition_data_list_count_is_operator_options',
+          'restriction' => 'input',
+        ),
+        'value' => array(
+          'type' => 'integer',
+          'label' => t('Count'),
+          'description' => t('The count to compare the data count with.'),
+        ),
+      ),
+      'group' => t('Data'),
+      'base' => 'rules_condition_data_list_count_is',
     ),
     'text_matches'  => array(
       'label' => t('Text comparison'),
@@ -641,6 +744,17 @@ function rules_data_selector_options_list(RulesAbstractPlugin $element) {
   if (isset($element->settings[$name . ':select']) && $wrapper = $element->applyDataSelector($element->settings[$name . ':select'])) {
     return $wrapper->optionsList($element instanceof RulesActionInterface ? 'edit' : 'view');
   }
+}
+
+/**
+ * Options list callback for condition list_count_is.
+ */
+function rules_condition_data_list_count_is_operator_options() {
+  return array(
+    '==' => t('equals'),
+    '<' => t('is lower than'),
+    '>' => t('is greater than'),
+  );
 }
 
 /**
