@@ -1,0 +1,6 @@
+name = "Farmhack Homepage"
+description = Contains the features and code required for the homepage.
+core = "7.x"
+package = "Features"
+dependencies[] = "fe_nodequeue"
+features[fe_nodequeue][] = "frontpage"
