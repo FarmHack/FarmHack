@@ -5,6 +5,13 @@
  */
 
 /**
+ * Implements hook_views_api().
+ */
+function farmhack_homepage_views_api() {
+  return array("version" => "3.0");
+}
+
+/**
  * Implements hook_fe_nodequeue_export_fields().
  */
 function farmhack_homepage_fe_nodequeue_export_fields() {
