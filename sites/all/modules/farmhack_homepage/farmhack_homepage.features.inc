@@ -15,7 +15,7 @@ function farmhack_homepage_fe_nodequeue_export_fields() {
     'name' => 'frontpage',
     'title' => 'Frontpage',
     'subqueue_title' => '',
-    'size' => '6',
+    'size' => '30',
     'link' => '',
     'link_remove' => '',
     'owner' => 'nodequeue',
