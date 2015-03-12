@@ -1,0 +1,134 @@
+@font-face {
+    font-family: 'burst_my_bubbleregular';
+    src: url('../fonts/burstmybubble-webfont.eot');
+    src: url('../fonts/burstmybubble-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/burstmybubble-webfont.woff2') format('woff2'),
+         url('../fonts/burstmybubble-webfont.woff') format('woff'),
+         url('../fonts/burstmybubble-webfont.ttf') format('truetype'),
+         url('../fonts/burstmybubble-webfont.svg#burst_my_bubbleregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'primerprint';
+    src: url('../fonts/primer_print-webfont.eot');
+    src: url('../fonts/primer_print-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/primer_print-webfont.woff2') format('woff2'),
+         url('../fonts/primer_print-webfont.woff') format('woff'),
+         url('../fonts/primer_print-webfont.ttf') format('truetype'),
+         url('../fonts/primer_print-webfont.svg#primerprint') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+body {
+  padding-top: 15px;
+}
+
+#header-region {
+  margin: 15px 15px 0 0px;
+}
+
+#main-region {
+
+}
+
+nav {
+  margin-left: 130px;
+}
+
+nav h1 {
+    float: left;
+    margin: 5px 0 0 0;
+    font-size: 30px;
+}
+
+.wrapper-right {
+  margin: 0 0 0 160px;
+}
+
+.tool {
+  margin-top: 150px;
+}
+
+.section-description {
+  margin-top: 15px;
+}
+.hand-written {
+  font-family: primerprint, Arial, sans-serif;
+  font-size: 3em;
+}
+
+.search-form-simple {
+  margin-top: 20px;
+}
+
+.search-form .form-control-wrapper {
+  margin-top: 15px;
+}
+
+.hacks {
+  margin-top: 15px;
+}
+
+.search-form .advanced {
+}
+
+.search-form .submit {
+  margin-top: 15px;
+}
+
+.join-us {
+  position: relative;
+  font-size: 32px;
+  color: red;
+  text-align: center;
+}
+
+.join-us--arrow {
+  position: absolute;
+  z-index: 9999;
+  right: 0px;
+  bottom: -100px;
+}
+
+#sidebar {
+  font-family: primerprint, Arial, sans-serif;
+  font-size: 20px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background: #EEE;
+  padding: 30px 15px 0;
+  width: 130px;
+  height: 5000px;
+  text-align: center;
+}
+
+#sidebar .menu-item {
+  margin-bottom: 40px;
+}
+
+.hack-results {
+  margin-top: 15px !important;
+}
+
+.hack-results .thumbnail h3 {
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+#sidebar .icon {
+  font-size: 40px;
+  clear: both;
+}
+
+.see-more {
+  text-align: center;
+}
+
+.page2 {
+  display:none;
+}
