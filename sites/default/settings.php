@@ -189,21 +189,6 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
  *   );
  * @endcode
  */
-$databases = array (
-  'default' => 
-  array (
-    'default' => 
-    array (
-      'database' => 'rjstatic_farmhack_beta1',
-      'username' => 'rjstatic_beta1',
-      'password' => 'thecatislazy',
-      'host' => 'localhost',
-      'port' => '',
-      'driver' => 'mysql',
-      'prefix' => '',
-    ),
-  ),
-);
 
 /**
  * Access control for update.php script.
@@ -513,3 +498,8 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
  * Remove the leading hash signs to disable.
  */
 # $conf['allow_authorize_operations'] = FALSE;
+
+// Include local dev environment settings, if possible.
+if (file_exists(dirname(__FILE__) .'/settings.local.inc')) {
+  include 'settings.local.inc';
+}
