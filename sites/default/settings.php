@@ -1,6 +1,5 @@
 <?php
 
-/*
 // Redirect all `*.farmhack.*` traffic that isn't `*.farmhack.org` to `*.farmhack.org`
 $fragments = explode('.', $_SERVER['HTTP_HOST']);
 $length = count($fragments);
@@ -17,7 +16,7 @@ if ($fragments[$length-2] == 'farmhack' && $fragments[$length-1] !== 'org') {
   header('Location: ' . $new_http_host); 
   exit();
 }
-*/
+
 /**
  * @file
  * Drupal site-specific configuration file.
