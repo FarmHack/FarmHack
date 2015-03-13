@@ -1,5 +1,6 @@
 <?php
 
+/*
 // Redirect all `*.farmhack.*` traffic that isn't `*.farmhack.org` to `*.farmhack.org`
 $fragments = explode('.', $_SERVER['HTTP_HOST']);
 $length = count($fragments);
@@ -12,13 +13,11 @@ if ($fragments[$length-2] == 'farmhack' && $fragments[$length-1] !== 'org') {
   }
   $new_http_host .= 'org';
   $new_http_host .= $_SERVER['REQUEST_URI'];
-  if ($new_http_host !== $_SERVER['HTTP_HOST']) {
-    header('HTTP/1.0 301 Moved Permanently'); 
-    header('Location: ' . $new_http_host); 
-    exit();
-  }
+  header('HTTP/1.0 301 Moved Permanently'); 
+  header('Location: ' . $new_http_host); 
+  exit();
 }
-
+*/
 /**
  * @file
  * Drupal site-specific configuration file.
