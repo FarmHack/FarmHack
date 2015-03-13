@@ -11,4 +11,3 @@ echo "<?php \$databases['default']['default'] = array(  'driver' => 'mysql',  'd
 drush sql-cli < farmhack.dev.2015-03-13.sanitized.sql
 ```
 Now setup Apache with a VHOST with name of `local.farmhack.org` and point it to the `FarmHack` folder. You can log in as root using `drush uli`.  Note, these directions do not include downloading the files directory (pictures), it's a Gigabyte large so we have to find some place to host it.
-
