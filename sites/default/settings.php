@@ -12,9 +12,11 @@ if ($fragments[$length-2] == 'farmhack' && $fragments[$length-1] !== 'org') {
   }
   $new_http_host .= 'org';
   $new_http_host .= $_SERVER['REQUEST_URI'];
-  header('HTTP/1.0 301 Moved Permanently'); 
-  header('Location: ' . $new_http_host); 
-  exit();
+  if ($new_http_host !== $_SERVER['HTTP_HOST']) {
+    header('HTTP/1.0 301 Moved Permanently'); 
+    header('Location: ' . $new_http_host); 
+    exit();
+  }
 }
 
 /**
