@@ -1,16 +1,21 @@
 <?php
 
-// Remove WWW.
-if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && 
-  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
-  if ($_SERVER['HTTP_HOST'] == 'www.farmhack.net' || 
-      $_SERVER['HTTP_HOST'] == 'live.farmhack.gotpantheon.com') {
-    header('HTTP/1.0 301 Moved Permanently'); 
-    header('Location: http://farmhack.net'. $_SERVER['REQUEST_URI']); 
-    exit();
+// Redirect all `*.farmhack.*` traffic that isn't `*.farmhack.org` to `*.farmhack.org`
+$fragments = explode('.', $_SERVER['HTTP_HOST']);
+$length = count($fragments);
+if ($fragments[$length-2] == 'farmhack' && $fragments[$length-1] !== 'org') { 
+  $new_http_host = 'http://';
+  foreach($fragments as $i => $fragment) {
+    if ($i < ($length-1)) {
+      $new_http_host .= $fragment . '.';
+    }
   }
+  $new_http_host .= 'org';
+  $new_http_host .= $_SERVER['REQUEST_URI'];
+  header('HTTP/1.0 301 Moved Permanently'); 
+  header('Location: ' . $new_http_host); 
+  exit();
 }
-
 
 /**
  * @file
@@ -502,4 +507,7 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
 // Include local dev environment settings, if possible.
 if (file_exists(dirname(__FILE__) .'/settings.local.inc')) {
   include 'settings.local.inc';
+}
+if (file_exists(dirname(__FILE__) .'/settings.local.php')) {
+  include 'settings.local.php';
 }
