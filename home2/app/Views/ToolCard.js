@@ -5,10 +5,10 @@ $(function() {
     template : _.template(' \
       <div class="col-sm-4"> \
         <div class="thumbnail"> \
-          <img src="<%= image %>" alt="..."> \
+          <img src="<%= image.src %>" alt="..."> \
           <div class="caption"> \
-           <h3><%= name %></h3> \
-            <p><%= description %></p> \
+           <h3><%= title %></h3> \
+            <p><%= body %></p> \
           </div> \
         </div> \
       </div>'),

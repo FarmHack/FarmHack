@@ -1,5 +1,7 @@
 $(function() {
 
-  App.Models.Tool = Backbone.Model.extend({})
+  App.Models.Tool = Backbone.Model.extend({
+    idAttribute: 'nid'
+  })
 
 })
