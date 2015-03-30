@@ -1,0 +1,3 @@
+name = Farm Hack Deploy
+description = Module for placing update hooks to enable, disable, unset variables, etc.
+core = 7.x
