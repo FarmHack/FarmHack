@@ -11,6 +11,7 @@ $(function() {
     currentColumn: 1,
 
     initialize: function(){
+      
     },
 
     addItem: function(model){
@@ -32,9 +33,12 @@ $(function() {
     },
 
     render: function() {
-      this.startRow()
-      this.addAll()
-      this.endRow()
+      this.collection.on('sync', function() {
+        this.startRow()
+        this.addAll()
+        this.endRow()
+      }, this)
+      this.collection.fetch()
     },
 
     startRow: function() {

@@ -1,0 +1,43 @@
+
+
+body {
+  padding-top: 15px;
+}
+
+/*
+ * Main Wrappers
+ */
+
+.body-wrapper {
+  margin: 0 0 0 160px;
+}
+
+
+
+/*
+ * Regions
+ */
+
+.header-region {
+  margin: 15px 15px 0 0px;
+}
+
+.main-region {
+  position: relative;
+  width: 1023px;
+}
+
+.left-region-wrapper {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 5000px;
+}
+
+.left-region {
+  height: 5000px;
+  font-family: primerprint, Arial, sans-serif;
+  font-size: 20px;
+  background: #EEE;
+  text-align: center;
+}
