@@ -1,2 +1,7 @@
 <?php
 
+
+function farmhack_deploy_update_7001() {
+  module_disable('google_analytics');
+}
+
