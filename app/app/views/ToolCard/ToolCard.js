@@ -5,9 +5,9 @@ $(function() {
     template : _.template(' \
       <div class="col-sm-4"> \
         <div class="thumbnail"> \
-          <img src="<%= image.src %>" alt="..."> \
+          <a href="<%= link %>" alt="<%= title %>"><img src="<%= image.src %>" alt="..."></a> \
           <div class="caption"> \
-           <h3><%= title %></h3> \
+           <h3><a href="<%= link %>" alt="<%= title %>"><%= title %></a></h3> \
             <p><%= body %></p> \
           </div> \
         </div> \
