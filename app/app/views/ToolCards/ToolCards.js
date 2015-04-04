@@ -11,7 +11,7 @@ $(function() {
     currentColumn: 1,
 
     initialize: function(){
-      
+      this.$el.html('<div style="text-align: center;"><img align="center" src="images/spinner.gif"/></div>')
     },
 
     addItem: function(model){
@@ -33,10 +33,16 @@ $(function() {
     },
 
     render: function() {
+      var view = this
       this.collection.on('sync', function() {
-        this.startRow()
-        this.addAll()
-        this.endRow()
+        this.$el.fadeOut(300)
+        setTimeout(function() {
+          view.$el.html('')
+          view.startRow()
+          view.addAll()
+          view.endRow()
+          view.$el.fadeIn(700)
+        }, 300)
       }, this)
       this.collection.fetch()
     },
