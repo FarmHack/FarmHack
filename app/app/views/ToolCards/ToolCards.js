@@ -41,6 +41,7 @@ $(function() {
           view.startRow()
           view.addAll()
           view.endRow()
+          view.seeMore()
           view.$el.fadeIn(700)
         }, 300)
       }, this)
@@ -53,7 +54,18 @@ $(function() {
 
     endRow: function() {
       this.$el.append('</div> <!--/row-->')
+    },
+
+    seeMore: function() {
+      this.$el.append(' \
+          <div class="see-more text-center"> \
+            <a class="btn btn-danger btn-lg" href="/tools"> \
+              Click here to see more tools <span class="badge">152</span> \
+            </a> \
+          </div> \
+        ')
     }
+
 
   })
 
