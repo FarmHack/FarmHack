@@ -4,24 +4,7 @@ $(function() {
 
     className: "jumbo-blog col-sm-5",
 
-    template: _.template('  \
-        <div class="activity-type"> \
-          BLOG  \
-        </div> \
-        <center><img class="img-responsive" src="/sites/default/files/<%= fileName %>"></center> \
-        <div class="activity-body"> \
-          <a href="/node/<%= nid %>"><%= title %></a> \
-        </div> \
-        <div class="activity-by-line"> \
-          <% if (userPhotoFileName) { %> \
-            <div class="activity-user-photo"> \
-              <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>"> \
-            </div> \
-          <% } %> \
-          by <a href="/user/<%= uid %>"><%= name %></a> <br/> \
-          on <%= changed %> \
-        </div> \
-      '),
+    template: _.template($('#template-jumbo-blog').html()),
 
     render: function () {
       this.collection.on('sync', function() {

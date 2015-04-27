@@ -111,6 +111,55 @@
 
   </script>
 
+  <script type="text/template" id="template-nav-bar">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Farm Hack</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/tools">Tools</a></li>
+            <li><a href="/wiki/getting-started">Getting Started</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/shops">Shops</a></li>
+            <li><a href="/people">People</a></li>
+            <li><a href="/user/register">Sign up</a></li>
+            <li><a href="/user">Log in</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div class='nav-floateys'>
+    </div>
+  </script>
+
+  <script type="text/template" id="template-jumbo-blog">
+      <div class="activity-type">
+        BLOG
+      </div>
+      <center><img class="img-responsive" src="/sites/default/files/<%= fileName %>"></center>
+      <div class="activity-body">
+        <a href="/node/<%= nid %>"><%= title %></a>
+      </div>
+      <div class="activity-by-line">
+        <% if (userPhotoFileName) { %>
+          <div class="activity-user-photo">
+            <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+          </div>
+        <% } %>
+        by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+        on <%= changed %>
+      </div>
+  </script>
+
   <script type="text/template" id="template-search-form">
               <div class="search-form">
                 <div class="simple">
