@@ -18,12 +18,14 @@ $(function() {
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="/tools">Tools</a></li>
-              <li><a href="/wiki/getting-started">Getting Started</a></li>
-              <li><a href="/forum">Forum</a></li>
-              <li><a href="/shops">Shops</a></li>
-              <li><a href="/people">People</a></li>
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="/tools">Tools</a></li>
+                <li><a href="/wiki/getting-started">Getting Started</a></li>
+                <li><a href="/forum">Forum</a></li>
+                <li><a href="/shops">Shops</a></li>
+                <li><a href="/people">People</a></li>
+                <li><a href="/user/register">Sign up</a></li>
+                <li><a href="/user">Log in</a></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div>
