@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <!-- Google Analytics Content Experiment code -->
     <script>function utmx_section(){}function utmx(){}(function(){var
-    k='57501499-0',d=document,l=d.location,c=d.cookie;
+    k='57501499-1',d=document,l=d.location,c=d.cookie;
     if(l.search.indexOf('utm_expid='+k)>0)return;
     function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
     indexOf(';',i);return escape(c.substring(i+n.length+1,j<0?c.
@@ -17,6 +16,7 @@
     </script><script>utmx('url','A/B');</script>
     <!-- End of Google Analytics Content Experiment code -->
 
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Farm Hack - An Open Source Community for Resilient Agriculture</title>
@@ -24,8 +24,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- 
-      Vendor Scripts 
+    <!--
+      Vendor Scripts
     -->
 
     <script type="text/javascript" src="vendor/jquery-2.0.2.min.js"></script>
@@ -37,9 +37,9 @@
     <script type="text/javascript" src="vendor/spin.min.js"></script>
     <script type="text/javascript" src="vendor/jquery.spin.js"></script>
 
-    <!-- 
-      App Scripts 
-    --> 
+    <!--
+      App Scripts
+    -->
 
     <script type="text/javascript" src="app/App.js"></script>
     <script type="text/javascript" src="app/models/Comment.js"></script>
@@ -57,14 +57,14 @@
     <script type="text/javascript" src="app/views/UpcomingEvents.js"></script>
     <script type="text/javascript" src="app/views/JumboBlog.js"></script>
 
-    <!-- 
-      Vender CSS 
+    <!--
+      Vender CSS
     -->
 
     <link href="vendor/Flat-UI-master/css/flat-ui.css" rel="stylesheet">
 
-    <!-- 
-      App CSS 
+    <!--
+      App CSS
     -->
 
     <link href="css/app.css" rel="stylesheet">
@@ -72,7 +72,7 @@
 
   </head>
 
-  <!-- 
+  <!--
     Regions
   -->
 
@@ -80,7 +80,7 @@
 
     <div id="top-region">
       <div id="movie">
-        <iframe src="//player.vimeo.com/video/73504647?portrait=0" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> 
+        <iframe src="//player.vimeo.com/video/73504647?portrait=0" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
       </div>
 
       <div id="jumboblog">
@@ -114,16 +114,16 @@
     <div id="bottom-region">
       <div class="row row-2"> </div>
     </div>
-      
+
   </body>
 
-  <!-- 
-    Templates 
+  <!--
+    Templates
   -->
 
   <script type="text/template" id="template-JumboBlog">
     <div class="activity-type">
-      <%= typeName %> 
+      <%= typeName %>
     </div>
     <center><img src="/sites/default/files/<%= fileName %>"></center>
     <div class="activity-body">
@@ -150,7 +150,7 @@
           <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
           <a class="btn btn-large btn-success" href="/user">Sign in or create an account</a>
         </div>
-      </div> 
+      </div>
     </div>
   </script>
 
@@ -164,7 +164,7 @@
           <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
           <a class="btn btn-large btn-success" href="/user">Go to your account</a>
         </div>
-      </div> 
+      </div>
     </div>
   </script>
 
@@ -190,7 +190,7 @@
 
   <script type="text/html" id="template-Node">
     <div class="activity-type" style="background: <%= typeColor %>;">
-      <%= typeName %> 
+      <%= typeName %>
     </div>
     <div class="activity-body">
       <a href="/node/<%= nid %>"><%= title %></a>
@@ -210,7 +210,7 @@
     <h2 class="title">
       <%= title %>
     </h2>
-    <div class="content">  </div>      
+    <div class="content">  </div>
   </script>
 
   <script type="text/html" id="template-block-Recent-Online-Activity">
@@ -219,7 +219,7 @@
         <img src='img/activities-header.jpg'>
       </h2>
     </div>
-    <div class="content"> </div>      
+    <div class="content"> </div>
   </script>
 
   <!--
