@@ -4,9 +4,13 @@
   top: 175px;
   right: 0;
   */
-  width: 360px;
   background: #f1f3f2 url('wedge.jpg');
   background-position: bottom right;
   background-repeat: no-repeat;
   padding: 10px;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  margin: auto;
 }

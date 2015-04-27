@@ -2,6 +2,8 @@ $(function() {
 
   App.Views.SearchForm = Backbone.View.extend({
 
+    className: 'col-xs-12',
+
     events: {
       'click button': 'submit',
     },

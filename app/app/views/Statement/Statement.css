@@ -1,0 +1,15 @@
+
+/*
+ * Menu
+ */
+
+.statement {
+  font-family: primerprint, Arial, sans-serif;
+  font-size: 3em;
+}
+
+@media screen and (max-width: 992px) {
+  .statement {
+    font-size: 2em;
+  }
+}

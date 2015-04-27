@@ -24,7 +24,7 @@ body {
 
 .main-region {
   position: relative;
-  width: 1023px;
+  max-width: 1023px;
 }
 
 .left-region-wrapper {

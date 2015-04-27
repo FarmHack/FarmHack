@@ -2,7 +2,7 @@ $(function() {
 
   App.Views.JumboBlog = Backbone.View.extend({
 
-    className: "jumbo-blog pull-right",
+    className: "jumbo-blog col-sm-5",
 
     template: _.template('  \
         <div class="activity-type"> \

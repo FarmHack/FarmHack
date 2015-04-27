@@ -2,6 +2,8 @@ $(function() {
 
   App.Views.AllInOneBanner = Backbone.View.extend({
 
+    className: 'hidden-sm hidden-xs',
+
     template: ' \
       <div style="text-align:center; width:1023px; margin-left:auto; margin-right:auto;"> \
         <img id="Image-Maps_3201309151126189" src="app/views/AllInOneBanner/AllInOneBanner.jpeg" usemap="#Image-Maps_3201309151126189" border="0" width="1023" height="176" alt="" /> \
