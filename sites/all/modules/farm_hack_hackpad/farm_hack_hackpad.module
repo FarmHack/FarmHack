@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Farm Hack Hackpad feature.
+ */
+
+include_once 'farm_hack_hackpad.features.inc';

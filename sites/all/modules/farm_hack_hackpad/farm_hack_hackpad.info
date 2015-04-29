@@ -1,0 +1,16 @@
+name = Farm Hack Hackpad
+core = 7.x
+package = Farm Hack
+version = 7.x-1.0
+project = farm_hack_hackpad
+dependencies[] = ctools
+dependencies[] = hackpad
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = hackpad_client_id
+features[variable][] = hackpad_enabled
+features[variable][] = hackpad_last
+features[variable][] = hackpad_save_edit_node
+features[variable][] = hackpad_secret
+features[variable][] = hackpad_subdomain

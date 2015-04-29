@@ -1,0 +1,16 @@
+name = Hackpad
+description = Hackpad integration for Drupal
+core = 7.x
+dependencies[] = text
+dependencies[] = oauth_common
+files[] = includes/hackpad.api.inc
+files[] = includes/hackpad.pad.inc
+files[] = includes/hackpad.user.inc
+
+
+; Information added by drupal.org packaging script on 2013-10-18
+version = "7.x-1.0-beta3"
+core = "7.x"
+project = "hackpad"
+datestamp = "1382133153"
+

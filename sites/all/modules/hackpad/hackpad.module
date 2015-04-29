@@ -1,0 +1,641 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function hackpad_menu() {
+  $items = array();
+
+  $items['admin/config/services/hackpad'] = array(
+    'title' => 'Hackpad settings',
+    'description' => 'Configure access credentials and other site-wide settings for Hackpad integration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hackpad_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file path' => drupal_get_path('module', 'hackpad') . '/includes',
+    'file' => 'hackpad.admin.inc',
+  );
+
+  $items['admin/config/services/hackpad/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['admin/config/services/hackpad/embed'] = array(
+    'title' => 'Test embedding',
+    'description' => 'Manually load a Hackpad for a given pad ID.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hackpad_embed_form'),
+    'access callback' => 'hackpad_embed_access',
+    'access arguments' => array('administer site configuration'),
+    'file path' => drupal_get_path('module', 'hackpad') . '/includes',
+    'file' => 'hackpad.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback to determine if the current user should be able to access
+ * the manual embed form.
+ *
+ * @param $permission
+ *   A permission to pass to user_access(), such as 'administer site
+ *   configuration'.
+ * @param $account
+ *   An optional user account object to check for access against.
+ *
+ * @return
+ *   TRUE if the user has access to the manual embed form.
+ */
+function hackpad_embed_access($permission, $account = NULL) {
+  return variable_get('hackpad_enabled') && user_access($permission, $account);
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function hackpad_element_info() {
+  $elements = array();
+
+  $elements['hackpad'] = array(
+    '#input' => TRUE,
+    '#process' => array('hackpad_element_process'),
+    '#attached' => array(
+      'js' => array(
+        'https://hackpad.com/static/hackpad.js' => array('type' => 'external'),
+        drupal_get_path('module', 'hackpad') . '/hackpad.js',
+      ),
+    ),
+  );
+
+  return $elements;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function hackpad_theme($existing, $type, $theme, $path) {
+  return array(
+    'hackpad' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function hackpad_field_info() {
+  $fields = array();
+
+  $fields['hackpad'] = array(
+    'label' => t('Hackpad'),
+    'description' => t('Store text from Hackpads.'),
+    'default_widget' => 'hackpad',
+    'default_formatter' => 'hackpad_html',
+  );
+
+  return $fields;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function hackpad_field_formatter_info() {
+  return array(
+    'hackpad_html' => array(
+      'label' => t('HTML'),
+      'field types' => array('hackpad'),
+    ),
+    'hackpad_html_trimmed' => array(
+      'label' => t('Trimmed'),
+      'field types' => array('hackpad'),
+      'settings' => array('trim_length' => 600),
+    ),
+    'hackpad_html_strip_trimmed' => array(
+      'label' => t('Strip HTML tags and trim'),
+      'field types' => array('hackpad'),
+      'settings' => array('trim_length' => 600),
+    ),
+    'hackpad_edit' => array(
+      'label' => t('Hackpad editor'),
+      'field types' => array('hackpad'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function hackpad_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  return text_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function hackpad_field_formatter_settings_summary($field, $instance, $view_mode) {
+  return text_field_formatter_settings_summary($field, $instance, $view_mode);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function hackpad_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+    case 'hackpad_html':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => drupal_render(hackpad_html_display($item['value'])));
+      }
+      break;
+
+    case 'hackpad_html_trimmed':
+      foreach ($items as $delta => $item) {
+        $html = drupal_render(hackpad_html_display($item['value']));
+        $output = text_summary($html, NULL, $display['settings']['trim_length']);
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'hackpad_html_strip_trimmed':
+      foreach ($items as $delta => $item) {
+        $html = strip_tags(drupal_render((hackpad_html_display($item['value']))));
+        $output = text_summary($html, NULL, $display['settings']['trim_length']);
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'hackpad_edit':
+      foreach ($items as $delta => $item) {
+        // This is a horrible hack. drupal_render() doesn't call #process
+        // functions, so our element never gets expanded. We have to use actual
+        // variables for our array parameters in the process function since
+        // they are passed by reference.
+        $hp = array(
+          '#type' => 'hackpad',
+          '#pad_id' => $item['pad_id'],
+        );
+        $fs = array();
+        $cf = array();
+        $element[$delta] = hackpad_element_process($hp, $fs, $cf);
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function hackpad_field_is_empty($item, $field) {
+  // @todo Check $item['value'] as well once that is populated.
+  if (empty($item['pad_id'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_insert().
+ */
+function hackpad_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  foreach ($items as $delta => &$item) {
+    $pad_class = hackpad_class_info('HackpadPad');
+    $pad = new $pad_class($item['pad_id']);
+
+    // If we are reverting the field to an earlier revision, revert the pad
+    // in Hackpad as well.
+    if (isset($item['revision_id']) && isset($entity->original)) {
+      $original_field = reset(field_get_items($entity_type, $entity->original, $field['field_name']));
+      if (is_array($original_field) && $original_field['revision_id'] > $item['revision_id']) {
+        $pad->revert($item['revision_id']);
+      }
+    }
+
+    $export = $pad->export();
+    $item['value'] = $export->body;
+
+    // Even if we are reverting, we need to get the new revision id.
+    $item['revision_id'] = $export->revision_id;
+  }
+}
+
+/**
+ * Implements hook_field_update().
+ */
+function hackpad_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  hackpad_field_insert($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
+ * Implements hook_field_delete().
+ */
+function hackpad_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  // @todo Delete the corresponding pad in Hackpad.
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function hackpad_field_widget_info() {
+  $widgets = array();
+  $widgets['hackpad'] = array(
+    'label' => t('Hackpad editor'),
+    'description' => t('A collaborative text editor.'),
+    'field types' => array('hackpad'),
+    'behaviors' => array(
+      'default value' => FIELD_BEHAVIOR_NONE,
+    ),
+  );
+
+  return $widgets;
+}
+
+/**
+ * FAPI #process callback for the 'hackpad' element type.
+ */
+function hackpad_element_process($element, &$form_state, $complete_form) {
+  // We don't need to use drupal_html_id() because embedding the same pad
+  // multiple times on one page is not supported.
+  $target_id = 'hackpad-' . $element['#pad_id'];
+  $pad_class = hackpad_class_info('HackpadPad');
+  $pad = new $pad_class($element['#pad_id']);
+
+  // Pull in our default settings and include the mapping of this pad to a
+  // target <div>.
+  $settings = hackpad_settings();
+  $settings['pads'] = array(
+    $element['#pad_id'] => array(
+      'target' => $target_id,
+      'url' => $pad->renderUrl(),
+    ),
+  );
+
+  $element['target'] = array(
+    '#markup' => '<div id="' . $target_id . '" class="hackpad-pad"></div>',
+    '#attached' => array(
+      'js' => array(
+        array(
+          'data' => array('hackpad' => $settings),
+          'type' => 'setting',
+        ),
+      ),
+    ),
+  );
+
+  // Set #hidden to TRUE on a hackpad element to hide the widget. This is
+  // useful for reserving a unique Hackpad pad ID and ensuring it's saved to
+  // our local database before allowing content to be entered.
+  if (isset($element['#hidden']) && $element['#hidden']) {
+    $element['target']['#markup'] = '<div style="display: none;">' . $element['target']['#markup'] . '</div>';
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function hackpad_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  switch ($instance['widget']['type']) {
+    case 'hackpad':
+      // When we save a new pad, $items is empty even when this hook is called
+      // during the form submission. So, we have to stash the ID of the pad we
+      // have created so we don't create a second (empty) pad. For some reason
+      // standard form values aren't passed in $form_state['values'], so we
+      // hack this a bit and just check input directly.
+      $pad_class = hackpad_class_info('HackpadPad');
+      $new_pad = !isset($items[$delta]['pad_id']);
+
+      // If we are creating a new pad on a node form, hide the pad by default.
+      $hide_pad = $new_pad && ($instance['entity_type'] == 'node') && variable_get('hackpad_save_edit_node', TRUE);
+
+      if (!isset($form_state['input']['hackpad_pad_id_' . $delta])) {
+        if ($new_pad) {
+          $pad = new $pad_class();
+        }
+        else {
+          // We are editing an existing field.
+          $pad = new $pad_class($items[$delta]['pad_id']);
+        }
+      }
+      else {
+        $pad = new $pad_class($form_state['input']['hackpad_pad_id_' . $delta]);
+      }
+
+      $element['value'] = array(
+        '#type' => 'hackpad',
+        '#pad_id' => $pad->pad_id,
+        '#hidden' => $new_pad,
+      );
+      $element['pad_id'] = array(
+        '#type' => 'value',
+        '#value' => $pad->pad_id,
+      );
+
+      $form['hackpad_pad_id_' . $delta] = array(
+        '#type' => 'hidden',
+        '#value' => $pad->pad_id,
+      );
+
+      if ($hide_pad) {
+        $form['actions']['submit']['#access'] = FALSE;
+        $form['actions']['save_edit'] = array(
+          '#type' => 'submit',
+          '#value' => t('Save and edit'),
+          '#submit' => array('hackpad_save_edit_redirect'),
+        );
+      }
+
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Redirect to the node edit form when creating a new node.
+ *
+ * Ideally, we would be able to support this for all entity types. However,
+ * the information passed to a submit handler isn't enough to be able to
+ * determine the edit URL.
+ *
+ * @param array $form
+ *   The FAPI array of the form.
+ * @param array &$form_state
+ *   The current state of the form.
+ */
+function hackpad_save_edit_redirect($form, &$form_state) {
+  if ($form_state['clicked_button']['#value'] == t('Save and edit')) {
+    node_form_submit($form, $form_state);
+    if (isset($_REQUEST['destination'])) {
+      $form_state['redirect'] = url('node/' . $form_state['nid'] . '/edit',
+        array(
+          'query' => array(
+            'destination' => $_REQUEST['destination'],
+          ),
+          'absolute' => TRUE,
+        )
+      );
+      $_GET['destination'] = $form_state['redirect'];
+      unset($_REQUEST['destination']);
+    }
+    else {
+      $form_state['redirect'] = 'node/' . $form_state['nid'] . '/edit';
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function hackpad_cron() {
+  hackpad_update_entities();
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Safari and future versions of Firefox block 3rd party cookies. That means
+ * that Hackpad's cookies are blocked since they are kept in an iframe. We work
+ * around this by redirecting the user to hackpad.com, which registers hackpad
+ * as a site that the user explicitly visited, bypassing the 3rd party cookie
+ * restriction.
+ */
+function hackpad_user_login(&$edit, $account) {
+  // Get the URL to redirect back to, respecting any previously set
+  // destination parameters.
+  $destination = url(reset(drupal_get_destination()), array('absolute' => TRUE));
+
+  // If a destination is present in the request, it has to be unset before
+  // calling drupal_goto().
+  unset($_GET['destination']);
+
+  // It is intentional that we don't go to a specific subdomain here.
+  drupal_goto("https://hackpad.com/?setCookie=1&contUrl=" . $destination);
+}
+
+/**
+ * Return a class name to use for a given base class.
+ *
+ * This allows other modules to alter the class mapping, so subclasses can be
+ * swapped in as needed.
+ *
+ * @param string $base_class
+ *   The name of a base class, such as HackpadPad.
+ *
+ * @return string
+ *   A class name, such as HackpadPad.
+ */
+function hackpad_class_info($base_class) {
+  $classes = &drupal_static(__FUNCTION__);
+  if (!isset($classes)) {
+    $classes = module_invoke_all('hackpad_class_info');
+    drupal_alter('hackpad_class_info', $classes);
+  }
+
+  return $classes[$base_class];
+}
+
+/**
+ * Implements hook_hackpad_class_info().
+ */
+function hackpad_hackpad_class_info() {
+  return array(
+    'HackpadApi' => 'HackpadApi',
+    'HackpadPad' => 'HackpadPad',
+    'HackpadUser' => 'HackpadUser',
+  );
+}
+
+/**
+ * Find all local entities with a Hackpad field and update them.
+ *
+ * This function checks Hackpad for all pads edited since a given timestamp
+ * and saves our local entity if the revision ID doesn't match. This allows
+ * pads to be edited within Hackpad proper while keeping our local exports of
+ * pad data in sync.
+ *
+ * @param int $hackpad_last
+ *   Optional parameter to indicate the timestamp to use when checking for
+ *   edited pads. Defaults to the hackpad_last variable.
+ */
+function hackpad_update_entities($hackpad_last = NULL) {
+  if (!$hackpad_last) {
+    $last = variable_get('hackpad_last', 0);
+  }
+
+  $hackpad = HackpadApi::api();
+  $pads_since = $hackpad->editedSince($last);
+
+  if (!empty($pads_since)) {
+    $pads = array();
+    foreach ($pads_since as $pad_id) {
+      $pad_class = hackpad_class_info('HackpadPad');
+      $pads[$pad_id] = new $pad_class($pad_id);
+    }
+
+    $fields = field_info_field_map();
+    foreach ($fields as $field_name => $field) {
+      if ($field['type'] == 'hackpad') {
+        // Find out what enabled bundles of this field have a pad ID that
+        // matches the existing data.
+        foreach ($field['bundles'] as $entity_type => $bundles) {
+          $ids = array();
+          foreach ($bundles as $bundle) {
+            $query = new EntityFieldQuery();
+            $result = $query->entityCondition('entity_type', $entity_type)
+              ->entityCondition('bundle', $bundle)
+              ->fieldCondition($field_name, 'pad_id', array_keys($pads), 'IN')
+              ->execute();
+            if (!empty($result[$entity_type])) {
+              $ids += array_keys($result[$entity_type]);
+            }
+          }
+          $entities = entity_load($entity_type, $ids, array(), TRUE);
+          foreach ($entities as $entity) {
+            // Don't save the entity if we have a newer revision stored
+            // locally.
+            $pad_id = $entity->{$field_name}[LANGUAGE_NONE][0]['pad_id'];
+            if ($pads[$pad_id]->revision_id <= $entity->{$field_name}[LANGUAGE_NONE][0]['revision_id']) {
+              continue;
+            }
+
+            // node_save() assumes that it's always the current user saving
+            // the node or node revision. If we're saving a node, temporarily
+            // switch to the owner of the node before saving. The may not match
+            // the user who made any upstream edits, but we also could have a
+            // situation where multiple users have edited a pad in between
+            // local revisions.
+            if ($entity_type == 'node') {
+              global $user;
+              $original_user = $user;
+              $user = user_load($entity->uid);
+              node_object_prepare($entity);
+              node_save($entity);
+              $user = $original_user;
+            }
+            else {
+              entity_save($entity_type, $entity);
+            }
+
+            list($id, , ,) = entity_extract_ids($entity_type, $entity);
+            watchdog('hackpad', 'Updated hackpad content for !entity_type !id.', array('!entity_type' => $entity_type, '!id' => $id));
+          }
+        }
+      }
+    }
+  }
+
+  variable_set('hackpad_last', REQUEST_TIME);
+}
+
+/**
+ * Add Hackpad Javascript to the page.
+ */
+function hackpad_js($settings = array()) {
+  // Pull in our default settings and merge them with any overrides passed to
+  // this function.
+  $defaults = hackpad_settings();
+  if (empty($settings)) {
+    $settings = $defaults;
+  }
+  else {
+    $settings = array_merge($defaults, $settings);
+  }
+
+  drupal_add_js(array('hackpad' => $settings), 'setting');
+  drupal_add_js('https://hackpad.com/static/hackpad.js', 'external');
+}
+
+/**
+ * Return an array containing all Hackpad settings that are suitable to include
+ * in Drupal.settings.
+ *
+ * @return
+ *   An array of all public settings saved by this module.
+ */
+function hackpad_settings($account = NULL) {
+  if (!$account) {
+    $account = $GLOBALS['user'];
+  }
+
+  $settings = array(
+    'user' => array(
+      'name' => $account->name,
+      'email' => $account->mail,
+    ),
+  );
+
+  $variables = array(
+    'hackpad_enabled',
+    'hackpad_client_id',
+    'hackpad_subdomain',
+  );
+
+  foreach ($variables as $var) {
+    $settings[$var] = variable_get($var, FALSE);
+  }
+
+  return $settings;
+}
+
+/**
+ * Generate a renderable array of a Hackpad HTML export.
+ *
+ * Hackpad doesn't give us a structured export, but instead a complete HTML
+ * page. This page also contains <head> markup. This function will add all of
+ * the head markup to the current page, excluding the title tag.
+ *
+ * @param string $html
+ *   The HTML string of the exported pad.
+ *
+ * @return array
+ *   A renderable array containing the body contents of the pad.
+ */
+function hackpad_html_display($html) {
+  $elements = array();
+
+  // We need to split the doc into tags that need to be inserted into
+  // <head> and the body.
+  if ($full_doc = DOMDocument::loadHTML($html)) {
+    $xpath = new DOMXpath($full_doc);
+    // Exclude the title tag since we will let Drupal handle that.
+    $entries = $xpath->query('//html/head/*[not(self::title)]');
+
+    // Add each of the appropriate head tags to our document head.
+    foreach ($entries as $entry) {
+      $head_tag = new DOMDocument();
+      $head_tag->appendChild($head_tag->importNode($entry->cloneNode(TRUE), TRUE));
+      $element = array(
+        '#type' => 'markup',
+        '#markup' => $head_tag->saveHTML(),
+      );
+      drupal_add_html_head($element, 'hackpad_' . md5($element['#markup']));
+    }
+
+    // Export our body tag.
+    $body = $full_doc->getElementsByTagName('body');
+    $body = $xpath->query('//html/body/*');
+    $elements = array('#type' => 'markup');
+    foreach ($body as $bi) {
+      $body_tag = new DOMDocument();
+      $body_tag->appendChild($body_tag->importNode($bi->cloneNode(TRUE), TRUE));
+      $element = array(
+        '#type' => 'markup',
+        '#markup' => $body_tag->saveHTML(),
+      );
+      $elements[] = $element;
+    }
+  }
+  else {
+    watchdog('hackpad', 'Unable to parse HTML when attempting to display a Hackpad.');
+  }
+
+  return $elements;
+}

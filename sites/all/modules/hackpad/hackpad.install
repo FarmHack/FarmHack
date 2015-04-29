@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Implements hook_field_schema().
+ */
+function hackpad_field_schema($field) {
+  $schema = array();
+  $schema['columns'] = array(
+    'value' => array(
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+    ),
+    'pad_id' => array(
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'revision_id' => array(
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+  );
+
+  $schema['indexes'] = array(
+    'pad_id' => array('pad_id'),
+    'revision_id' => array('revision_id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function hackpad_uninstall() {
+  variable_del('hackpad_client_id');
+  variable_del('hackpad_enabled');
+  variable_del('hackpad_last');
+  variable_del('hackpad_secret');
+  variable_del('hackpad_subdomain');
+}
