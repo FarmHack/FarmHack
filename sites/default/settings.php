@@ -1,20 +1,17 @@
 <?php
 
-// Redirect all `*.farmhack.*` traffic that isn't `*.farmhack.org` to `*.farmhack.org`
-$fragments = explode('.', $_SERVER['HTTP_HOST']);
-$length = count($fragments);
-if ($fragments[$length-2] == 'farmhack' && $fragments[$length-1] !== 'org') { 
-  $new_http_host = 'http://';
-  foreach($fragments as $i => $fragment) {
-    if ($i < ($length-1)) {
-      $new_http_host .= $fragment . '.';
-    }
+// Remove WWW.
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
+  if ($_SERVER['HTTP_HOST'] == 'www.farmhack.net' ||
+      $_SERVER['HTTP_HOST'] == 'farmhack.net' ||
+      $_SERVER['HTTP_HOST'] == 'www.farmhack.com' ||
+      $_SERVER['HTTP_HOST'] == 'farmhack.com' ||
+      $_SERVER['HTTP_HOST'] == 'live-farmhack.pantheon.io') {
+    header('HTTP/1.0 301 Moved Permanently');
+    header('Location: http://farmhack.org'. $_SERVER['REQUEST_URI']);
+    exit();
   }
-  $new_http_host .= 'org';
-  $new_http_host .= $_SERVER['REQUEST_URI'];
-  header('HTTP/1.0 301 Moved Permanently'); 
-  header('Location: ' . $new_http_host); 
-  exit();
 }
 
 /**
