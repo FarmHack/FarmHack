@@ -15,6 +15,13 @@ $(function() {
     },
 
     submit: function() {
+      ga('send', {
+        'hitType': 'event',          // Required.
+        'eventCategory': 'search',   // Required.
+        'eventAction': 'submit',      // Required.
+        'eventLabel': 'frontpage search',
+        'eventValue': 4
+      });
       window.location.href = '/search/tools/' + this.$el.find('.tool-search-text').val()
     }
   })
