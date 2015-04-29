@@ -11,6 +11,16 @@ $(function() {
       //this.renderUpcomingEvents()
       this.renderRecentActivity()
       this.renderJumboBlog()
+      $('.play-movie').click(function() {
+        $('.play-movie').html('<iframe src="https://player.vimeo.com/video/73504647?autoplay=1&title=0&byline=0&portrait=0" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
+        ga('send', {
+          'hitType': 'event',          // Required.
+          'eventCategory': 'movie',   // Required.
+          'eventAction': 'play',      // Required.
+          'eventLabel': 'frontpage',
+          'eventValue': 4
+        })
+      })
 
       window.onscroll = function() {
         var speed = 3.0;
