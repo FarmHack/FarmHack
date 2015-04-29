@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Farm Hack Tool feature.
+ */
+
+include_once 'farm_hack_tool.features.inc';
