@@ -11,3 +11,11 @@ function farmhack_deploy_update_7002() {
   module_enable('farm_hack_tool');
 }
 
+
+function farmhack_deploy_update_8000) {
+  module_enable('strongarm');
+  module_enable('farm_hack_hackpad');
+  module_enable('farm_hack_tool');
+}
+
+
