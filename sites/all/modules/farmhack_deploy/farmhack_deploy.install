@@ -5,3 +5,7 @@ function farmhack_deploy_update_7001() {
   module_disable('google_analytics');
 }
 
+function farmhack_deploy_update_7002() {
+  module_enable('farm_hack_tool');
+}
+
