@@ -6,6 +6,8 @@ function farmhack_deploy_update_7001() {
 }
 
 function farmhack_deploy_update_7002() {
+  module_enable('strongarm');
+  module_enable('farm_hack_hackpad');
   module_enable('farm_hack_tool');
 }
 
