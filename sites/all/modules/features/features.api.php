@@ -34,7 +34,7 @@
  *   'default_filename': The filename to use when 'default_file' is set to
  *   FEATURES_DEFAULTS_CUSTOM.
  *
- *   'features_source': Boolean value for whether this component should be
+ *   'feature_source': Boolean value for whether this component should be
  *   offered as an option on the initial feature creation form.
  *
  *   'base': Optional. An alternative base key to use when calling features
@@ -54,14 +54,14 @@ function hook_features_api() {
     'mycomponent' => array(
       'default_hook' => 'mycomponent_defaults',
       'default_file' => FEATURES_DEFAULTS_INCLUDED,
-      'features_source' => TRUE,
-      'file' => drupal_get_path('module', 'mycomponent') .'/mycomponent.features.inc',
+      'feature_source' => TRUE,
+      'file' => drupal_get_path('module', 'mycomponent') . '/mycomponent.features.inc',
     ),
   );
 }
 
 /**
- * Component hook. The hook should be implemented using the name ot the
+ * Component hook. The hook should be implemented using the name of the
  * component, not the module, eg. [component]_features_export() rather than
  * [module]_features_export().
  *
@@ -112,13 +112,13 @@ function hook_features_export($data, &$export, $module_name) {
   // The following is the simplest implementation of a straight object export
   // with no further export processors called.
   foreach ($data as $component) {
-    $export['mycomponent'][$component] = $component;
+    $export['features']['mycomponent'][$component] = $component;
   }
   return array();
 }
 
 /**
- * Component hook. The hook should be implemented using the name ot the
+ * Component hook. The hook should be implemented using the name of the
  * component, not the module, eg. [component]_features_export() rather than
  * [module]_features_export().
  *
@@ -137,7 +137,7 @@ function hook_features_export_options() {
 }
 
 /**
- * Component hook. The hook should be implemented using the name ot the
+ * Component hook. The hook should be implemented using the name of the
  * component, not the module, eg. [component]_features_export() rather than
  * [module]_features_export().
  *
@@ -166,12 +166,12 @@ function hook_features_export_render($module_name, $data, $export = NULL) {
     $code[] = "  \$mycomponents['{$name}'] = " . features_var_export(mycomponent_load($name)) .";";
   }
   $code[] = "return \$mycomponents;";
-  $code = implode("\n", $mycomponents);
+  $code = implode("\n", $code);
   return array('mycomponent_defaults' => $code);
 }
 
 /**
- * Component hook. The hook should be implemented using the name ot the
+ * Component hook. The hook should be implemented using the name of the
  * component, not the module, eg. [component]_features_export() rather than
  * [module]_features_export().
  *
@@ -181,10 +181,12 @@ function hook_features_export_render($module_name, $data, $export = NULL) {
  *   The name of the feature module whose components should be reverted.
  * @return boolean
  *   TRUE or FALSE for whether the components were successfully reverted.
+ *   NOTE: This return value is no longer used in the latest Features so
+ *   modules should no longer count on this value
  */
-function hook_features_export_revert($module_name) {
-  $mycomponents = module_invoke_all($module_name, 'mycomponent_defaults');
-  if (!empty($$mycomponents)) {
+function hook_features_revert($module_name) {
+  $mycomponents = module_invoke($module_name, 'mycomponent_defaults');
+  if (!empty($mycomponents)) {
     foreach ($mycomponents as $mycomponent) {
       mycomponent_delete($mycomponent);
     }
@@ -192,7 +194,7 @@ function hook_features_export_revert($module_name) {
 }
 
 /**
- * Component hook. The hook should be implemented using the name ot the
+ * Component hook. The hook should be implemented using the name of the
  * component, not the module, eg. [component]_features_export() rather than
  * [module]_features_export().
  *
@@ -208,9 +210,9 @@ function hook_features_export_revert($module_name) {
  * @param string $module_name
  *   The name of the feature module whose components should be rebuilt.
  */
-function hook_features_export_rebuild($module_name) {
-  $mycomponents = module_invoke_all($module_name, 'mycomponent_defaults');
-  if (!empty($$mycomponents)) {
+function hook_features_rebuild($module_name) {
+  $mycomponents = module_invoke($module_name, 'mycomponent_defaults');
+  if (!empty($mycomponents)) {
     foreach ($mycomponents as $mycomponent) {
       mycomponent_save($mycomponent);
     }
@@ -218,11 +220,49 @@ function hook_features_export_rebuild($module_name) {
 }
 
 /**
- * Alter the final export array just prior to the rendering of defaults. Allows
- * modules a final say in altering what component objects are exported.
+ * Invoked before a restore operation is run.
+ *
+ * This hook is called before any of the restore operations on the components is
+ * run.
+ *
+ * @param string $op
+ *   The operation that is triggered: revert, rebuild, disable, enable
+ * @param array $items
+ *   The items handled by the operation.
+ */
+function hook_features_pre_restore($op, $items) {
+  if ($op == 'rebuild') {
+    // Use features rebuild to rebuild the features independent exports too.
+    entity_defaults_rebuild();
+  }
+}
+
+/**
+ * Invoked after a restore operation is run.
+ *
+ * This hook is called after any of the restore operations on the components is
+ * run.
+ *
+ * @param string $op
+ *   The operation that is triggered: revert, rebuild, disable, enable
+ * @param array $items
+ *   The items handled by the operation.
+ */
+function hook_features_post_restore($op, $items) {
+  if ($op == 'rebuild') {
+    // Use features rebuild to rebuild the features independent exports too.
+    entity_defaults_rebuild();
+  }
+}
+
+/**
+ * Alter the final array of Component names to be exported, just prior to
+ * the rendering of defaults. Allows modules a final say in whether or not
+ * certain Components are exported (the Components' actual data, however,
+ * cannot be altered by this hook).
  *
  * @param array &$export
- *   By reference. An array of all components to be exported with a given
+ *   By reference. An array of all component names to be exported with a given
  *   feature.
  * @param array $module_name
  *   The name of the feature module to be generated.
@@ -266,6 +306,7 @@ function hook_features_pipe_COMPONENT_alter(&$pipe, $data, $export) {
  *   feature.
  *
  * The component being exported is contained in $export['component'].
+ * The module being exported contained in $export['module_name'].
  */
 function hook_features_pipe_alter(&$pipe, $data, $export) {
   if ($export['component'] == 'node' && in_array($data, 'my-node-type')) {
@@ -288,12 +329,32 @@ function hook_features_pipe_alter(&$pipe, $data, $export) {
  */
 
 /**
+ * Deprecated as of 7.x-2.0.
+ *
  * Alter the default fields right before they are cached into the database.
  *
  * @param &$fields
  *   By reference. The fields that have been declared by another feature.
  */
 function hook_field_default_fields_alter(&$fields) {
+}
+
+/**
+ * Alter the base fields right before they are cached into the database.
+ *
+ * @param &$fields
+ *   By reference. The fields that have been declared by another feature.
+ */
+function hook_field_default_field_bases_alter(&$fields) {
+}
+
+/**
+ * Alter the field instances right before they are cached into the database.
+ *
+ * @param &$fields
+ *   By reference. The fields that have been declared by another feature.
+ */
+function hook_field_default_field_instances_alter(&$fields) {
 }
 
 /**
@@ -371,6 +432,99 @@ function hook_user_default_permissions_alter(&$permissions) {
  *   By reference. The roles that have been declared by another feature.
  */
 function hook_user_default_roles_alter(&$roles) {
+}
+
+/**
+ * @}
+ */
+
+
+/**
+ * @defgroup features_module_hooks Feature module hooks
+ * @{
+ * Hooks invoked on Feature modules when that module is enabled, disabled,
+ * rebuilt, or reverted. These are ONLY invoked on the Features module on
+ * which these actions are taken.
+ */
+
+/**
+ * Feature module hook. Invoked on a Feature module before that module is
+ * reverted.
+ *
+ * @param $component
+ *   String name of the component that is about to be reverted.
+ */
+function hook_pre_features_revert($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module after that module is
+ * reverted.
+ *
+ * @param $component
+ *   String name of the component that has just been reverted.
+ */
+function hook_post_features_revert($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module before that module is
+ * rebuilt.
+ *
+ * @param $component
+ *   String name of the component that is about to be rebuilt.
+ */
+function hook_pre_features_rebuild($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module after that module is
+ * rebuilt.
+ *
+ * @param $component
+ *   String name of the component that has just been rebuilt.
+ */
+function hook_post_features_rebuild($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module before that module is
+ * disabled.
+ *
+ * @param $component
+ *   String name of the component that is about to be disabled.
+ */
+function hook_pre_features_disable_feature($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module after that module is
+ * disabled.
+ *
+ * @param $component
+ *   String name of the component that has just been disabled.
+ */
+function hook_post_features_disable_feature($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module before that module is
+ * enabled.
+ *
+ * @param $component
+ *   String name of the component that is about to be enabled.
+ */
+function hook_pre_features_enable_feature($component) {
+}
+
+/**
+ * Feature module hook. Invoked on a Feature module after that module is
+ * enabled.
+ *
+ * @param $component
+ *   String name of the component that has just been enabled.
+ */
+function hook_post_features_enable_feature($component) {
 }
 
 /**
