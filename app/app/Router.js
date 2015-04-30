@@ -4,6 +4,7 @@ $(function(){
 
       routes:{
         '': 'home',
+        'tool/:id': 'tool'
       },
 
       home: function() {
@@ -39,6 +40,19 @@ $(function(){
         navBarView.render()
 
       },
+
+      tool: function(toolId) {
+        var tool = new App.Models.Tool()
+        tool.set('hackpadId', toolId)
+        tool.set('title', 'test')
+        var hackpadView = new App.Views.Hackpad({model: tool})
+
+        $('.main-region').html('')
+        $('.main-region').append(hackpadView.el)
+
+        hackpadView.render()
+
+      }
 
   }))
 

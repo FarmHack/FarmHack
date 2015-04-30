@@ -77,6 +77,8 @@
   <link  href="app/views/FarmHackMovie/FarmHackMovie.css" rel="stylesheet">
   <script src="app/views/SearchForm/SearchForm.js"></script>
   <link  href="app/views/SearchForm/SearchForm.css" rel="stylesheet">
+  <script src="app/views/Hackpad/Hackpad.js"></script>
+  <link  href="app/views/Hackpad/Hackpad.css" rel="stylesheet">
 
   <!-- MODELS -->
   <script src="app/models/Tool.js"></script>
@@ -109,6 +111,10 @@
     ga('create', 'UA-30070277-1', 'auto');
     ga('send', 'pageview');
 
+  </script>
+
+  <script type="text/template" id="template-hackpad">
+    <iframe width=600 height=400 src="/hackpad.php?id=<%= hackpadId %>"></iframe>
   </script>
 
   <script type="text/template" id="template-nav-bar">
