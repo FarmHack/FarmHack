@@ -14,6 +14,12 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
   }
 }
 
+if ($_GET['q'] == '') {
+  header('HTTP/1.0 301 Moved Permanently');
+  header('Location: http://' . $_SERVER['HTTP_HOST'] . '/app/');
+  exit();
+}
+ 
 /**
  * @file
  * Drupal site-specific configuration file.
