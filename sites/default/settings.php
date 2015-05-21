@@ -14,7 +14,7 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
   }
 }
 
-if ($_GET['q'] == '') {
+if ($_SERVER['PHP_SELF'] == '/index.php' && $_GET['q'] == '') {
   header('HTTP/1.0 301 Moved Permanently');
   header('Location: http://' . $_SERVER['HTTP_HOST'] . '/app/');
   exit();
