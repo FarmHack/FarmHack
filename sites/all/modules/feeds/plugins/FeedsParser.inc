@@ -315,7 +315,7 @@ class FeedsEnclosure extends FeedsElement {
    */
   public function setAllowedExtensions($extensions) {
     // Normalize whitespace so that empty extensions are not allowed.
-    $this->allowedExtensions = trim(preg_replace('/\s/', ' ', $extensions));
+    $this->allowedExtensions = trim(preg_replace('/\s+/', ' ', $extensions));
   }
 
   /**
@@ -332,7 +332,7 @@ class FeedsEnclosure extends FeedsElement {
   }
 
   /**
-   * Returns the full path to the file URI with a safe filen ame.
+   * Returns the full path to the file URI with a safe file name.
    *
    * @return string
    *   The safe file URI.
@@ -352,8 +352,6 @@ class FeedsEnclosure extends FeedsElement {
    *
    * @throws RuntimeException
    *   Thrown if the file extension is invalid.
-   *
-   * @see FeedsElement::getValue()
    */
   public function getLocalValue() {
     return str_replace(' ', '_', $this->getSafeFilename());
@@ -367,8 +365,6 @@ class FeedsEnclosure extends FeedsElement {
    *
    * @throws RuntimeException
    *   Thrown if the file extension is invalid.
-   *
-   * @see FeedsElement::getValue()
    */
   protected function getSafeFilename() {
     if (isset($this->safeFilename)) {
@@ -430,7 +426,7 @@ class FeedsEnclosure extends FeedsElement {
    *   If file object could not be created.
    */
   public function getFile($destination) {
-
+    $file = NULL;
     if ($this->getValue()) {
       // Prepare destination directory.
       file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
@@ -478,7 +474,6 @@ class FeedsEnclosure extends FeedsElement {
       return $file;
     }
   }
-
 }
 
 /**
@@ -680,11 +675,16 @@ class FeedsDateTime extends DateTime {
    *   PHP DateTimeZone object, NULL allowed
    */
   public function __construct($time = '', $tz = NULL) {
-    // Assume UNIX timestamp if numeric.
     if (is_numeric($time)) {
-      // Make sure it's not a simple year
-      if ((is_string($time) && strlen($time) > 4) || is_int($time)) {
+      // Assume UNIX timestamp if it doesn't look like a simple year.
+      if (strlen($time) > 4) {
         $time = "@" . $time;
+      }
+      // If it's a year, add a default month too, because PHP's date functions
+      // won't parse standalone years after 2000 correctly (see explanation at
+      // http://aaronsaray.com/blog/2007/07/11/helpful-strtotime-reminders/#comment-47).
+      else {
+        $time = 'January ' . $time;
       }
     }
 
@@ -693,7 +693,7 @@ class FeedsDateTime extends DateTime {
     $time = str_replace("GMT+", "+", $time);
 
     // Some PHP 5.2 version's DateTime class chokes on invalid dates.
-    if (!strtotime($time)) {
+    if (!date_create($time)) {
       $time = 'now';
     }
 
