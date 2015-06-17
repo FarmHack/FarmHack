@@ -1,0 +1,6 @@
+Quick 2-line workaround in date_views/theme/theme.inc to fix title of monthly calendar views (was displaying "June 1, 2015" instead of "June"):
+
+https://www.drupal.org/node/2294973#comment-9016311
+
+This should be fixed in a future release of the Date module.
+
