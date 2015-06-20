@@ -11,7 +11,7 @@ $(function() {
         <area shape="rect" coords="3,11,61,46" href="/tools" alt="Tools" title="Tools"    /> \
         <area shape="rect" coords="72,11,180,46" href="/forum" alt="Discussions" title="Discussions"    /> \
         <area shape="rect" coords="184,12,278,47" href="/calendar" alt="Calendar" title="Calendar"    /> \
-        <area shape="rect" coords="289,11,409,46" href="host-an-event" alt="Host to an event" title="Host to an event"    /> \
+        <area shape="rect" coords="289,11,409,46" href="/host-an-event" alt="Host to an event" title="Host to an event"    /> \
         <area shape="rect" coords="415,11,480,46" href="/shops" alt="Open Shops" title="Open Shops"    /> \
         <area shape="rect" coords="486,12,561,47" href="/people" alt="People" title="People"    /> \
         <area shape="rect" coords="629,3,717,95" href="/donate" alt="donate" title="donate"    /> \
