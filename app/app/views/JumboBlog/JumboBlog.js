@@ -14,6 +14,7 @@ $(function() {
         vars.changed = moment(vars.changed, "X").format("MMMM D h:mma")
         vars.fileName = blogModel.attributes.field_main_image.und[0].filename
         vars.typeName = "RECENT BLOG"
+        vars.url = vars['field_external_url']['und'][0]['value']
         this.$el.append(this.template(vars))
       }, this)
       this.collection.fetch()
