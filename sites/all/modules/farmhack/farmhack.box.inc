@@ -19,10 +19,12 @@ function farmhack_default_box() {
   $box->description = 'FarmHack Friends';
   $box->options = array(
     'body' => array(
-      'value' => '<div class="textwidget"><p><a href="http://thegreenhorns.net/">The Greenhorns</a></p>
+      'value' => '<div class="textwidget"><p><a href="http://www.youngfarmers.org">National Young Farmers\' Coalition</a></p>
+<p><a href="http://thegreenhorns.net/">The Greenhorns</a></p>
 <p><a href="http://www.greenstartnh.org/">Green Start</a></p></div>',
       'format' => 'filtered_html',
     ),
+    'additional_classes' => '',
   );
   $export['farmhac_friends'] = $box;
 
@@ -47,17 +49,40 @@ We also seek to bring our non-farmer allies on board: engineers, architects, des
   $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
+  $box->delta = 'farmhack_involved';
+  $box->plugin_key = 'simple';
+  $box->title = '';
+  $box->description = 'Farm Hack - Get Involved';
+  $box->options = array(
+    'body' => array(
+      'value' => 'FarmHack.net Tool and Forum sections conceived by the community and programmed with volunteer hours from R.J. Steinert ([http://rjsteinert.com](http://rjsteinert.com)).
+
+Have a suggestion or see a problem?  Speak up in the [forum for the Tool called "FarmHack.net"](http://farmhack.net/tools/farmhacknet#forum).
+
+Want to volunteer hours helping to program this site?  [Contact us](http://www.farmhack.net/user/8/contact).',
+      'format' => 'full_html',
+    ),
+    'additional_classes' => '',
+  );
+  $export['farmhack_involved'] = $box;
+
+  $box = new stdClass();
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
   $box->delta = 'farmhack_social_media_links';
   $box->plugin_key = 'simple';
   $box->title = 'Connect With Farm Hack';
   $box->description = 'Connect With Farm Hack';
   $box->options = array(
     'body' => array(
-      'value' => '<div id="fm_ft_social"> <a href="http://www.facebook.com/pages/The-National-Young-Farmers-Coalition/157485677636655" target="_blank"></a> <a href="http://twitter.com/#!/NYFCNYFC" target="_blank"></a> <a href="http://feeds.feedburner.com/nyfc" target="_blank"></a>
+      'value' => '<div id="fm_ft_social"> <a href="https://www.facebook.com/pages/Farm-Hack/514798055226447?ref=br_tf" target="_blank">Facebook</a><br>
+ <a href="http://twitter.com/#!/NYFCNYFC" target="_blank">Twitter</a><br>
+ <a href="http://feeds.feedburner.com/nyfc" target="_blank">RSS</a>
       <div class="clear"></div>
     </div>',
       'format' => 'full_html',
     ),
+    'additional_classes' => '',
   );
   $export['farmhack_social_media_links'] = $box;
 

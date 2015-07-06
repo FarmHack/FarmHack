@@ -90,6 +90,12 @@ function farmhack_context_default_contexts() {
           'region' => 'header',
           'weight' => '-10',
         ),
+        'boxes-farmhack_involved' => array(
+          'module' => 'boxes',
+          'delta' => 'farmhack_involved',
+          'region' => 'footer_firstcolumn',
+          'weight' => '-10',
+        ),
         'boxes-farmhac_friends' => array(
           'module' => 'boxes',
           'delta' => 'farmhac_friends',
