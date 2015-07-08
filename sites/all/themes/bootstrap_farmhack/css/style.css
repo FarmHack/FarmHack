@@ -1,3 +1,11 @@
 /**
  * Styles for the {{ THEME NAME }} theme.
  */
+
+.logo {
+  margin-top: 13px;
+}
+
+#boxes-box-farmhack_donate {
+  display: none;
+}
