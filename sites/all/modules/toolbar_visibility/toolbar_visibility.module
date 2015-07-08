@@ -1,0 +1,81 @@
+<?php
+/**
+ * @file
+ * Give a way to remove the Drupal Toolbar on selected themes.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function toolbar_visibility_permission() {
+  return array(
+    'administer Toobar Visibility' => array(
+      'title' => t('Administer Toobar Visibility'),
+      'description' => t('Perform administration tasks for Toobar Visibility.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function toolbar_visibility_menu() {
+  $items = array();
+  $items['admin/config/user-interface/toolbar-visibility'] = array(
+    'title' => 'Toobar Visibility',
+    'description' => 'Chose themes where remove the Toolbar',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('toolbar_visibility_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer Toobar Visibility'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function toolbar_visibility_page_alter(&$page) {
+  global $theme_key;
+  $themes = list_themes();
+  $theme_object = $themes[$theme_key];
+
+  if (variable_get('toolbar_visibility_theme', NULL)) {
+    if (in_array($theme_object->name, variable_get('toolbar_visibility_theme', NULL))) {
+      if (isset($page['page_top']['toolbar'])) {
+        unset($page['page_top']['toolbar']);
+      }
+    }
+  }
+}
+
+/**
+ * Form constructor for the settings
+ */
+function toolbar_visibility_settings() {
+  $form = array();
+
+  if (module_exists("overlay")) {
+    drupal_set_message(t('To use this module, you must disable the Overlay Module. Go to the <a href="@modules_page_url">modules page</a> to disable it.', array('@modules_page_url' => url('admin/modules'))), 'warning');
+  }
+  else {
+    // Get the themes list from variable if exist!
+    $themes = variable_get('toolbar_visibility_theme', NULL);
+    // Get the system themes list!
+    $list_themes = list_themes();
+
+    foreach ($list_themes as $list) {
+      $all_themes[$list->name] = $list->name;
+    }
+
+    $form['toolbar_visibility_theme'] = array(
+      '#type' => 'select',
+      '#title' => t('Select theme(s) where you want to remove Toolbar'),
+      '#multiple' => TRUE,
+      '#options' => $all_themes,
+      '#default_value' => variable_get('toolbar_visibility_theme', NULL),
+    );
+
+    return system_settings_form($form);
+  }
+}
