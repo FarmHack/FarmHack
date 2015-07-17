@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the NEFKE Shared Calendar feature.
+ */
+
+include_once 'nefke_shared_calendar.features.inc';
