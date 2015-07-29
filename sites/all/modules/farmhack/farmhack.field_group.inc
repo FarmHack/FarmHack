@@ -51,10 +51,11 @@ function farmhack_field_group_info() {
     'label' => 'Tool Concept',
     'weight' => '0',
     'children' => array(
-      0 => 'field_tool_description',
-      1 => 'field_tool_image',
-      2 => 'field_related_problem_statements',
+      0 => 'field_related_problem_statements',
+      1 => 'field_tool_description',
+      2 => 'field_tool_image',
       3 => 'title',
+      4 => 'field_tool_stage',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -222,9 +223,9 @@ function farmhack_field_group_info() {
     'label' => 'Related Tools',
     'weight' => '3',
     'children' => array(
-      0 => 'field_tools_component',
-      1 => 'field_tools_assembly',
-      2 => 'field_tools_branch',
+      0 => 'field_tools_assembly',
+      1 => 'field_tools_branch',
+      2 => 'field_tools_component',
       3 => 'field_tools_merge',
     ),
     'format_type' => 'fieldset',

@@ -124,5 +124,38 @@ function farmhack_context_default_contexts() {
   t('farmhack');
   $export['global'] = $context;
 
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'library_tool_search';
+  $context->description = '';
+  $context->tag = 'Tools';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'library/search' => 'library/search',
+        'library/search/*' => 'library/search/*',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'facetapi-8Q3VMyDWwZpQ3FyNxo6OORFlpOxYYwed' => array(
+          'module' => 'facetapi',
+          'delta' => '8Q3VMyDWwZpQ3FyNxo6OORFlpOxYYwed',
+          'region' => 'sidebar_first',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Tools');
+  $export['library_tool_search'] = $context;
+
   return $export;
 }

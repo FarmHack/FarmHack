@@ -55,11 +55,12 @@ We also seek to bring our non-farmer allies on board: engineers, architects, des
   $box->description = 'Farm Hack - Get Involved';
   $box->options = array(
     'body' => array(
-      'value' => 'FarmHack.net Tool and Forum sections conceived by the community and programmed with volunteer hours from R.J. Steinert ([http://rjsteinert.com](http://rjsteinert.com)).
+      'value' => 'FarmHack.org Tool and Forum sections conceived by the community and programmed by volunteers with help from some small grants from places like SARE. 
 
-Have a suggestion or see a problem?  Speak up in the [forum for the Tool called "FarmHack.net"](http://farmhack.net/tools/farmhacknet#forum).
+Have a suggestion or see a problem?  Speak up in the [forum for the Tool called "FarmHack.org"](http://farmhack.net/tools/farmhacknet#forum).
 
-Want to volunteer hours helping to program this site?  [Contact us](http://www.farmhack.net/user/8/contact).',
+If you would like to get involved, contact RJ at rj@rjsteinert.com
+',
       'format' => 'full_html',
     ),
     'additional_classes' => '',

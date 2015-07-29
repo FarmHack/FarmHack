@@ -390,6 +390,33 @@ function farmhack_field_default_field_bases() {
     'type' => 'image',
   );
 
+  // Exported field_base: 'field_tool_stage'
+  $field_bases['field_tool_stage'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_tool_stage',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'concept' => 'Concept',
+        'prototype' => 'Prototype',
+        'ready to build' => 'Ready to build',
+      ),
+      'allowed_values_function' => '',
+      'profile2_private' => FALSE,
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_tools_assembly'
   $field_bases['field_tools_assembly'] = array(
     'active' => 1,

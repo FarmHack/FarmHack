@@ -562,7 +562,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -680,6 +680,66 @@ function farmhack_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-tool-field_tool_stage'
+  $field_instances['node-tool-field_tool_stage'] = array(
+    'bundle' => 'tool',
+    'default_value' => array(
+      0 => array(
+        'value' => 'concept',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 12,
+      ),
+      'notifications' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tool_stage',
+    'label' => 'tool_stage',
+    'required' => 1,
+    'settings' => array(
+      'jquery_ui_multiselect' => array(
+        'dividerLocation' => 0.5,
+        'doubleClickable' => 1,
+        'dragToAdd' => 1,
+        'enabled' => 0,
+        'height' => 0,
+        'includeAddAll' => 1,
+        'includeRemoveAll' => 1,
+        'searchable' => 1,
+        'selectedContainerOnLeft' => 1,
+        'sortable' => 1,
+        'width' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'node-tool-field_tools_assembly'
   $field_instances['node-tool-field_tools_assembly'] = array(
     'bundle' => 'tool',
@@ -723,7 +783,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 10,
+      'weight' => 18,
     ),
   );
 
@@ -770,7 +830,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 11,
+      'weight' => 19,
     ),
   );
 
@@ -817,7 +877,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 9,
+      'weight' => 17,
     ),
   );
 
@@ -864,7 +924,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 12,
+      'weight' => 20,
     ),
   );
 
@@ -1037,6 +1097,7 @@ function farmhack_field_default_field_instances() {
   t('This tool merges these other tools together');
   t('User Manual Wiki (Drupal)');
   t('What functionality solves this problem?');
+  t('tool_stage');
 
   return $field_instances;
 }

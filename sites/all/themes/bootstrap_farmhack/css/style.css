@@ -6,6 +6,36 @@
   margin-top: 13px;
 }
 
+#toolbar {
+}
+
 #boxes-box-farmhack_donate {
   display: none;
+}
+.search-results {
+  margin: 0px;
+  padding: 0px;
+}
+.search-results .item {
+  width: 45%;
+}
+
+@media  (max-width: 600px) {
+  .search-results .item {
+    width: 95%;
+  }
+}
+
+.search-form label {
+  display: none;
+}
+.search-form .form-group{
+  width: 80%;
+}
+.search-form input.form-control {
+  width: 95%;
+display: inline;
+}
+.search-form button {
+  display: inline;
 }
