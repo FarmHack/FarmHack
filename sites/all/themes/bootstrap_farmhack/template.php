@@ -39,6 +39,7 @@ function bootstrap_farmhack_apachesolr_search_page_alter(array &$build, array $s
         var target = document.getElementById(\'block-system-main\')
         var spinner = new Spinner(spinnerOpts).spin(target);
         jQuery(".page-header").text("Tool Library")
+        jQuery(".page-header").append(" <a href=\"/node/add/tool\" class=\"btn btn-success\">+ Add a tool</a>")
         jQuery(\'#block-system-main h2\').hide()
         jQuery(".search-results").hide()
       })
