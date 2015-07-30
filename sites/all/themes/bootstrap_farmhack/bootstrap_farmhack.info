@@ -27,3 +27,4 @@ regions[page_bottom]    = 'Page bottom'
 stylesheets[all][] = css/style.css
 
 scripts[] = js/packery.pkgd.js
+scripts[] = js/spin.js

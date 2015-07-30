@@ -1,3 +1,7 @@
 .search-results {
   display: none;
 }
+
+#block-system-main {
+  min-height: 200px;
+}
