@@ -133,8 +133,8 @@ function farmhack_context_default_contexts() {
   $context->conditions = array(
     'path' => array(
       'values' => array(
-        'library/search' => 'library/search',
-        'library/search/*' => 'library/search/*',
+        'library/tools' => 'library/tools',
+        'library/tools/*' => 'library/tools/*',
       ),
     ),
   );

@@ -14,9 +14,9 @@ function farmhack_apachesolr_search_default_searchers() {
   $searcher->disabled = FALSE; /* Edit this to true to make a default searcher disabled initially */
   $searcher->api_version = 3;
   $searcher->page_id = 'library';
-  $searcher->label = 'Library';
+  $searcher->label = 'Library Tools';
   $searcher->description = 'Library search of tools.';
-  $searcher->search_path = 'library/search';
+  $searcher->search_path = 'library/tools';
   $searcher->page_title = 'Tool Library';
   $searcher->env_id = 'solr';
   $searcher->settings = array(

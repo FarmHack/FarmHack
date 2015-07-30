@@ -19,7 +19,6 @@ dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = toolbar_visibility
 dependencies[] = views
-dependencies[] = facetapi 
 features[apachesolr_environment][] = solr
 features[apachesolr_search_page][] = library
 features[box][] = farmhac_friends
