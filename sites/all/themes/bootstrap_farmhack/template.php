@@ -6,6 +6,7 @@
 function bootstrap_farmhack_apachesolr_search_page_alter(array &$build, array $search_page) {
   if (arg(0) == "library" && arg(1) == "tools") {
     // Manage the loading of the library/tools page
+    drupal_add_css(drupal_get_path('theme', 'bootstrap_farmhack'). '/css/library-tools.css');
     drupal_add_js( '
       jQuery(window).load(function() {
         jQuery(".spinner").hide()
