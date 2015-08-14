@@ -24,6 +24,36 @@
 
   <!-- REGIONS -->
   <body>
+
+    <header id="navbar" role="banner" class="navbar navbar-static-top navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="logo navbar-btn pull-left" href="/" title="Home">
+            <img src="http://farmhack.org/sites/all/themes/bootstrap_farmhack/logo.png" alt="Home">
+          </a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse">
+          <nav role="navigation">
+            <ul class="menu nav navbar-nav">
+              <li class="first leaf"><a href="/tools" title="">TOOLS</a></li>
+              <li class="leaf"><a href="/forum" title="">CONVERSATIONS</a></li>
+              <li class="leaf"><a href="/calendar/month" title="">CALENDAR</a></li>
+              <li class="leaf"><a href="/home/host-an-event">HOST AN EVENT</a></li>
+              <li class="leaf"><a href="/shops" title="">SHOPS</a></li>
+              <li class="leaf"><a href="/people" title="">PEOPLE</a></li>
+              <li class="last leaf"><a href="http://blog.farmhack.org" title="">BLOG</a></li>
+            </ul> 
+          </nav>
+        </div>
+      </div>
+    </header>
+
     <div class="left-region-wrapper">
       <div class="left-region"> </div>
     </div>
@@ -118,33 +148,7 @@
   </script>
 
   <script type="text/template" id="template-nav-bar">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Farm Hack</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="/tools">Tools</a></li>
-            <li><a href="/forum">Conversations</a></li>
-            <li><a href="/calendar-month">Calendar</a></li>
-            <li><a href="/shops">Shops</a></li>
-            <li><a href="/people">People</a></li>
-            <li><a href="/user/register">Sign up</a></li>
-            <li><a href="/user">Log in</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-    <div class='nav-floateys'>
-    </div>
+
   </script>
 
   <script type="text/template" id="template-jumbo-blog">
