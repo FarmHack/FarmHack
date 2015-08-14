@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics Content Experiment code -->
+    <script>function utmx_section(){}function utmx(){}(function(){var
+    k='57501499-1',d=document,l=d.location,c=d.cookie;
+    if(l.search.indexOf('utm_expid='+k)>0)return;
+    function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
+    indexOf(';',i);return escape(c.substring(i+n.length+1,j<0?c.
+    length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;d.write(
+    '<sc'+'ript src="'+'http'+(l.protocol=='https:'?'s://ssl':
+    '://www')+'.google-analytics.com/ga_exp.js?'+'utmxkey='+k+
+    '&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
+    valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+    '" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
+    </script><script>utmx('url','A/B');</script>
+    <!-- End of Google Analytics Content Experiment code -->
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Farm Hack - An Open Source Community for Resilient Agriculture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--
+      Vendor Scripts
+    -->
+
+    <script type="text/javascript" src="vendor/jquery-2.0.2.min.js"></script>
+    <script type="text/javascript" src="vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="vendor/backbone.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
+    <script type="text/javascript" src="vendor/moment.min.js"></script>
+    <script type="text/javascript" src="vendor/moment-timezone.min.js"></script>
+    <script type="text/javascript" src="vendor/spin.min.js"></script>
+    <script type="text/javascript" src="vendor/jquery.spin.js"></script>
+
+    <!--
+      App Scripts
+    -->
+
+    <script type="text/javascript" src="app/App.js"></script>
+    <script type="text/javascript" src="app/models/Comment.js"></script>
+    <script type="text/javascript" src="app/models/Node.js"></script>
+    <script type="text/javascript" src="app/models/Blog.js"></script>
+    <script type="text/javascript" src="app/collections/Comments.js"></script>
+    <script type="text/javascript" src="app/collections/Nodes.js"></script>
+    <script type="text/javascript" src="app/collections/Events.js"></script>
+    <script type="text/javascript" src="app/collections/UpcomingEvents.js"></script>
+    <script type="text/javascript" src="app/collections/RecentActivity.js"></script>
+    <script type="text/javascript" src="app/collections/Blogs.js"></script>
+    <script type="text/javascript" src="app/views/Comment.js"></script>
+    <script type="text/javascript" src="app/views/Node.js"></script>
+    <script type="text/javascript" src="app/views/RecentActivity.js"></script>
+    <script type="text/javascript" src="app/views/UpcomingEvents.js"></script>
+    <script type="text/javascript" src="app/views/JumboBlog.js"></script>
+
+    <!--
+      Vender CSS
+    -->
+
+    <link href="vendor/Flat-UI-master/css/flat-ui.css" rel="stylesheet">
+
+    <!--
+      App CSS
+    -->
+
+    <link href="css/app.css" rel="stylesheet">
+    <link href="css/block.css" rel="stylesheet">
+
+  </head>
+
+  <!--
+    Regions
+  -->
+
+  <body>
+
+    <div id="top-region">
+      <div id="movie">
+        <!--iframe src="//player.vimeo.com/video/73504647?portrait=0" width="600" height="337" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe-->
+        <a class="play-movie" href="#"><img src="img/farm-hack-movie.png" width=600 height=337 /></a>
+          
+      </div>
+
+      <div id="jumboblog">
+
+      </div>
+
+
+      <div style="text-align:center; width:1023px; margin-left:auto; margin-right:auto;">
+        <img id="Image-Maps_3201309151126189" src="img/top.jpeg" usemap="#Image-Maps_3201309151126189" border="0" width="1023" height="569" alt="" />
+        <map id="_Image-Maps_3201309151126189" name="Image-Maps_3201309151126189">
+        <area shape="rect" coords="3,11,61,46" href="/tools" alt="Tools" title="Tools"    />
+        <area shape="rect" coords="72,11,180,46" href="/forum" alt="Discussions" title="Discussions"    />
+        <area shape="rect" coords="184,12,278,47" href="/calendar" alt="Calendar" title="Calendar"    />
+        <area shape="rect" coords="289,11,409,46" href="host-an-event" alt="Host to an event" title="Host to an event"    />
+        <area shape="rect" coords="415,11,480,46" href="/shops" alt="Open Shops" title="Open Shops"    />
+        <area shape="rect" coords="486,12,561,47" href="/people" alt="People" title="People"    />
+        <area shape="rect" coords="629,3,717,95" href="/donate" alt="donate" title="donate"    />
+        <area shape="rect" coords="930,15,961,48" href="http://twitter.com/#!/NYFCNYFC" alt="Contact us on Twitter" title="Contact us on Twitter"    />
+        <area shape="rect" coords="961,14,989,47" href="http://www.facebook.com/pages/The-National-Young-Farmers-Coalition/157485677636655" alt="Contact us on Facebook" title="Contact us on Facebook"    />
+        <area shape="rect" coords="990,13,1018,46" href="http://feeds.feedburner.com/nyfc" alt="Follow our RSS Feed" title="Follow our RSS Feed"    />
+        <area shape="rect" coords="730,70,1005,116" href="/user" alt="Sign in or create an accout" title="Sign in or create an accout"    />
+        <area shape="rect" coords="730,112,1005,158" href="/wiki/getting-started" alt="Guide to getting started in the Farm Hack community" title="Guide to getting started in the Farm Hack community"    />
+        <area shape="rect" coords="637,186,1018,544" href="/shops" alt="Check out the new section, Open Shops!" title="Check out the new section, Open Shops!"    />
+        <area shape="rect" coords="1021,567,1023,569" href="http://www.image-maps.com/index.php?aff=mapped_users_3201309151126189" alt="Image Map" title="Image Map" />
+        </map>
+      </div>
+      <!-- Image map text links - End - -->
+
+    </div>
+
+    <div id="bottom-region">
+      <div class="row row-2"> </div>
+    </div>
+
+  </body>
+
+  <!--
+    Templates
+  -->
+
+  <script type="text/template" id="template-JumboBlog">
+    <div class="activity-type">
+      <%= typeName %>
+    </div>
+    <center><img src="/sites/default/files/<%= fileName %>"></center>
+    <div class="activity-body">
+      <h1><a href="/node/<%= nid %>"><%= title %></a></h1>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
+  </script>
+
+  <script type="text/template" id="jumbotron-anonymous">
+    <div class="frame">
+      <div class="content">
+        <div class="slogan">
+          An open source community for resilient agriculture.
+        </div>
+        <div class="go">
+          <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
+          <a class="btn btn-large btn-success" href="/user">Sign in or create an account</a>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="jumbotron-user">
+    <div class="frame">
+      <div class="content">
+        <div class="slogan">
+          Welcome back <%= name %>
+        </div>
+        <div class="go">
+          <a class="btn btn-large btn-success" href="/user/register">Getting Started</a>
+          <a class="btn btn-large btn-success" href="/user">Go to your account</a>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/html" id="template-Comment">
+    <div class="activity-type">
+      FORUM COMMENT
+    </div>
+    <div class="activity-body">
+      <a href="/comment/<%= cid %>#comment-<%= cid %>">
+        <%= subject %>
+      </a>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= created %>
+    </div>
+  </script>
+
+  <script type="text/html" id="template-Node">
+    <div class="activity-type" style="background: <%= typeColor %>;">
+      <%= typeName %>
+    </div>
+    <div class="activity-body">
+      <a href="/node/<%= nid %>"><%= title %></a>
+    </div>
+    <div class="activity-by-line">
+      <% if (userPhotoFileName) { %>
+        <div class="activity-user-photo">
+          <img height=35 src="http://farmhack.net/sites/default/files/styles/thumbnail/public/pictures/<%= userPhotoFileName %>">
+        </div>
+      <% } %>
+      by <a href="/user/<%= uid %>"><%= name %></a> <br/>
+      on <%= changed %>
+    </div>
+  </script>
+
+  <script type="text/html" id="template--collection-view">
+    <h2 class="title">
+      <%= title %>
+    </h2>
+    <div class="content">  </div>
+  </script>
+
+  <script type="text/html" id="template-block-Recent-Online-Activity">
+    <div class="title">
+      <h2>
+        <img src='img/activities-header.jpg'>
+      </h2>
+    </div>
+    <div class="content"> </div>
+  </script>
+
+  <!--
+    Start the App
+  -->
+
+  <script>
+    $(document).ready(function() {
+      App.start()
+    })
+  </script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30070277-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<!--[if !(lt IE 8)]><!-->
+<script type="text/javascript">
+(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=document.location.protocol+"//d1agz031tafz8n.cloudfront.net/thedaywefightback.js/widget.min.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})()
+</script>
+<!--<![endif]-->
+
+</html>
