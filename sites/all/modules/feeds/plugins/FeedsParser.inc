@@ -315,7 +315,7 @@ class FeedsEnclosure extends FeedsElement {
    */
   public function setAllowedExtensions($extensions) {
     // Normalize whitespace so that empty extensions are not allowed.
-    $this->allowedExtensions = trim(preg_replace('/\s+/', ' ', $extensions));
+    $this->allowedExtensions = drupal_strtolower(trim(preg_replace('/\s+/', ' ', $extensions)));
   }
 
   /**
@@ -371,12 +371,11 @@ class FeedsEnclosure extends FeedsElement {
       return $this->safeFilename;
     }
 
-    $filename = rawurldecode(drupal_basename($this->getValue()));
+    // Strip any query string or fragment from file name.
+    list($filename) = explode('?', $this->getValue());
+    list($filename) = explode('#', $filename);
 
-    if (module_exists('transliteration')) {
-      require_once drupal_get_path('module', 'transliteration') . '/transliteration.inc';
-      $filename = transliteration_clean_filename($filename);
-    }
+    $filename = rawurldecode(drupal_basename($filename));
 
     // Remove leading and trailing whitespace and periods.
     $filename = trim($filename, " \t\n\r\0\x0B.");
@@ -385,7 +384,7 @@ class FeedsEnclosure extends FeedsElement {
       $extension = FALSE;
     }
     else {
-      $extension = substr($filename, strrpos($filename, '.') + 1);
+      $extension = drupal_strtolower(substr($filename, strrpos($filename, '.') + 1));
     }
 
     if (!$extension || !in_array($extension, explode(' ', $this->allowedExtensions), TRUE)) {
@@ -435,7 +434,7 @@ class FeedsEnclosure extends FeedsElement {
         $file           = new stdClass();
         $file->uid      = 0;
         $file->uri      = $this->getSanitizedUri();
-        $file->filemime = $this->mime_type;
+        $file->filemime = $this->getMIMEType();
         $file->filename = $this->getSafeFilename();
 
         if (drupal_dirname($file->uri) !== $destination) {
@@ -459,7 +458,14 @@ class FeedsEnclosure extends FeedsElement {
           $destination = trim($destination, '/') . '/';
         }
         try {
-          $file = file_save_data($this->getContent(), $destination . $this->getLocalValue());
+          $filename = $this->getLocalValue();
+
+          if (module_exists('transliteration')) {
+            require_once drupal_get_path('module', 'transliteration') . '/transliteration.inc';
+            $filename = transliteration_clean_filename($filename);
+          }
+
+          $file = file_save_data($this->getContent(), $destination . $filename);
         }
         catch (Exception $e) {
           watchdog_exception('Feeds', $e, nl2br(check_plain($e)));

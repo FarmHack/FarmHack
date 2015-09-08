@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Test cases for Feeds mapping configuration form.
+ * Contains FeedsMapperConfigTestCase.
  */
 
 /**
- * Class for testing basic Feeds ajax mapping configurtaion form behavior.
+ * Test cases for Feeds mapping configuration form.
  */
 class FeedsMapperConfigTestCase extends FeedsMapperTestCase {
+
   public static function getInfo() {
     return array(
       'name' => 'Mapper: Config',
@@ -75,7 +76,6 @@ class FeedsMapperConfigTestCase extends FeedsMapperTestCase {
     $this->assertEqual($settings['radios'], 'option1');
     $this->assertEqual($settings['select'], 'option4');
     $this->assertEqual($settings['second_value'], $second_callback_value);
-
 
     // Check that form validation works.
     // Click gear to get form.

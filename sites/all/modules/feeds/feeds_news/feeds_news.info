@@ -19,9 +19,9 @@ features[views_view][] = feeds_defaults_feed_items
 files[] = feeds_news.module
 files[] = feeds_news.test
 
-; Information added by Drupal.org packaging script on 2015-06-17
-version = "7.x-2.0-alpha8+96-dev"
+; Information added by Drupal.org packaging script on 2015-07-11
+version = "7.x-2.0-beta1"
 core = "7.x"
 project = "feeds"
-datestamp = "1434513488"
+datestamp = "1436615941"
 

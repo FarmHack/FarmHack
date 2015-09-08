@@ -24,6 +24,16 @@ function feeds_tests_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['testing/feeds/files-empty-alt-title.csv'] = array(
+    'page callback' => 'feeds_tests_files_empty_alt_title',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['testing/feeds/files-empty.csv'] = array(
+    'page callback' => 'feeds_tests_files_empty',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -41,6 +51,11 @@ function feeds_tests_theme() {
       'variables' => array('files' => array()),
       'path' => drupal_get_path('module', 'feeds_tests') . '/feeds',
       'template' => 'feeds-tests-files',
+    ),
+    'feeds_tests_files_empty' => array(
+      'variables' => array('files' => array()),
+      'path' => drupal_get_path('module', 'feeds_tests') . '/feeds',
+      'template' => 'feeds-tests-files-empty',
     ),
   );
 }
@@ -99,6 +114,44 @@ function feeds_tests_files_remote() {
   }
   drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
   print theme('feeds_tests_files', array('files' => $images));
+}
+
+/**
+ * Outputs a CSV file pointing to files without alt/title.
+ *
+ * This is used to test if alt/title attributes are removed on a second import.
+ */
+function feeds_tests_files_empty_alt_title() {
+  $images = array(
+    0 => 'tubing.jpeg',
+    1 => 'foosball.jpeg',
+    2 => 'attersee.jpeg',
+    3 => 'hstreet.jpeg',
+    4 => 'la fayette.jpeg',
+  );
+  $path = drupal_get_path('module', 'feeds_tests') . '/feeds/assets';
+  foreach ($images as &$image) {
+    $image = file_create_url("$path/$image");
+  }
+  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  print theme('feeds_tests_files_empty', array('files' => $images));
+}
+
+/**
+ * Outputs a CSV file pointing to no files.
+ *
+ * This is used to test if files are removed on a second import.
+ */
+function feeds_tests_files_empty() {
+  $images = array(
+    0 => '',
+    1 => '',
+    2 => '',
+    3 => '',
+    4 => '',
+  );
+  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  print theme('feeds_tests_files_empty', array('files' => $images));
 }
 
 /**

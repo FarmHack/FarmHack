@@ -112,8 +112,7 @@ function file_feeds_set_target(FeedsSource $source, $entity, $target, array $val
         if ($v) {
           try {
             $v->setAllowedExtensions($instance_info['settings']['file_extensions']);
-            $file = $v->getFile($destination);
-            $field[LANGUAGE_NONE][$delta] += (array) $file;
+            $field[LANGUAGE_NONE][$delta] += (array) $v->getFile($destination);
             // @todo: Figure out how to properly populate this field.
             $field[LANGUAGE_NONE][$delta]['display'] = 1;
           }

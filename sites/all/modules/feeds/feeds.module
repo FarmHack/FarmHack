@@ -827,6 +827,13 @@ function _feeds_feeds_processor_targets_alter(array &$targets, $entity_type, $bu
 }
 
 /**
+ * Implements hook_flush_caches().
+ */
+function feeds_flush_caches() {
+  return array('cache_feeds_http');
+}
+
+/**
  * @}
  */
 
@@ -1094,9 +1101,9 @@ function feeds_plugin($plugin, $id) {
 /**
  * Includes a library file.
  *
- * @param $file
+ * @param string $file
  *   The filename to load from.
- * @param $library
+ * @param string $library
  *   The name of the library. If libraries module is installed,
  *   feeds_include_library() will look for libraries with this name managed by
  *   libraries module.
@@ -1104,55 +1111,63 @@ function feeds_plugin($plugin, $id) {
 function feeds_include_library($file, $library) {
   static $included = array();
 
-  if (!isset($included[$file])) {
-    $included[$file] = FALSE;
+  $key = $library . '/' . $file;
+
+  if (!isset($included[$key])) {
+    $included[$key] = FALSE;
 
     $library_dir = variable_get('feeds_library_dir', FALSE);
     $feeds_library_path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file";
+    $libraries_path = module_exists('libraries') ? libraries_get_path($library) : FALSE;
 
     // Try first whether libraries module is present and load the file from
     // there. If this fails, require the library from the local path.
-    if (module_exists('libraries') && file_exists(libraries_get_path($library) . "/$file")) {
-      require libraries_get_path($library) . "/$file";
-      $included[$file] = TRUE;
+    if ($libraries_path && is_file("$libraries_path/$file")) {
+      require "$libraries_path/$file";
+      $included[$key] = TRUE;
     }
-    elseif ($library_dir && file_exists("$library_dir/$library/$file")) {
-      require "$library_dir/$library/$file";
-      $included[$file] = TRUE;
+    elseif (is_file(DRUPAL_ROOT . '/sites/all/libraries/' . $key)) {
+      require DRUPAL_ROOT . '/sites/all/libraries/' . $key;
+      $included[$key] = TRUE;
     }
-    elseif (file_exists($feeds_library_path)) {
+    elseif ($library_dir && is_file($library_dir . '/' . $key)) {
+      require $library_dir . '/' . $key;
+      $included[$key] = TRUE;
+    }
+    elseif (is_file($feeds_library_path)) {
       // @todo: Throws "Deprecated function: Assigning the return value of new
       // by reference is deprecated."
       require $feeds_library_path;
-      $included[$file] = TRUE;
+      $included[$key] = TRUE;
     }
   }
 
-  return $included[$file];
+  return $included[$key];
 }
 
 /**
  * Checks whether a library is present.
  *
- * @param $file
+ * @param string $file
  *   The filename to load from.
- * @param $library
+ * @param string $library
  *   The name of the library. If libraries module is installed,
  *   feeds_library_exists() will look for libraries with this name managed by
  *   libraries module.
  */
 function feeds_library_exists($file, $library) {
-
-  if (module_exists('libraries') && file_exists(libraries_get_path($library) . "/$file")) {
+  $path = module_exists('libraries') ? libraries_get_path($library) : FALSE;
+  if ($path && is_file($path . '/' . $file)) {
     return TRUE;
   }
-
-  elseif (file_exists(DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file")) {
+  elseif (is_file(DRUPAL_ROOT . "/sites/all/libraries/$library/$file")) {
     return TRUE;
   }
-
+  elseif (is_file(DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file")) {
+    return TRUE;
+  }
   elseif ($library_dir = variable_get('feeds_library_dir', FALSE)) {
-    if (file_exists("$library_dir/$library/$file")) {
+    if (is_file("$library_dir/$library/$file")) {
       return TRUE;
     }
   }

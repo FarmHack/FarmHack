@@ -88,6 +88,7 @@ class FeedsState {
   public $updated;
   public $deleted;
   public $unpublished;
+  public $blocked;
   public $skipped;
   public $failed;
 
@@ -106,6 +107,7 @@ class FeedsState {
     $this->updated =
     $this->deleted =
     $this->unpublished =
+    $this->blocked =
     $this->skipped =
     $this->failed = 0;
   }

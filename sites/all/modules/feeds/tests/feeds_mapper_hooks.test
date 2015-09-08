@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Test case for the various callbacks implemented for mappers.
+ * Contains FeedsMapperHookTestCase.
  */
 
 /**
- * Class for testing Feeds field mapper.
+ * Test case for the various callbacks implemented for mappers.
  */
 class FeedsMapperHookTestCase extends FeedsMapperTestCase {
+
   public static function getInfo() {
     return array(
       'name' => 'Mapper: Hooks and callbacks',

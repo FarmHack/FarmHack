@@ -265,8 +265,8 @@ abstract class FeedsProcessor extends FeedsPlugin {
       catch (Exception $e) {
         $state->failed++;
         drupal_set_message($e->getMessage(), 'warning');
-        $message = $this->createLogMessage($e, $entity, $item);
-        $source->log('import', $message, array(), WATCHDOG_ERROR);
+        list($message, $arguments) = $this->createLogEntry($e, $entity, $item);
+        $source->log('import', $message, $arguments, WATCHDOG_ERROR);
       }
     }
 
@@ -311,6 +311,16 @@ abstract class FeedsProcessor extends FeedsPlugin {
             'Unpublished @number @entity.',
             'Unpublished @number @entities.',
             array('@number' => $state->unpublished) + $tokens
+        ),
+      );
+    }
+    if ($state->blocked) {
+      $messages[] = array(
+        'message' => format_plural(
+          $state->blocked,
+          'Blocked @number @entity.',
+          'Blocked @number @entities.',
+          array('@number' => $state->blocked) + $tokens
         ),
       );
     }
@@ -1066,7 +1076,11 @@ abstract class FeedsProcessor extends FeedsPlugin {
   }
 
   /**
-   * Creates a log message for when an exception occured during import.
+   * DEPRECATED: Creates a log message for exceptions during import.
+   *
+   * Don't use this method as it concatenates user variables into the log
+   * message, which will pollute the locales_source table when the log message
+   * is translated. Use ::createLogEntry instead.
    *
    * @param Exception $e
    *   The exception that was throwned during processing the item.
@@ -1077,15 +1091,78 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *
    * @return string
    *   The message to log.
+   *
+   * @deprecated
+   *   Use ::createLogEntry instead.
    */
   protected function createLogMessage(Exception $e, $entity, $item) {
-    include_once DRUPAL_ROOT . '/includes/utility.inc';
     $message = $e->getMessage();
     $message .= '<h3>Original item</h3>';
-    $message .= '<pre>' . check_plain(drupal_var_export($item)) . '</pre>';
+    // $this->exportObjectVars() already runs check_plain() for us, so we can
+    // concatenate here as is.
+    $message .= '<pre>' . $this->exportObjectVars($item) . '</pre>';
     $message .= '<h3>Entity</h3>';
-    $message .= '<pre>' . check_plain(drupal_var_export($entity)) . '</pre>';
+    $message .= '<pre>' . $this->exportObjectVars($entity) . '</pre>';
+
     return $message;
+  }
+
+  /**
+   * Creates a log entry for when an exception occured during import.
+   *
+   * @param Exception $e
+   *   The exception that was throwned during processing the item.
+   * @param object $entity
+   *   The entity object.
+   * @param array $item
+   *   The parser result for this entity.
+   *
+   * @return array
+   *   The message and arguments to log.
+   */
+  protected function createLogEntry(Exception $e, $entity, $item) {
+    $message = '@exception';
+    $message .= '<h3>Original item</h3>';
+    $message .= '<pre>!item</pre>';
+    $message .= '<h3>Entity</h3>';
+    $message .= '<pre>!entity</pre>';
+    $arguments = array(
+      '@exception' => $e->getMessage(),
+      // $this->exportObjectVars() already runs check_plain() for us, so we can
+      // use the "!" placeholder.
+      '!item' => $this->exportObjectVars($item),
+      '!entity' => $this->exportObjectVars($entity),
+    );
+
+    return array($message, $arguments);
+  }
+
+  /**
+   * Returns a string representation of an object or array for log messages.
+   *
+   * @param object|array $object
+   *   The object to convert.
+   *
+   * @return string
+   *   The sanitized string representation of the object.
+   */
+  protected function exportObjectVars($object) {
+    include_once DRUPAL_ROOT . '/includes/utility.inc';
+
+    $out = is_array($object) ? $object : get_object_vars($object);
+    $out = array_filter($out, 'is_scalar');
+
+    foreach ($out as $key => $value) {
+      if (is_string($value)) {
+        $out[$key] = truncate_utf8($value, 100, FALSE, TRUE);
+      }
+    }
+
+    if (is_array($object)) {
+      return check_plain(drupal_var_export($out));
+    }
+
+    return check_plain(drupal_var_export((object) $out));
   }
 
   /**
