@@ -10,7 +10,7 @@
  */
 function google_analytics_counter_admin($form, &$form_state) {
 
-  $defaultcroninterval = 60;
+  $defaultcroninterval = 30;
   $chunk = 1000; // Could be up to 10000 but keeping the default low so that it works even for people without external cron.
   $dayquota = 10000;
 
@@ -37,7 +37,7 @@ function google_analytics_counter_admin($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Number of items to fetch from Google Analytics in one request'),
     '#default_value' => variable_get('google_analytics_counter_chunk_to_fetch', $chunk),
-    '#description' => t('How many items will be fetched from Google Analytics in one request (during a cron run). The maximum allowed by Google is 10000 but it may take too long and time out. Default: %chunk items.', array('%chunk' => check_plain($chunk))),
+    '#description' => t('How many items will be fetched from Google Analytics in one request (during a cron run). The maximum allowed by Google is 10000. Default: %chunk items.', array('%chunk' => check_plain($chunk))),
     '#options' => drupal_map_assoc($times),
     '#required' => TRUE,
     );
@@ -71,6 +71,29 @@ function google_analytics_counter_admin($form, &$form_state) {
     '#default_value' => variable_get('google_analytics_counter_cache_length', GOOGLE_ANALYTICS_COUNTER_DAY),
     '#required' => TRUE,
     );
+
+  // If the statistics module is off, the own table storage MUST be used. See also https://www.drupal.org/node/2275575
+  if (!module_exists('statistics')){
+    $default_value = 1;
+  }
+  else {
+    $default_value = variable_get('google_analytics_counter_storage', '0');
+  }
+  $form['google_analytics_counter_storage'] = array(
+    '#type' => 'radios',
+    '#title' => t('Data storage location'),
+    '#options' => array(
+      '1' => t('Use this module\'s database table. This is the recommended option.'),
+      '0' => t('Overwrite total pageview values in table node_counter provided by the core module Statistics. If the Statistics module is disabled, this option gets deactivated as well. Only really useful for backward compatibility on sites that previously used version 7.2 or older and do not wish to change configuration (e.g. views) immediately. This option is deprecated.'),
+    ),
+    '#default_value' => $default_value, // For backward compatibility keeping it on the deprecated option.
+    '#required' => TRUE,
+    //'#description' => t("")
+  );
+  // Disable the Statistics option if the module is off. And force the own database table option.
+  if (!module_exists('statistics')){
+    $form['google_analytics_counter_storage'][0]['#disabled'] = TRUE; // See http://drupal.stackexchange.com/a/17550/196
+  }
 
   return system_settings_form($form);
 }
