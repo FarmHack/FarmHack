@@ -127,7 +127,7 @@ class openlayers_views_plugin_style_source_vector extends views_plugin_style {
       $form['data_source']['wkt'] = array(
         '#type' => 'select',
         '#title' => t('WKT Field'),
-        '#description' => t('Choose the OpenLayers WKT field.'),
+        '#description' => t('Choose the Openlayers WKT field.'),
         '#options' => $fields,
         '#default_value' => $this->options['data_source']['wkt'],
         '#states' => $this->datasource_dependent('wkt'),

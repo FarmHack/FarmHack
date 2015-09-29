@@ -13,21 +13,21 @@ function openlayers_views_views_plugins() {
   return array(
     'display' => array(
       'openlayers' => array(
-        'title' => t('OpenLayers Data'),
-        'help' => t('Data for OpenLayers maps.'),
+        'title' => t('Openlayers Data'),
+        'help' => t('Data for Openlayers maps.'),
         'handler' => 'openlayers_views_plugin_display_openlayers',
         'path' => drupal_get_path('module', 'openlayers_views') . '/views',
         'uses hook menu' => FALSE,
         'use ajax' => FALSE,
         'use pager' => TRUE,
         'accept attachments' => FALSE,
-        'admin' => t('OpenLayers Data'),
+        'admin' => t('Openlayers Data'),
       ),
     ),
     'style' => array(
       'openlayers_source_vector' => array(
-        'title' => t('OpenLayers Vector Data Overlay'),
-        'help' => t('Provides Data to Power an OpenLayers map.'),
+        'title' => t('Openlayers Vector Data Overlay'),
+        'help' => t('Provides Data to Power an Openlayers map.'),
         'handler' => 'openlayers_views_plugin_style_source_vector',
         'path' => drupal_get_path('module', 'openlayers_views') . '/views',
         'uses fields' => TRUE,
@@ -38,7 +38,7 @@ function openlayers_views_views_plugins() {
         'even empty' => TRUE,
       ),
       'openlayers_map_views' => array(
-        'title' => t('OpenLayers Views Map'),
+        'title' => t('Openlayers Views Map'),
         'help' => t('Provides a map based on a views configureation.'),
         'handler' => 'openlayers_views_plugin_map_views',
         'uses fields' => TRUE,

@@ -14,7 +14,7 @@ function openlayers_views_default_openlayers_layers_alter(&$layers) {
     $machine_name = 'layer_map_views_' . $view_name . '_' . $display;
     // Check if the configuration for this layer was already defined or if it
     // has been modified. If so don't add it, to keep the layer exportable.
-    $custom_version = ctools_export_crud_load('openlayers_layers', $machine_name);
+    $custom_version = \Drupal\openlayers\Openlayers::loadExportable('layer', $machine_name);
     if (!isset($layers[$machine_name]) && empty($custom_version)) {
       $ol_layer = new stdClass();
       $ol_layer->api_version = 1;

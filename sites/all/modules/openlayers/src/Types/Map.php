@@ -5,13 +5,15 @@
  */
 
 namespace Drupal\openlayers\Types;
+use Drupal\openlayers\Openlayers;
 
 /**
  * Class Map.
  */
 abstract class Map extends Object implements MapInterface {
-
   /**
+   * A unique ID for the map.
+   *
    * @var string
    */
   protected $id;
@@ -19,42 +21,9 @@ abstract class Map extends Object implements MapInterface {
   /**
    * {@inheritdoc}
    */
-  public function init(array $data) {
-    parent::init($data);
-
-    $this->setOption('target', $this->getId());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function buildCollection() {
-    parent::buildCollection();
-
-    $ol_types = array(
-      'source',
-      'layer',
-      'control',
-      'interaction',
-      'component',
-      'projection',
-    );
-    foreach ($ol_types as $type) {
-      foreach ($this->getOption($type . 's', array()) as $object) {
-        // @TODO Throw proper exception if an object isn't available?
-        if ($merge_object = openlayers_object_load($type, $object)) {
-          $this->getCollection()->merge($merge_object->getCollection());
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getId() {
     if (!isset($this->id)) {
-      $css_map_name = drupal_clean_css_identifier($this->machine_name);
+      $css_map_name = drupal_clean_css_identifier($this->getMachineName());
       // Use uniqid to ensure we've really an unique id - otherwise there will
       // occur issues with caching.
       $this->id = drupal_html_id('openlayers-map-' . $css_map_name . '-' . uniqid('', TRUE));
@@ -66,51 +35,32 @@ abstract class Map extends Object implements MapInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLayers($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('layer'));
+  public function attached() {
+    $attached = parent::attached();
+
+    $settings = $this->getCollection()->getJS();
+    $settings['map'] = array_shift($settings['map']);
+
+    $attached['js'][] = array(
+      'data' => array(
+        'openlayers' => array(
+          'maps' => array(
+            $this->getId() => $settings,
+          ),
+        ),
+      ),
+      'type' => 'setting',
+    );
+
+    return $attached;
   }
+
 
   /**
    * {@inheritdoc}
    */
-  public function getSources($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('source'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getStyles($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('style'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getControls($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('control'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInteractions($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('interaction'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getComponents($reset = FALSE) {
-    return array_values($this->getCollection()->getObjects('component'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
+  public function build(array $build = array()) {
     $map = $this;
-    $build = array();
 
     // Run prebuild hook to all objects who implements it.
     $map->preBuild($build, $map);
@@ -121,66 +71,87 @@ abstract class Map extends Object implements MapInterface {
       $asynchronous += (int) $object->isAsynchronous();
     }
 
-    $settings = $map->getCollection()->getJS();
-    $settings['map'] = $settings['map'][0];
-    $settings = array(
-      'data' => array(
-        'openlayers' => array(
-          'maps' => array(
-            $map->getId() => $settings,
-          ),
-        ),
-      ),
-      'type' => 'setting',
-    );
-
     // If this is asynchronous flag it as such.
     if ($asynchronous) {
       $settings['data']['openlayers']['maps'][$map->getId()]['map']['async'] = $asynchronous;
     }
 
-    $attached = $map->getCollection()->getAttached();
-    $attached['js'][] = $settings;
-
     $styles = array(
       'width' => $map->getOption('width'),
       'height' => $map->getOption('height'),
-      'overflow' => 'hidden',
     );
 
-    $css_styles = '';
-    foreach ($styles as $property => $value) {
-      $css_styles .= $property . ':' . $value . ';';
-    }
+    $styles = implode(array_map(function($k, $v) {
+      return $k . ':' . $v . ';';
+    }, array_keys($styles), $styles));
 
-    $build += array(
+    $build['openlayers'] = array(
       '#type' => 'container',
       '#attributes' => array(
         'id' => 'openlayers-container-' . $map->getId(),
-        'style' => $css_styles,
         'class' => array(
           'contextual-links-region',
           'openlayers-container',
         ),
       ),
-      'map' => array(
-        '#theme' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => '',
+      'map-container' => array(
+        '#type' => 'container',
         '#attributes' => array(
-          'id' => $map->getId(),
+          'id' => 'map-container-' . $map->getId(),
+          'style' => $styles,
           'class' => array(
-            'openlayers-map',
-            $map->machine_name,
+            'openlayers-map-container',
           ),
         ),
-        '#attached' => $attached,
+        'map' => array(
+          '#type' => 'container',
+          '#attributes' => array(
+            'id' => $map->getId(),
+            'class' => array(
+              'openlayers-map',
+              $map->getMachineName(),
+            ),
+          ),
+          '#attached' => $map->getCollection()->getAttached(),
+        ),
       ),
     );
 
     // If this is an asynchronous map flag it as such.
     if ($asynchronous) {
-      $build['map']['#attributes']['class'][] = 'asynchronous';
+      $build['openlayers']['map-container']['map']['#attributes']['class'][] = 'asynchronous';
+    }
+
+    if ((bool) $this->getOption('capabilities', FALSE) === TRUE) {
+      $items = array_values($this->getOption(array('capabilities', 'options', 'table'), array()));
+      array_walk($items, 'check_plain');
+
+      $build['openlayers']['capabilities'] = array(
+        '#weight' => 1,
+        '#type' => $this->getOption(array('capabilities', 'options', 'container_type'), 'fieldset'),
+        '#title' => $this->getOption(array('capabilities', 'options', 'title'), NULL),
+        '#description' => $this->getOption(array('capabilities', 'options', 'description'), NULL),
+        '#collapsible' => $this->getOption(array('capabilities', 'options', 'collapsible'), TRUE),
+        '#collapsed' => $this->getOption(array('capabilities', 'options', 'collapsed'), TRUE),
+        'description' => array(
+          '#type' => 'container',
+          '#attributes' => array(
+            'class' => array(
+              'description',
+            ),
+          ),
+          array(
+            '#markup' => theme(
+              'item_list',
+              array(
+                'items' => $items,
+                'title' => '',
+                'type' => 'ul',
+              )
+            ),
+          ),
+        ),
+      );
     }
 
     $map->postBuild($build, $map);
@@ -188,21 +159,31 @@ abstract class Map extends Object implements MapInterface {
     return $build;
   }
 
-  public function getJS() {
-    $js = parent::getJS(); // TODO: Change the autogenerated stub
-    unset($js['opt']['layers']);
-    unset($js['opt']['projections']);
-    unset($js['opt']['sources']);
-    unset($js['opt']['controls']);
-    unset($js['opt']['styles']);
-    unset($js['opt']['interactions']);
-    unset($js['opt']['components']);
+  /**
+   * {@inheritdoc}
+   */
+  public function optionsToObjects() {
+    $import = array();
 
-    // Add the id to the JS settings.
-    $js['map_id'] = $this->getId();
+    foreach (Openlayers::getPluginTypes(array('map')) as $type) {
+      foreach ($this->getOption($type . 's', array()) as $weight => $object) {
+        if ($merge_object = Openlayers::load($type, $object)) {
+          $merge_object->setWeight($weight);
+          $import[] = $merge_object;
+        }
+      }
+    }
 
-    return $js;
+    return $import;
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
+  public function getJS() {
+    $js = parent::getJS();
+    $js['opt']['target'] = $this->getId();
+    unset($js['opt']['capabilities']);
+    return $js;
+  }
 }

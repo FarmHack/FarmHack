@@ -10,7 +10,7 @@
 function openlayers_ui_menu() {
   $items = array();
 
-  // Core OpenLayers settings pages.
+  // Core Openlayers settings pages.
   $items['admin/structure/openlayers'] = array(
     'title' => 'Openlayers',
     'description' => 'Manage maps, layers, sources, controls, styles, and interactions.',
@@ -24,7 +24,7 @@ function openlayers_ui_menu() {
     'title' => 'Settings',
     'access arguments' => array('administer openlayers'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => 10,
+    'weight' => 15,
   );
 
   return $items;
@@ -55,7 +55,7 @@ function openlayers_ui_help($path, $arg) {
 
   switch ($path) {
     case 'admin/help#openlayers':
-      $output = t('Openlayers is a module who displays information on a map using the <a href="@url">Openlayers library</a>.', array('@url' => 'http://ol3js.org/'));
+      $output = t('Openlayers is a module who displays information on a map using the <a href="@url">Openlayers library</a>.', array('@url' => 'http://openlayers.org/'));
       break;
 
     case 'admin/structure/openlayers':
@@ -97,4 +97,32 @@ function openlayers_ui_help($path, $arg) {
 
   if (isset($output)) {
     return '<p>' . $output . '</p>';
-  }}
+  }
+
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function openlayers_ui_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  $path = 'admin/structure/openlayers';
+  if (substr($root_path, 0, 26) == $path) {
+    $path_exploded = explode('/', $root_path);
+    foreach (\Drupal\openlayers\Openlayers::getPluginTypes() as $plugin_type) {
+      if (count($path_exploded) >= 4) {
+        if ($path_exploded[3] == $plugin_type . 's') {
+          continue;
+        }
+      }
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => array(
+          'path' => $path . '/' . $plugin_type . 's/add',
+          'title' => t('Add new @plugin_type', array('@plugin_type' => $plugin_type)),
+          'href' => $path . '/' . $plugin_type . 's/add',
+        ),
+      );
+    }
+
+  }
+}

@@ -4,12 +4,12 @@
  * Class Interactions.
  */
 
-namespace Drupal\openlayers\UI;
+namespace Drupal\openlayers_ui\UI;
 
 /**
  * Class Interactions.
  *
- * @package Drupal\openlayers\UI
+ * @package Drupal\openlayers_ui\UI
  */
 class OpenlayersInteractions extends \OpenlayersObjects {
 

@@ -9,6 +9,6 @@ namespace Drupal\openlayers\Types;
 /**
  * Interface InteractionInterface.
  */
-interface InteractionInterface {
+interface InteractionInterface extends ObjectInterface {
 
 }

@@ -4,12 +4,12 @@
  * Class Controls.
  */
 
-namespace Drupal\openlayers\UI;
+namespace Drupal\openlayers_ui\UI;
 
 /**
  * Class Controls.
  *
- * @package Drupal\openlayers\UI
+ * @package Drupal\openlayers_ui\UI
  */
 class OpenlayersControls extends \OpenlayersObjects {
 

@@ -1,0 +1,51 @@
+.ol-geofield.ol-control {
+  top: .5em;
+  left: 4em;
+  display: inline-flex;
+}
+
+.ol-geofield.ol-control div.draw button:only-child {
+  border-radius: 2px 2px 2px 2px;
+}
+.ol-geofield.ol-control div.draw button {
+  border-radius: 0;
+}
+.ol-geofield.ol-control div.draw button:first-child {
+  border-radius: 2px 0 0 2px;
+}
+.ol-geofield.ol-control div.draw button:last-child {
+  border-radius: 0 2px 2px 0;
+}
+.ol-geofield.ol-control div.draw button:only-child {
+  border-radius: 2px 2px 2px 2px;
+}
+
+.ol-geofield.ol-control div.actions button {
+  border-radius: 0;
+}
+.ol-geofield.ol-control div.actions button:first-child {
+  border-radius: 2px 0 0 2px;
+}
+.ol-geofield.ol-control div.actions button:last-child {
+  border-radius: 0 2px 2px 0;
+}
+.ol-geofield.ol-control div.actions button:only-child {
+  border-radius: 2px 2px 2px 2px;
+}
+
+.ol-geofield.ol-control div.actions {
+  margin-left: 1em;
+}
+
+.ol-geofield.ol-control div.options {
+  margin-left: 1em;
+}
+
+.ol-geofield.ol-control button {
+  display: inline-block;
+}
+.ol-geofield.ol-control button.enable {
+  text-decoration: none;
+  background-color: #4c6079;
+  background-color: rgba(0,60,136,0.7);
+}

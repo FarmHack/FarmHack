@@ -4,7 +4,7 @@
  * Class openlayers_components_ui.
  */
 
-namespace Drupal\openlayers\UI;
+namespace Drupal\openlayers_ui\UI;
 
 /**
  * Class openlayers_components_ui.

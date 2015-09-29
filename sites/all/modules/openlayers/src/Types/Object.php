@@ -7,6 +7,7 @@
 namespace Drupal\openlayers\Types;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\openlayers\Config;
+use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Collection;
 use Drupal\openlayers\Types\ObjectInterface;
 
@@ -14,7 +15,6 @@ use Drupal\openlayers\Types\ObjectInterface;
  * Class Object.
  */
 abstract class Object extends PluginBase implements ObjectInterface {
-
   /**
    * The unique machine name.
    *
@@ -37,21 +37,26 @@ abstract class Object extends PluginBase implements ObjectInterface {
   public $description;
 
   /**
+   * The factory service.
+   *
    * @var string
    */
-  public $class;
+  public $factory_service;
 
   /**
+   * @var int
+   */
+  protected $weight = 0;
+  /**
+   * The array containing the options.
+   *
    * @var array
    */
-  public $options = array();
+  protected $options = array();
 
   /**
-   * @var string
-   */
-  public $factory_service = NULL;
-
-  /**
+   * Holds the Collection object.
+   *
    * @var Collection
    */
   protected $collection;
@@ -71,36 +76,12 @@ abstract class Object extends PluginBase implements ObjectInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultProperties() {
-    return array(
-      'machine_name' => NULL,
-      'name' => NULL,
-      'description' => NULL,
-      'options' => array(),
-      'factory_service' => NULL,
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(array $data) {
-    // Mash the provided configuration with the defaults.
-    foreach ($this->defaultProperties() as $property => $value) {
-      if (isset($data[$property])) {
-        $this->{$property} = $data[$property];
-      }
-    }
-
-    // If there are options ensure the provided ones overwrite the defaults.
-    if (isset($data['options'])) {
-      $this->options = array_replace_recursive((array) $this->options, (array) $data['options']);
-    }
-
-    // We need to ensure the object has a proper machine name.
-    if (empty($this->machine_name)) {
-      $this->machine_name = drupal_html_id($this->getType() . '-' . time());
-    }
+  public function init() {
+    $this->options = $this->getOptions();
+    $this->machine_name = $this->getMachineName();
+    $this->name = $this->getName();
+    $this->description = $this->getDescription();
+    $this->factory_service = $this->getFactoryService();
   }
 
   /**
@@ -115,15 +96,21 @@ abstract class Object extends PluginBase implements ObjectInterface {
   /**
    * {@inheritdoc}
    */
-  public function optionsFormValidate($form, &$form_state) {
-
-  }
+  public function optionsFormValidate($form, &$form_state) {}
 
   /**
    * {@inheritdoc}
    */
   public function optionsFormSubmit($form, &$form_state) {
+    if (isset($form_state['values']['options'])) {
+      $options = array_merge((array) $this->getOptions(), (array) $form_state['values']['options']);
+      $this->setOptions($options);
+    }
 
+    $form_state['item'] = $this->getExport();
+
+    // Refresh translatable strings.
+    $this->i18nStringsRefresh();
   }
 
   /**
@@ -132,10 +119,9 @@ abstract class Object extends PluginBase implements ObjectInterface {
   public function preBuild(array &$build, ObjectInterface $context = NULL) {
     foreach ($this->getCollection()->getFlatList() as $object) {
       if ($object !== $this) {
-        $object->preBuild($build, $this);
+        $object->preBuild($build, $context);
       }
     }
-
     drupal_alter('openlayers_object_preprocess', $build, $this);
   }
 
@@ -148,15 +134,7 @@ abstract class Object extends PluginBase implements ObjectInterface {
         $object->postBuild($build, $context);
       }
     }
-
     drupal_alter('openlayers_object_postprocess', $build, $this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
-
   }
 
   /**
@@ -187,6 +165,9 @@ abstract class Object extends PluginBase implements ObjectInterface {
         }
       }
     }
+
+    // Invalidate the Collection so it gets rebuilt with new options.
+    $this->collection = NULL;
   }
 
   /**
@@ -206,20 +187,131 @@ abstract class Object extends PluginBase implements ObjectInterface {
       $ref = &$ref[$parent];
     }
     $ref = $value;
+
+    // Invalidate the Collection so it gets rebuilt with new options.
+    $this->collection = NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions() {
+    if (!empty($this->options)) {
+      return $this->options;
+    }
+    else {
+      $configuration = $this->getConfiguration();
+      if (!empty($configuration['options'])) {
+        return $configuration['options'];
+      }
+    }
+
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOptions(array $options = array()) {
+    $this->options = $options;
+
+    // Invalidate the Collection so it gets rebuilt with new options.
+    $this->collection = NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExport() {
+    $configuration = $this->getConfiguration();
+    $options = $this->getOptions();
+
+    $options = Openlayers::array_map_recursive('\Drupal\openlayers\Openlayers::floatval_if_numeric', (array) $options);
+    $options = Openlayers::removeEmptyElements((array) $options);
+    $configuration['options'] = $options;
+
+    return (object) $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMachineName() {
+    $configuration = $this->getConfiguration();
+    if (isset($configuration['machine_name'])) {
+      return check_plain($configuration['machine_name']);
+    }
+    else {
+      return 'undefined';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    $configuration = $this->getConfiguration();
+    if (isset($configuration['name'])) {
+      return check_plain($configuration['name']);
+    }
+    else {
+      return 'undefined';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    $configuration = $this->getConfiguration();
+    if (isset($configuration['description'])) {
+      return check_plain($configuration['description']);
+    }
+    else {
+      return 'undefined';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFactoryService() {
+    $configuration = $this->getConfiguration();
+    if (isset($configuration['factory_service'])) {
+      return check_plain($configuration['factory_service']);
+    }
+    else {
+      return 'undefined';
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOption($parents, $default_value = NULL) {
-    $options = $this->options;
-
     if (is_string($parents)) {
       $parents = array($parents);
     }
 
     if (is_array($parents)) {
       $notfound = FALSE;
+
+      if (!isset($this->options)) {
+        $notfound = TRUE;
+        $parents = array();
+        $options = array();
+      }
+      else {
+        $options = $this->options;
+      }
+
       foreach ($parents as $parent) {
         if (isset($options[$parent])) {
           $options = $options[$parent];
@@ -245,7 +337,7 @@ abstract class Object extends PluginBase implements ObjectInterface {
    * {@inheritdoc}
    */
   public function attached() {
-    if ($plugin = $this->getConfiguration()) {
+    if ($plugin = $this->getPluginDefinition()) {
       $path = $this->getClassDirectory();
 
       $jsdir = $path . '/js';
@@ -267,6 +359,7 @@ abstract class Object extends PluginBase implements ObjectInterface {
             'type' => 'file',
             'group' => Config::get('openlayers.js_css.group'),
             'weight' => Config::get('openlayers.js_css.weight'),
+            'media' => Config::get('openlayers.js_css.media'),
           );
         }
       }
@@ -276,26 +369,21 @@ abstract class Object extends PluginBase implements ObjectInterface {
   }
 
   /**
-   * Returns an array with the maps this object is attached on.
-   *
-   * @return array
-   *   An array of map objects this object is attached on. Keyed by the map
-   *   machine name.
+   * {@inheritdoc}
+   */
+  public function getObjects($type = NULL) {
+    return array_values($this->getCollection()->getObjects($type));
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getParents() {
-    $maps = ctools_export_crud_load_all('openlayers_maps');
-    $parents = array();
-
-    foreach ($maps as $map) {
-      $map = openlayers_object_load('map', $map);
-      foreach ($map->getCollection()->getFlatList() as $object) {
-        if ($object->machine_name == $this->machine_name) {
-          $parents[$map->machine_name] = $map;
-        }
-      }
-    }
-
-    return $parents;
+    return array_filter(Openlayers::loadAll('Map'), function($map) {
+      return array_filter($map->getObjects($this->getType()), function($object) {
+        return $object->getMachineName() == $this->getMachineName();
+      });
+    });
   }
 
   /**
@@ -308,24 +396,25 @@ abstract class Object extends PluginBase implements ObjectInterface {
   /**
    * {@inheritdoc}
    */
-  public function getConfiguration() {
-    return $this->pluginDefinition;
+  public function getProvider() {
+    $class = explode('\\', $this->pluginDefinition['class']);
+    return $class[1];
   }
 
   /**
-   * Returns the path to the plugin directory.
+   * {@inheritdoc}
    */
   public function getClassDirectory() {
     $class = explode('\\', $this->pluginDefinition['class']);
-    return drupal_get_path('module', $class[1]) . '/src/' . implode('/', array_slice($class, 2, -1));
+    return drupal_get_path('module', $this->getProvider()) . '/src/' . implode('/', array_slice($class, 2, -1));
   }
 
   /**
-   * Returns the path to the class file.
+   * {@inheritdoc}
    */
   public function getClassPath() {
     $class = explode('\\', $this->pluginDefinition['class']);
-    return drupal_get_path('module', $class[1]) . '/src/' . implode('/', array_slice($class, 2)) . '.php';
+    return drupal_get_path('module', $this->getProvider()) . '/src/' . implode('/', array_slice($class, 2)) . '.php';
   }
 
   /**
@@ -340,25 +429,17 @@ abstract class Object extends PluginBase implements ObjectInterface {
    */
   public function getType() {
     $class = explode('\\', get_class($this));
-    return $class[3];
-  }
-
-  /**
-   * Allows to adjust the initially built collection.
-   *
-   * The collection can be accessed already by calling $this->getCollection().
-   */
-  protected function buildCollection() {
+    return drupal_strtolower($class[3]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCollection() {
-    if (!($this->collection instanceof Collection)) {
+    if (is_null($this->collection) || !($this->collection instanceof Collection)) {
       $this->collection = \Drupal::service('openlayers.Types')->createInstance('Collection');
+      $this->collection->import($this->optionsToObjects());
       $this->collection->append($this);
-      $this->buildCollection();
     }
     return $this->collection;
   }
@@ -366,11 +447,60 @@ abstract class Object extends PluginBase implements ObjectInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJS() {
-    return array(
-      'mn' => $this->machine_name,
-      'fs' => $this->factory_service,
-      'opt' => $this->options,
-    );
+  public function optionsToObjects() {
+    return array();
   }
+
+  /**
+   * {@inheritdoc}
+   *
+   * !Attention! This function will remove any option that is named after a
+   * plugin type e.g.: layers, controls, styles, interactions, components .
+   */
+  public function getJS() {
+    $export = $this->getExport();
+
+    array_map(function($type) use ($export) {
+      unset($export->options[$type . 's']);
+    }, Openlayers::getPluginTypes());
+
+    $js = array(
+      'mn' => $export->machine_name,
+      'fs' => $export->factory_service,
+    );
+
+    if (!empty($export->options)) {
+      $js['opt'] = $export->options;
+    }
+
+    return $js;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return intval($this->weight);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginDescription() {
+    $plugin_definition = $this->getPluginDefinition();
+    return isset($plugin_definition['description']) ? $plugin_definition['description'] : '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function i18nStringsRefresh() {}
+
 }

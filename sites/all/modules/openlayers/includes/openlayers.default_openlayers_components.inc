@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_default_components().
+ * Implements hook_default_openlayers_components().
  */
 function openlayers_default_openlayers_components() {
   $export = array();

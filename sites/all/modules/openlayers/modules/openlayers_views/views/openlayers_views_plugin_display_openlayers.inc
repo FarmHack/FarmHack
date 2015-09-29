@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Display plugin for OpenLayers Data
+ * Display plugin for Openlayers Data
  *
  * @ingroup openlayers
  */
@@ -25,7 +25,7 @@ class openlayers_views_plugin_display_openlayers extends views_plugin_display {
   }
 
   /**
-   * OpenLayers data features are used directly in the map object.
+   * Openlayers data features are used directly in the map object.
    */
   public function execute() {
     return $this->view->render();

@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_default_interactions().
+ * Implements hook_default_openlayers_interactions().
  */
 function openlayers_default_openlayers_interactions() {
   $export = array();
@@ -155,7 +155,9 @@ function openlayers_default_openlayers_interactions() {
   $ol_interaction->name = 'Select';
   $ol_interaction->description = 'Select interaction description';
   $ol_interaction->factory_service = 'openlayers.Interaction:Select';
-  $ol_interaction->options = array();
+  $ol_interaction->options = array(
+    'style' => 'openlayers_style_select',
+  );
   $export['openlayers_interaction_select'] = $ol_interaction;
 
   $ol_interaction = new stdClass();
@@ -166,6 +168,16 @@ function openlayers_default_openlayers_interactions() {
   $ol_interaction->factory_service = 'openlayers.Interaction:Snap';
   $ol_interaction->options = array();
   $export['openlayers_interaction_snap'] = $ol_interaction;
+
+  $ol_interaction = new stdClass();
+  $ol_interaction->disabled = FALSE;
+  $ol_interaction->api_version = 1;
+  $ol_interaction->machine_name = 'openlayers_interaction_translate';
+  $ol_interaction->name = 'Translate';
+  $ol_interaction->description = 'Translate interaction description';
+  $ol_interaction->factory_service = 'openlayers.Interaction:Translate';
+  $ol_interaction->options = array();
+  $export['openlayers_interaction_translate'] = $ol_interaction;
 
   return $export;
 }

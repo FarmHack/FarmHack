@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_default_sources().
+ * Implements hook_default_openlayers_sources().
  */
 function openlayers_examples_default_openlayers_sources() {
   $export = array();
@@ -14,7 +14,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_example1';
-  $ol_source->name = 'MapBox example 1';
+  $ol_source->name = 'Openlayers examples: MapBox example 1';
   $ol_source->description = 'Source MapBox example 1';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
@@ -26,7 +26,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_example2';
-  $ol_source->name = 'MapBox example 2';
+  $ol_source->name = 'Openlayers examples: MapBox example 2';
   $ol_source->description = 'Source MapBox example 2';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
@@ -38,7 +38,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_example3';
-  $ol_source->name = 'MapBox example 3';
+  $ol_source->name = 'Openlayers examples: MapBox example 3';
   $ol_source->description = 'Source MapBox example 3, used by ft.com.';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
@@ -50,7 +50,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_geography_class';
-  $ol_source->name = 'MapBox Geography Class';
+  $ol_source->name = 'Openlayers examples: MapBox Geography Class';
   $ol_source->description = 'Source MapBox Geography Class description';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
@@ -62,7 +62,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_geography_class_utfgrid';
-  $ol_source->name = 'MapBox Geography Class UTFgrid';
+  $ol_source->name = 'Openlayers examples: MapBox Geography Class UTFgrid';
   $ol_source->description = 'Source MapBox Geography Class UTFgrid description';
   $ol_source->factory_service = 'openlayers.Source:TileUTFGrid';
   $ol_source->options = array(
@@ -74,7 +74,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapbox_natural_earth_hypso_bathy';
-  $ol_source->name = 'MapBox Natural Earth Hypso Bathy';
+  $ol_source->name = 'Openlayers examples: MapBox Natural Earth Hypso Bathy';
   $ol_source->description = 'Source MapBox Natural Hearth Hypso Bathy description';
   $ol_source->factory_service = 'openlayers.Source:TileJSON';
   $ol_source->options = array(
@@ -86,7 +86,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_googlemaps';
-  $ol_source->name = 'Google Maps';
+  $ol_source->name = 'Openlayers examples: Google Maps';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:GoogleMaps';
   $ol_source->options = array(
@@ -102,7 +102,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openstreetmap_europa';
-  $ol_source->name = 'EC OpenStreetMap Europa Webtools';
+  $ol_source->name = 'Openlayers examples: EC OpenStreetMap Europa Webtools';
   $ol_source->description = 'Source from European Commission webtools based on OSM, with some modifications.';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -114,7 +114,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_geojson_file';
-  $ol_source->name = 'Cities GeoJSON';
+  $ol_source->name = 'Openlayers examples: Cities GeoJSON';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:GeoJSON';
   $ol_source->options = array(
@@ -126,19 +126,31 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_kml_earthquakes';
-  $ol_source->name = '2012 Earthquakes';
+  $ol_source->name = 'Openlayers examples: 2012 Earthquakes';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:KML';
   $ol_source->options = array(
-    'url' => file_create_url(drupal_get_path('module', 'openlayers_examples') . '/assets/2012_Earthquakes_Mag5.kml', array('absolute' => TRUE)),
+    'url' => file_create_url(drupal_get_path('module', 'openlayers_examples') . '/assets/2012_Earthquakes_Mag5.kml'),
   );
   $export['openlayers_examples_source_kml_earthquakes'] = $ol_source;
 
   $ol_source = new stdClass();
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_kml_timezones';
+  $ol_source->name = 'Openlayers examples: Timezones (KML)';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:KML';
+  $ol_source->options = array(
+    'url' => file_create_url(drupal_get_path('module', 'openlayers_examples') . '/assets/timezones.kml'),
+  );
+  $export['openlayers_examples_source_kml_timezones'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
+  $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_cluster';
-  $ol_source->name = 'Cluster cities';
+  $ol_source->name = 'Openlayers examples: Cluster cities';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:Cluster';
   $ol_source->options = array(
@@ -151,10 +163,11 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_opencyclemap';
-  $ol_source->name = 'OpenCycleMap';
+  $ol_source->name = 'Openlayers examples: OpenCycleMap';
   $ol_source->description = 'Source OpenCycleMap description';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
+    'crossOrigin' => 'anonymous',
     'url' => '//{a-c}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
   );
   $export['openlayers_examples_source_opencyclemap'] = $ol_source;
@@ -162,21 +175,23 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openstreetmap_mapnik';
-  $ol_source->name = 'OpenStreetMap Mapnik';
+  $ol_source->name = 'Openlayers examples: OpenStreetMap Mapnik';
   $ol_source->description = 'OpenStreetMap Mapnik source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
-    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    'crossOrigin' => 'anonymous',
+    'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   );
   $export['openlayers_examples_source_openstreetmap_mapnik'] = $ol_source;
 
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openstreetmap_bw';
-  $ol_source->name = 'OpenStreetMap black and white';
+  $ol_source->name = 'Openlayers examples: OpenStreetMap black and white';
   $ol_source->description = 'OpenStreetMap black and white source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
+    'crossOrigin' => 'null',
     'url' => '//{a-c}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     'attributions' => '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   );
@@ -185,7 +200,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openstreetmap_de';
-  $ol_source->name = 'OpenStreetMap DE';
+  $ol_source->name = 'Openlayers examples: OpenStreetMap DE';
   $ol_source->description = 'Source OpenStreetMap DE description';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -197,7 +212,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openstreetmap_hot';
-  $ol_source->name = 'OpenStreetMap Hot';
+  $ol_source->name = 'Openlayers examples: OpenStreetMap Hot';
   $ol_source->description = 'OpenStreetMap Hot source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -209,7 +224,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_opencyclemap_thunderforest';
-  $ol_source->name = 'OpenCycleMap Thunderforest';
+  $ol_source->name = 'Openlayers examples: OpenCycleMap Thunderforest';
   $ol_source->description = 'OpenCycleMap Thunderforest source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -221,7 +236,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_opencyclemap_transport';
-  $ol_source->name = 'OpenCycleMap Transport';
+  $ol_source->name = 'Openlayers examples: OpenCycleMap Transport';
   $ol_source->description = 'OpenCycleMap Transport source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -233,7 +248,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_opencyclemap_landscape';
-  $ol_source->name = 'OpenCycleMap Landscape';
+  $ol_source->name = 'Openlayers examples: OpenCycleMap Landscape';
   $ol_source->description = 'OpenCycleMap Landscape source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -245,7 +260,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_opencyclemap_outdoors';
-  $ol_source->name = 'OpenCycleMap Outdoors';
+  $ol_source->name = 'Openlayers examples: OpenCycleMap Outdoors';
   $ol_source->description = 'OpenCycleMap Outdoors source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
@@ -257,11 +272,12 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openmapsurfer_roads';
-  $ol_source->name = 'OpenMapSurfer Roads';
+  $ol_source->name = 'Openlayers examples: OpenMapSurfer Roads';
   $ol_source->description = 'OpenMapSurfer Roads source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
-    'url' => '//openmapsurfer.uni-hd.de/tiles/roads/x={x}&y={y}&z={z}',
+    'crossOrigin' => 'null',
+    'url' => '//korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}',
     'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   );
   $export['openlayers_examples_source_openmapsurfer_roads'] = $ol_source;
@@ -269,11 +285,12 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openmapsurfer_roadsg';
-  $ol_source->name = 'OpenMapSurfer Roads grayscale';
+  $ol_source->name = 'Openlayers examples: OpenMapSurfer Roads grayscale';
   $ol_source->description = 'OpenMapSurfer Roads grayscale source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
-    'url' => '//openmapsurfer.uni-hd.de/tiles/roadsg/x={x}&y={y}&z={z}',
+    'crossOrigin' => 'null',
+    'url' => '//korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}',
     'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   );
   $export['openlayers_examples_source_openmapsurfer_roadsg'] = $ol_source;
@@ -281,11 +298,12 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openmapsurfer_adminb';
-  $ol_source->name = 'OpenMapSurfer admin borders';
+  $ol_source->name = 'Openlayers examples: OpenMapSurfer admin borders';
   $ol_source->description = 'OpenMapSurfer admin borders source';
   $ol_source->factory_service = 'openlayers.Source:OSM';
   $ol_source->options = array(
-    'url' => '//openmapsurfer.uni-hd.de/tiles/adminb/x={x}&y={y}&z={z}',
+    'crossOrigin' => 'null',
+    'url' => '//korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}',
     'attributions' => 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   );
   $export['openlayers_examples_source_openmapsurfer_adminb'] = $ol_source;
@@ -293,7 +311,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_bingmaps';
-  $ol_source->name = 'Bing Maps';
+  $ol_source->name = 'Openlayers examples: Bing Maps';
   $ol_source->description = 'Source Bingmaps description';
   $ol_source->factory_service = 'openlayers.Source:BingMaps';
   $ol_source->options = array();
@@ -303,7 +321,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapquest_sat';
-  $ol_source->name = 'MapQuest Satellite';
+  $ol_source->name = 'Openlayers examples: MapQuest Satellite';
   $ol_source->description = 'Source MapQuest Satellite description';
   $ol_source->factory_service = 'openlayers.Source:MapQuest';
   $ol_source->options = array(
@@ -315,7 +333,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_mapquest_hyb';
-  $ol_source->name = 'MapQuest Hybrid';
+  $ol_source->name = 'Openlayers examples: MapQuest Hybrid';
   $ol_source->description = 'Source MapQuest Hybrid';
   $ol_source->factory_service = 'openlayers.Source:MapQuest';
   $ol_source->options = array(
@@ -327,11 +345,11 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_imagestatic';
-  $ol_source->name = 'Image Static';
+  $ol_source->name = 'Openlayers examples: Image Static';
   $ol_source->description = 'Source Image Static description';
   $ol_source->factory_service = 'openlayers.Source:ImageStatic';
   $ol_source->options = array(
-    'url' => file_create_url(drupal_get_path('module', 'openlayers') . '/images/druplicon.png', array('absolute' => TRUE)),
+    'url' => file_create_url(drupal_get_path('module', 'openlayers_examples') . '/assets/druplicon.png'),
   );
   $export['openlayers_examples_source_imagestatic'] = $ol_source;
 
@@ -339,7 +357,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_tiledebug';
-  $ol_source->name = 'Tile debug';
+  $ol_source->name = 'Openlayers examples: Tile debug';
   $ol_source->description = 'A pseudo tile source, which does not fetch tiles from a server, but renders a grid outline for the tile grid/projection along with the coordinates for each tile.';
   $ol_source->factory_service = 'openlayers.Source:TileDebug';
   $ol_source->options = array(
@@ -351,7 +369,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_stamen1';
-  $ol_source->name = 'Stamen terrain labels';
+  $ol_source->name = 'Openlayers examples: Stamen terrain labels';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:Stamen';
   $ol_source->options = array(
@@ -363,7 +381,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_stamen2';
-  $ol_source->name = 'Stamen watercolor';
+  $ol_source->name = 'Openlayers examples: Stamen watercolor';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:Stamen';
   $ol_source->options = array(
@@ -375,7 +393,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_stamen3';
-  $ol_source->name = 'Stamen toner';
+  $ol_source->name = 'Openlayers examples: Stamen toner';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:Stamen';
   $ol_source->options = array(
@@ -387,7 +405,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_worldtopomap';
-  $ol_source->name = 'ESRI World Topo Map';
+  $ol_source->name = 'Openlayers examples: ESRI World Topo Map';
   $ol_source->description = 'ESRI World Topo Map source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -400,7 +418,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_worldstreetmap';
-  $ol_source->name = 'ESRI World Street Map';
+  $ol_source->name = 'Openlayers examples: ESRI World Street Map';
   $ol_source->description = 'ESRI World Street Map source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -413,7 +431,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_delorme';
-  $ol_source->name = 'ESRI Delorme';
+  $ol_source->name = 'Openlayers examples: ESRI Delorme';
   $ol_source->description = 'ESRI Delorme source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -426,7 +444,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_worldimagery';
-  $ol_source->name = 'ESRI World Imagery';
+  $ol_source->name = 'Openlayers examples: ESRI World Imagery';
   $ol_source->description = 'ESRI World Imagery source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -439,7 +457,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_worldterrainbase';
-  $ol_source->name = 'ESRI Terrain Base';
+  $ol_source->name = 'Openlayers examples: ESRI Terrain Base';
   $ol_source->description = 'ESRI Terrain Base source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -452,7 +470,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_worldshadedrelief';
-  $ol_source->name = 'ESRI Shaded Relief Base';
+  $ol_source->name = 'Openlayers examples: ESRI Shaded Relief Base';
   $ol_source->description = 'ESRI Shaded Relief source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -465,7 +483,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_oceanbasemap';
-  $ol_source->name = 'ESRI Ocean Basemap';
+  $ol_source->name = 'Openlayers examples: ESRI Ocean Basemap';
   $ol_source->description = 'ESRI Ocean Basemap source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -478,7 +496,7 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source->disabled = FALSE; /* Edit this to true to make a default source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_esri_natgeoworldmap';
-  $ol_source->name = 'ESRI National Geographic World Map';
+  $ol_source->name = 'Openlayers examples: ESRI National Geographic World Map';
   $ol_source->description = 'ESRI National Geographic World Map source';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -490,8 +508,8 @@ function openlayers_examples_default_openlayers_sources() {
   $ol_source = new stdClass();
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
-  $ol_source->machine_name = 'openlayers_examples_source_atlas_webgl';
-  $ol_source->name = 'Openlayers Examples Source Atlas Webgl';
+  $ol_source->machine_name = 'openlayers_examples_source_symbols_webgl';
+  $ol_source->name = 'Openlayers examples: Symbols Webgl';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:InlineJS';
   $ol_source->options = array(
@@ -587,105 +605,13 @@ var source = new ol.source.Vector({
   features: features
 });',
   );
-  $export['openlayers_examples_source_atlas_webgl'] = $ol_source;
-
-  $ol_source = new stdClass();
-  $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
-  $ol_source->api_version = 1;
-  $ol_source->machine_name = 'openlayers_examples_source_icon_sprite';
-  $ol_source->name = 'Openlayers Examples Source Icon Sprite';
-  $ol_source->description = '';
-  $ol_source->factory_service = 'openlayers.Source:InlineJS';
-  $ol_source->options = array(
-    'javascript' => 'var iconInfo = [{
-  offset: [0, 0],
-  opacity: 1.0,
-  rotateWithView: true,
-  rotation: 0.0,
-  scale: 1.0,
-  size: [55, 55]
-}, {
-  offset: [110, 86],
-  opacity: 0.75,
-  rotateWithView: false,
-  rotation: Math.PI / 2.0,
-  scale: 1.25,
-  size: [55, 55]
-}, {
-  offset: [55, 0],
-  opacity: 0.5,
-  rotateWithView: true,
-  rotation: Math.PI / 3.0,
-  scale: 1.5,
-  size: [55, 86]
-}, {
-  offset: [212, 0],
-  opacity: 1.0,
-  rotateWithView: true,
-  rotation: 0.0,
-  scale: 1.0,
-  size: [44, 44]
-}];
-
-var i;
-
-var iconCount = iconInfo.length;
-var icons = new Array(iconCount);
-for (i = 0; i < iconCount; ++i) {
-  var info = iconInfo[i];
-  icons[i] = new ol.style.Icon({
-    offset: info.offset,
-    opacity: info.opacity,
-    rotateWithView: info.rotateWithView,
-    rotation: info.rotation,
-    scale: info.scale,
-    size: info.size,
-    src: \'/sites/all/modules/openlayers/modules/openlayers_examples/assets/Butterfly.png\'
-  });
-}
-
-var featureCount = 50000;
-var features = new Array(featureCount);
-var feature, geometry;
-var e = 25000000;
-for (i = 0; i < featureCount; ++i) {
-  geometry = new ol.geom.Point(
-      [2 * e * Math.random() - e, 2 * e * Math.random() - e]);
-  feature = new ol.Feature(geometry);
-  feature.setStyle(
-      new ol.style.Style({
-        image: icons[i % (iconCount - 1)]
-      })
-  );
-  features[i] = feature;
-}
-
-var source = new ol.source.Vector({
-  features: features
-});
-
-var overlayFeatures = [];
-for (i = 0; i < featureCount; i += 30) {
-  var clone = features[i].clone();
-  clone.setStyle(null);
-  overlayFeatures.push(clone);
-}
-
-var featureOverlay = new ol.FeatureOverlay({
-  map: data.map,
-  style: new ol.style.Style({
-    image: icons[iconCount - 1]
-  }),
-  features: overlayFeatures
-});',
-  );
-  $export['openlayers_examples_source_icon_sprite'] = $ol_source;
+  $export['openlayers_examples_source_symbols_webgl'] = $ol_source;
 
   $ol_source = new stdClass();
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_precipitation';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Precipitation';
+  $ol_source->name = 'Openlayers examples: OWM Precipitation';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -697,7 +623,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_precipitation_cls';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Precipitation classic';
+  $ol_source->name = 'Openlayers examples: OWM Precipitation classic';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -709,7 +635,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_clouds';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Clouds';
+  $ol_source->name = 'Openlayers examples: OWM Clouds';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -721,7 +647,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_clouds_cls';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Clouds classic';
+  $ol_source->name = 'Openlayers examples: OWM Clouds classic';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -733,7 +659,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_pressure';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Pressure';
+  $ol_source->name = 'Openlayers examples: OWM Pressure';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -745,7 +671,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_pressure_cntr';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Pressure contour';
+  $ol_source->name = 'Openlayers examples: OWM Pressure contour';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -757,7 +683,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_temp';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Temp';
+  $ol_source->name = 'Openlayers examples: OWM Temp';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -769,7 +695,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_rain';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Rain';
+  $ol_source->name = 'Openlayers examples: OWM Rain';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -781,7 +707,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_rain_cls';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Rain classic';
+  $ol_source->name = 'Openlayers examples: OWM Rain classic';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -793,7 +719,7 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_snow';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Snow';
+  $ol_source->name = 'Openlayers examples: OWM Snow';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
@@ -805,13 +731,50 @@ var featureOverlay = new ol.FeatureOverlay({
   $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
   $ol_source->api_version = 1;
   $ol_source->machine_name = 'openlayers_examples_source_openweather_wind';
-  $ol_source->name = 'OpenLayers Examples Source OpenWeather Wind';
+  $ol_source->name = 'Openlayers examples: OWM Wind';
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:XYZ';
   $ol_source->options = array(
     'url' => '//www.tile.openweathermap.org/map/wind/{z}/{x}/{y}.png',
   );
   $export['openlayers_examples_source_openweather_wind'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
+  $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_tilewms';
+  $ol_source->name = 'Openlayers examples: TileWMS';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:TileWMS';
+  $ol_source->options = array(
+    'url' => 'http://services.nationalmap.gov/arcgis/services/transportation/MapServer/WMSServer',
+    'wms_layers' => '1,2,3,4,5,6,7,8,9',
+    'version' => '',
+    'params' => array(
+      'LAYERS' => '1,2,3,4,5,6,7,8,9',
+    ),
+  );
+  $export['openlayers_examples_source_tilewms'] = $ol_source;
+
+  $ol_source = new stdClass();
+  $ol_source->disabled = FALSE; /* Edit this to true to make a default ol_source disabled initially */
+  $ol_source->api_version = 1;
+  $ol_source->machine_name = 'openlayers_examples_source_random_features';
+  $ol_source->name = 'Openlayers examples: Random features';
+  $ol_source->description = '';
+  $ol_source->factory_service = 'openlayers.Source:Random';
+  $ol_source->options = array(
+    'Point' => array(
+      'count' => 50,
+    ),
+    'LineString' => array(
+      'count' => 20,
+    ),
+    'Polygon' => array(
+      'count' => 2,
+    ),
+  );
+  $export['openlayers_examples_source_random_features'] = $ol_source;
 
   return $export;
 }

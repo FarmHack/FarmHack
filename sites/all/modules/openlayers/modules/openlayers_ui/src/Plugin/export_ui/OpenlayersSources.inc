@@ -15,11 +15,11 @@ function openlayers_ui_OpenlayersSources_ctools_export_ui() {
       'menu prefix' => 'admin/structure/openlayers',
       'menu item' => 'sources',
       'menu title' => 'Sources',
-      'menu description' => 'Administer OpenLayers sources.',
+      'menu description' => 'Administer Openlayers sources.',
     ),
 
     'handler' => array(
-      'class' => '\\Drupal\\openlayers\\UI\\OpenlayersSources',
+      'class' => '\\Drupal\\openlayers_ui\\UI\\OpenlayersSources',
       'file' => 'OpenlayersSources.php',
     ),
 
@@ -51,8 +51,8 @@ function openlayers_ui_OpenlayersSources_ctools_export_ui() {
 
     'title singular' => t('source'),
     'title plural' => t('sources'),
-    'title singular proper' => t('OpenLayers source preset'),
-    'title plural proper' => t('OpenLayers sources presets'),
+    'title singular proper' => t('Openlayers source preset'),
+    'title plural proper' => t('Openlayers sources presets'),
 
     'strings' => array(
       'confirmation' => array(
@@ -71,23 +71,22 @@ function openlayers_ui_OpenlayersSources_ctools_export_ui() {
  * Source base config form handler.
  */
 function openlayers_source_form_start($form, &$form_state) {
-  $class = new \Drupal\openlayers\UI\OpenlayersSources();
+  $class = new \Drupal\openlayers_ui\UI\OpenlayersSources();
   $class->init($form_state['plugin']);
   $class->edit_form($form, $form_state);
 
-  $layers = ctools_export_crud_load_all('openlayers_layers');
-  $options = array('' => 'Dont attach');
-  foreach ($layers as $machine_name => $data) {
-    $layer = openlayers_object_load('Layer', $machine_name);
-    if (property_exists($layer, 'disabled') && ($layer->disabled == 1 || $layer->disabled == TRUE)) {
+  $options = array();
+  foreach (\Drupal\openlayers\Openlayers::loadAllExportable('Layer') as $machine_name => $layer) {
+    if (!is_object($layer) || (property_exists($layer, 'disabled') && ($layer->disabled == 1 || $layer->disabled == TRUE))) {
       continue;
     }
-    $options[$machine_name] = $data->name;
+    $options[$machine_name] = $layer->name;
   }
 
   $form['attachToLayer'] = array(
     '#type' => 'select',
     '#title' => 'Add this to a layer ?',
+    '#empty_option' => t('- Do no attach -'),
     '#description' => 'Select the layer to add this object to.',
     '#options' => $options,
     '#default_value' => isset($form_state['item']->attachToLayer) ? $form_state['item']->attachToLayer : '',
@@ -100,7 +99,7 @@ function openlayers_source_form_start($form, &$form_state) {
  * Source base config form validation handler.
  */
 function openlayers_source_form_start_validate($form, &$form_state) {
-  $class = new \Drupal\openlayers\UI\OpenlayersSources();
+  $class = new \Drupal\openlayers_ui\UI\OpenlayersSources();
   $class->init($form_state['plugin']);
   $class->edit_form_validate($form, $form_state);
 }
@@ -109,7 +108,7 @@ function openlayers_source_form_start_validate($form, &$form_state) {
  * Source base config form submit handler.
  */
 function openlayers_source_form_start_submit($form, &$form_state) {
-  $class = new \Drupal\openlayers\UI\OpenlayersSources();
+  $class = new \Drupal\openlayers_ui\UI\OpenlayersSources();
   $class->init($form_state['plugin']);
   $class->edit_form_submit($form, $form_state);
 }
@@ -121,9 +120,10 @@ function openlayers_source_form_type($form, &$form_state) {
   $form['factory_service'] = array(
     '#type' => 'select',
     '#title' => t('Source Type'),
+    '#empty_option' => t('- Select a @plugin type -', array('@plugin' => 'Source')),
     '#default_value' => isset($form_state['item']->factory_service) ? $form_state['item']->factory_service : '',
     '#description' => t('Select the type of source.'),
-    '#options' => Openlayers::getOLObjectsOptions('Source'),
+    '#options' => \Drupal\openlayers\Openlayers::getOLObjectsOptions('Source'),
     '#required' => TRUE,
   );
 
@@ -132,10 +132,25 @@ function openlayers_source_form_type($form, &$form_state) {
   );
 
   $form['options']['attributions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Attributions options'),
+  );
+  $form['options']['attributions']['enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable attributions'),
+    '#default_value' => isset($form_state['item']->options['attributions']) ? TRUE : FALSE,
+    '#description' => t('Enable attributions ?'),
+  );
+  $form['options']['attributions']['data'] = array(
     '#type' => 'textfield',
     '#title' => t('Attributions'),
     '#default_value' => isset($form_state['item']->options['attributions']) ? $form_state['item']->options['attributions'] : '',
     '#description' => t('Attributions HTML text. Empty to disable.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="options[attributions][enabled]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   return $form;
@@ -149,8 +164,12 @@ function openlayers_source_form_type_submit($form, &$form_state) {
     $form_state['item']->options = array_merge((array) $form_state['item']->options, (array) $form_state['values']['options']);
   }
 
-  if (empty($form_state['values']['options']['attributions'])) {
+  if ((bool) $form_state['values']['options']['attributions']['enabled'] == FALSE) {
     unset($form_state['item']->options['attributions']);
+  }
+  else {
+    unset($form_state['item']->options['attributions']['enabled']);
+    $form_state['item']->options['attributions'] = $form_state['values']['options']['attributions']['data'];
   }
 
   $form_state['item']->factory_service = $form_state['values']['factory_service'];
@@ -160,9 +179,10 @@ function openlayers_source_form_type_submit($form, &$form_state) {
  * Source options config form handler.
  */
 function openlayers_source_form_options($form, &$form_state) {
-  $source = openlayers_object_load('Source', $form_state['item']);
-  $source->optionsForm($form, $form_state);
-  $form['options']['#tree'] = TRUE;
+  if (($source = \Drupal\openlayers\Openlayers::load('Source', $form_state['item'])) == TRUE) {
+    $source->optionsForm($form, $form_state);
+    $form['options']['#tree'] = TRUE;
+  }
 
   return $form;
 }
@@ -171,8 +191,9 @@ function openlayers_source_form_options($form, &$form_state) {
  * Source options config form validation handler.
  */
 function openlayers_source_form_options_validate($form, &$form_state) {
-  $source = openlayers_object_load('Source', $form_state['item']);
-  $source->optionsFormValidate($form, $form_state);
+  if (($source = \Drupal\openlayers\Openlayers::load('Source', $form_state['item'])) == TRUE) {
+    $source->optionsFormValidate($form, $form_state);
+  }
 }
 
 /**
@@ -183,13 +204,15 @@ function openlayers_source_form_options_submit($form, &$form_state) {
     $form_state['item']->options = array_merge((array) $form_state['item']->options, (array) $form_state['values']['options']);
   }
 
-  if (!empty($form_state['item']->attachToMap)) {
-    $layer = ctools_export_crud_load('openlayers_layers', $form_state['item']->attachToLayer);
-    $layer->options['source'] = $form_state['item']->machine_name;
-    ctools_export_crud_save('openlayers_layers', $layer);
+  if (!empty($form_state['item']->attachToLayer) && ($layer = \Drupal\openlayers\Openlayers::load('layer', $form_state['item']->attachToLayer)) == TRUE) {
+    // We should add the object to the Collection so JS and CSS files are
+    // imported.
+    $layer->setOption('source', $form_state['item']->machine_name);
+    \Drupal\openlayers\Openlayers::save($layer);
     unset($form_state['item']->attachToLayer);
   }
 
-  $source = openlayers_object_load('Source', $form_state['item']);
-  $source->optionsFormSubmit($form, $form_state);
+  if (($source = \Drupal\openlayers\Openlayers::load('Source', $form_state['item'])) == TRUE) {
+    $source->optionsFormSubmit($form, $form_state);
+  }
 }

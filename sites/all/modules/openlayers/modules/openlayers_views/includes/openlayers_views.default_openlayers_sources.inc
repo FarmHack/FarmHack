@@ -14,7 +14,7 @@ function openlayers_views_default_openlayers_sources_alter(&$sources) {
     $machine_name = 'source_views_' . $view_name . '_' . $display;
     // Check if the configuration for this source was already defined or if it
     // has been modified. If so don't add it, to keep the source exportable.
-    $custom_version = ctools_export_crud_load('openlayers_sources', $machine_name);
+    $custom_version = \Drupal\openlayers\Openlayers::loadExportable('source', $machine_name);
     if (!isset($sources[$machine_name]) && empty($custom_version)) {
       if ($view = views_get_view($view_name)) {
         $view->set_display($display);
@@ -39,7 +39,7 @@ function openlayers_views_default_openlayers_sources_alter(&$sources) {
     $machine_name = 'source_map_views_' . $view_name . '_' . $display;
     // Check if the configuration for this source was already defined or if it
     // has been modified. If so don't add it, to keep the source exportable.
-    $custom_version = ctools_export_crud_load('openlayers_sources', $machine_name);
+    $custom_version = \Drupal\openlayers\Openlayers::loadExportable('source', $machine_name);
     if (!isset($sources[$machine_name]) && empty($custom_version)) {
       $ol_source = new stdClass();
       $ol_source->api_version = 1;

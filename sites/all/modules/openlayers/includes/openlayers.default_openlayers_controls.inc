@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_default_controls().
+ * Implements hook_default_openlayers_controls().
  */
 function openlayers_default_openlayers_controls() {
   $export = array();
@@ -65,6 +65,14 @@ function openlayers_default_openlayers_controls() {
   $ol_control->factory_service = 'openlayers.Control:Zoom';
   $ol_control->options = array();
   $export['openlayers_control_zoom'] = $ol_control;
+
+  $ol_control = new stdClass();
+  $ol_control->api_version = 1;
+  $ol_control->machine_name = 'openlayers_control_overviewmap';
+  $ol_control->name = 'OverviewMap';
+  $ol_control->description = 'Create a new control with a map acting as an overview map for an other defined map.';
+  $ol_control->factory_service = 'openlayers.Control:OverviewMap';
+  $export['openlayers_control_overviewmap'] = $ol_control;
 
   $ol_control = new stdClass();
   $ol_control->api_version = 1;

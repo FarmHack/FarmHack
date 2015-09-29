@@ -22,7 +22,7 @@ function openlayers_examples_menu() {
   $items = array();
 
   $items['openlayers_examples'] = array(
-    'title' => 'OpenLayers 3.1.x examples',
+    'title' => 'Openlayers 3.x examples',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('openlayers_examples'),
     'access arguments' => array('access content'),
@@ -36,17 +36,14 @@ function openlayers_examples_menu() {
  * Form handler.
  */
 function openlayers_examples($form, &$form_state, $map_arg = NULL) {
-  ctools_include('export');
-  $maps = ctools_export_crud_load_all('openlayers_maps');
+  $maps = array();
   $options = array();
-  foreach ($maps as $machine_name => $data) {
-    if (property_exists($data, 'disabled') && ($data->disabled == 1 || $data->disabled == TRUE)) {
+  foreach (\Drupal\openlayers\Openlayers::loadAllExportable('Map') as $machine_name => $data) {
+    if (!is_object($data) || (property_exists($data, 'disabled') && ($data->disabled == 1 || $data->disabled == TRUE))) {
       continue;
     }
-    $options[$data->machine_name] = $data->name;
+    $options[$machine_name] = $data->name;
   }
-
-  ksort($options);
 
   if (isset($form_state['values']['openlayers_default_map'])) {
     $maps = $form_state['values']['openlayers_default_map'];
@@ -72,7 +69,7 @@ function openlayers_examples($form, &$form_state, $map_arg = NULL) {
     '#ajax' => array(
       'callback' => '_openlayers_examples_ajax_reload_default_map',
       'method' => 'replace',
-      'wrapper' => 'default_map_ajax',
+      'wrapper' => 'default_openlayers_map_ajax',
       'effect' => 'fade',
     ),
   );
@@ -80,42 +77,63 @@ function openlayers_examples($form, &$form_state, $map_arg = NULL) {
   $form['#token'] = NULL;
 
   $form['form'] = array(
-    '#prefix' => '<div id="default_map_ajax">',
+    '#prefix' => '<div id="default_openlayers_map_ajax">',
     '#suffix' => '</div>',
     '#type' => 'markup',
   );
 
   foreach ($maps as $map) {
-    $map = openlayers_object_load('Map', $map);
+    if (($map = \Drupal\openlayers\Openlayers::load('Map', $map)) == FALSE) {
+      continue;
+    }
+    $map_configuration = $map->getConfiguration();
 
     $form['form'][$map->getId()] = array(
       '#type' => 'fieldset',
-      '#title' => $map->name,
+      '#title' => $map_configuration['name'],
       '#collapsible' => FALSE,
     );
 
     $map->clearOption('contextualLinks');
     $map->setOption('height', '500px');
 
-    $controls = array_filter(array_merge($map->getOption('controls', array()), array(
-      'openlayers_control_zoom',
-      'openlayers_control_rotate',
-      'openlayers_control_fullscreen',
-    )));
+    $controls = array_values(
+      array_merge(
+        $map->getOption('controls', array()),
+        array(
+          'openlayers_control_attribution',
+          'openlayers_control_zoom',
+          'openlayers_control_rotate',
+          'openlayers_control_fullscreen',
+        )
+      )
+    );
     $map->setOption('controls', $controls);
 
-    $map->setOption(
-      'interactions',
-      array(
-        'openlayers_interaction_doubleclickzoom',
-        'openlayers_interaction_dragpan',
-        'openlayers_interaction_dragrotate',
-        'openlayers_interaction_mousewheelzoom',
-      ),
-      TRUE
+    $components = array_values(
+      array_merge(
+        $map->getOption('interactions', array()),
+        array(
+          'openlayers_interaction_doubleclickzoom',
+          'openlayers_interaction_dragpan',
+          'openlayers_interaction_dragrotate',
+        )
+      )
     );
+    $map->setOption('interactions', $components);
 
-    $components = array_filter(array_merge($map->getOption('components', array()), array('openlayers_examples_component_ajax_values')));
+    $components = array_values(
+      array_merge(
+        $map->getOption('components', array()),
+        array(
+          'openlayers_examples_component_ajax_values',
+          'openlayers_examples_component_viewsync',
+          'openlayers_examples_component_spinjs',
+          'openlayers_examples_component_progressbar',
+          'openlayers_examples_component_permalink',
+        )
+      )
+    );
     $map->setOption('components', $components);
 
     if (isset($form_state['input']['zoom'])) {
@@ -134,29 +152,28 @@ function openlayers_examples($form, &$form_state, $map_arg = NULL) {
     $form['form'][$map->getId()]['map'] = array(
       '#weight' => 0,
       '#type' => 'openlayers',
-      '#map' => $map,
-      '#description' => 'Use your mouse to navigate the map. Double click to zoom, hold your click and move to dragpan, hold shift and alt keys and left button mouse to rotate.',
+      '#map' => $map
     );
 
-    if ((bool) $map->getOption('provideIframe', FALSE) == TRUE) {
-      $form_state['item'] = $map;
+    if (module_exists('openlayers_services')) {
+      if ((bool) $map->getOption('provideIframe', FALSE) == TRUE) {
+        $form_state['item'] = $map;
 
-      $form['form'][$map->getId()]['openlayers_services'] = array(
-        '#type' => 'fieldset',
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#title' => 'Embed this map in an iframe',
-      );
+        $form['form'][$map->getId()]['openlayers_services'] = array(
+          '#type' => 'fieldset',
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+          '#title' => 'Embed this map in an iframe',
+        );
 
-      if (module_exists('services')) {
         foreach (services_endpoint_load_all() as $service) {
-          if (isset($service->resources['openlayers_map']['operations']['retrieve']['enabled']) && $service->resources['openlayers_map']['operations']['retrieve']['enabled'] == 1) {
+          if (isset($service->resources['openlayers-map']['operations']['retrieve']['enabled']) && $service->resources['openlayers-map']['operations']['retrieve']['enabled'] == 1) {
 
             $width = ($map->getOption('width', 'auto') == 'auto') ? '100%' : $map->getOption('width', 'auto');
             $height = $map->getOption('height', 'auto');
-            $iframe = "<iframe src='" . url('openlayers/openlayers_map/' . $map->machine_name, array('absolute' => TRUE)) . "' width='" . $width . "' height='" . $height . "'/>";
+            $iframe = "<iframe src='" . url('openlayers/openlayers-map/' . $map->getMachineName(), array('absolute' => TRUE)) . "' width='" . $width . "' height='" . $height . "'/>";
 
-            $form['form'][$map->getId()]['openlayers_services'][$map->machine_name] = array(
+            $form['form'][$map->getId()]['openlayers_services'][$map->getMachineName()] = array(
               '#type' => 'textarea',
               '#description' => t('Copy paste this html code to embed this map in your content.'),
               '#rows' => 3,
@@ -177,7 +194,7 @@ function openlayers_examples($form, &$form_state, $map_arg = NULL) {
 
     $form['form'][$map->getId()]['permalink']['link'] = array(
       '#type' => 'textfield',
-      '#value' => url('openlayers_examples/' . $map->machine_name, array('absolute' => TRUE)),
+      '#value' => url('openlayers_examples/' . $map->getMachineName(), array('absolute' => TRUE)),
       '#size' => 128,
     );
 
@@ -207,6 +224,10 @@ function openlayers_examples($form, &$form_state, $map_arg = NULL) {
     '#value' => 0,
   );
 
+  $form['version'] = array(
+    '#markup' => 'Module running Openlayers version: ' . \Drupal\openlayers\Openlayers::getLibraryVersion(),
+  );
+
   // This is for preventing 'system/ajax' as destination when using AJAX maps.
   // See: http://drupal.stackexchange.com/questions/86958/get-current-url-arguments-inside-ajax-callback
   $form['current_path'] = array('#type' => 'hidden', '#value' => current_path());
@@ -232,7 +253,7 @@ function _openlayers_examples_ajax_reload_default_map($form, &$form_state) {
 function openlayers_examples_block_info() {
   return array(
     'openlayers_examples' => array(
-      'info' => 'OpenLayers Examples',
+      'info' => 'Openlayers Examples',
     ),
   );
 }

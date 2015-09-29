@@ -4,8 +4,6 @@
  * Openlayers module.
  */
 
-include 'includes/openlayers.helpers.inc';
-
 /**
  * Implements hook_ctools_plugin_api().
  */
@@ -17,235 +15,15 @@ function openlayers_ctools_plugin_api($module, $api) {
 }
 
 /**
- * Implements hook_ctools_plugin_directory().
- */
-function openlayers_ctools_plugin_directory($owner, $plugin_type) {
-  if ($owner == 'ctools' && $plugin_type == 'content_types') {
-    return 'plugins/' . $plugin_type;
-  }
-}
-
-/**
- * Create an object instance for an export.
- *
- * @param string $object_type
- *   The object type to look up. See openlayers_object_types() for a list of
- *   available object types.
- * @param array|string|object $export
- *   The exported object.
- *
- * @return mixed|openlayers_error
- *   Returns the instance of the requested object or an instance of
- *   openlayers_error on error.
- */
-function openlayers_object_load($object_type, $export) {
-  // @todo: This needs to be refactored properly.
-  ctools_include('export');
-
-  $object = NULL;
-  $exportable = array();
-
-  if (is_object($export)) {
-    $array_object = new ArrayObject($export);
-    $exportable = $array_object->getArrayCopy();
-  }
-  if (is_string($export)) {
-    $exportable = (array) ctools_export_crud_load('openlayers_' . strtolower($object_type) . 's', $export);
-  }
-
-  if (is_array($exportable) && isset($exportable['factory_service'])) {
-    list($plugin_manager_id, $plugin_id) = explode(':', $exportable['factory_service'], 2);
-    if (\Drupal::hasService($plugin_manager_id)) {
-      $plugin_manager = \Drupal::service($plugin_manager_id);
-      if ($plugin_manager->hasDefinition($plugin_id)) {
-        $object = $plugin_manager->createInstance($plugin_id);
-      } else {
-        $exportable += array(
-          'type' => $object_type,
-          'errorMessage' => 'Unable to load @type @machine_name',
-        );
-        $object = \Drupal::service('openlayers.Types')->createInstance('Error');
-      }
-    }
-    else {
-      $exportable += array(
-        'type' => $object_type,
-        'errorMessage' => 'Service <em>@service</em> doesn\'t exists, unable to load @type @machine_name',
-      );
-      $object = \Drupal::service('openlayers.Types')->createInstance('Error');
-    }
-  }
-  else {
-    $exportable += array(
-      'type' => $object_type,
-      'machine_name' => $export,
-      'errorMessage' => 'Unable to load CTools exportable @type @machine_name.',
-    );
-    $object = \Drupal::service('openlayers.Types')->createInstance('Error');
-  }
-  $object->init($exportable);
-
-  if (isset($exportable['disabled']) && ($exportable['disabled'] == 1 || $exportable['disabled'] == TRUE)) {
-    $object->disabled = 1;
-  }
-
-  return $object;
-}
-
-/**
  * Implements hook_permission().
  */
 function openlayers_permission() {
   return array(
     'administer openlayers' => array(
-      'title' => t('Administer OpenLayers'),
-      'description' => t('Configure OpenLayers settings, styles, maps, and layers.'),
+      'title' => t('Administer Openlayers'),
+      'description' => t('Configure Openlayers settings, styles, maps, and layers.'),
     ),
   );
-}
-
-/**
- * Implements hook_libraries_info().
- */
-function openlayers_libraries_info() {
-  $libraries['openlayers3'] = array(
-    'name' => 'OpenLayers3',
-    'vendor url' => 'http://ol3js.org/',
-    'download url' => 'https://github.com/openlayers/ol3/releases/download/v3.6.0/v3.6.0.zip',
-    'version arguments' => array(
-      'file' => 'build/ol.js',
-      'pattern' => '@Version: (.*)@',
-      'lines' => 3,
-    ),
-    'files' => array(
-      'js' => array(
-        'closure-library/closure/goog/base.js' => array(
-          'type' => 'file',
-          'weight' => 4,
-          'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-        ),
-        'build/ol.js' => array(
-          'type' => 'file',
-          'weight' => 6,
-          'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-        ),
-      ),
-      'css' => array(
-        'css/ol.css' => array(
-          'type' => 'file',
-          'weight' => 4,
-          'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-        ),
-      ),
-    ),
-    'integration files' => array(
-      'openlayers' => array(
-        'js' => array(
-          'js/openlayers.goog.js' => array(
-            'type' => 'file',
-            'weight' => 2,
-            'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-          ),
-          'js/openlayers.js' => array(
-            'type' => 'file',
-            'weight' => 8,
-            'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-          ),
-          'js/openlayers.pluginManager.js' => array(
-            'type' => 'file',
-            'weight' => 12,
-            'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-          ),
-          'js/openlayers.behaviors.js' => array(
-            'type' => 'file',
-            'weight' => 14,
-            'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-          ),
-        ),
-        'css' => array(
-          'css/openlayers.css' => array(
-            'type' => 'file',
-            'weight' => 4,
-            'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-          ),
-        ),
-      ),
-    ),
-    'variants' => array(
-      'debug' => array(
-        'files' => array(
-          'js' => array(
-            'closure-library/closure/goog/base.js' => array(
-              'type' => 'file',
-              'weight' => 4,
-              'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-            ),
-            'build/ol-deps.js' => array(
-              'type' => 'file',
-              'weight' => 6,
-              'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-            ),
-            'build/ol-debug.js' => array(
-              'type' => 'file',
-              'weight' => 8,
-              'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-            ),
-          ),
-          'css' => array(
-            'css/ol.css' => array(
-              'type' => 'file',
-              'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-            ),
-          ),
-        ),
-        'integration files' => array(
-          'openlayers' => array(
-            'js' => array(
-              'js/openlayers.goog.js' => array(
-                'type' => 'file',
-                'weight' => 2,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-              'js/openlayers.js' => array(
-                'type' => 'file',
-                'weight' => 8,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-              'js/openlayers.pluginManager.js' => array(
-                'type' => 'file',
-                'weight' => 12,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-              'js/openlayers.behaviors.js' => array(
-                'type' => 'file',
-                'weight' => 14,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-              'js/openlayers.console.js' => array(
-                'type' => 'file',
-                'weight' => 16,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-              'js/openlayers.debug.js' => array(
-                'type' => 'file',
-                'weight' => 18,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-            ),
-            'css' => array(
-              'css/openlayers.css' => array(
-                'type' => 'file',
-                'weight' => 4,
-                'group' => \Drupal\openlayers\Config::get('openlayers.js_css.group'),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  return $libraries;
 }
 
 /**
@@ -257,6 +35,7 @@ function openlayers_element_info() {
       '#input' => FALSE,
       '#tree' => TRUE,
       '#process' => array('openlayers_element_process_callback'),
+      '#pre_render' => array('openlayers_element_prerender_callback'),
       '#theme_wrappers' => array('form_element'),
     ),
   );
@@ -267,57 +46,27 @@ function openlayers_element_info() {
  *
  * Renders the map and returns the markup in an renderable array.
  */
-function openlayers_element_process_callback($element, &$form_state) {
-  $map = openlayers_object_load('Map', $element['#map']);
-  $element['map'] = $map->build();
+function openlayers_element_process_callback($element, $form_state, $complete_form) {
+  /* @var \Drupal\openlayers\Types\Map $map */
+  if (($map = \Drupal\openlayers\Openlayers::load('Map', $element['#map'])) == TRUE) {
+    $element['map'] = $map->build();
+  }
 
   return $element;
 }
 
 /**
- * If the PHP version is < 5.3.0 we need to create array_replace_recursive().
+ * Pre render callback for the openlayers form element.
  */
-if (!function_exists('array_replace_recursive')) {
-  /**
-   * Replaces elements from passed arrays into the first array recursively.
-   *
-   * @link http://php.net/manual/en/function.array-replace-recursive.php
-   *
-   * @param array $array
-   *   The array in which elements are replaced.
-   * @param array $array1
-   *   The array from which elements will be extracted.
-   *
-   * @return array|NULL
-   *   An array, or NULL if an error occurs.
-   */
-  function array_replace_recursive(array $array, array $array1) {
-    // Get array arguments.
-    $arrays = func_get_args();
-
-    // Define the original array.
-    $original = array_shift($arrays);
-
-    // Loop through arrays.
-    foreach ($arrays as $array) {
-      // Loop through array key/value pairs.
-      foreach ($array as $key => $value) {
-        // Value is an array.
-        if (is_array($value)) {
-          // Traverse the array; replace or add result to original array.
-          $original[$key] = array_replace_recursive($original[$key], $array[$key]);
-        }
-        // Value is not an array.
-        else {
-          // Replace or add current value to original array.
-          $original[$key] = $value;
-        }
-      }
+function openlayers_element_prerender_callback($element) {
+  if (empty($element['map'])) {
+    /* @var \Drupal\openlayers\Types\Map $map */
+    if (($map = \Drupal\openlayers\Openlayers::load('Map', $element['#map'])) == TRUE) {
+      $element['map'] = $map->build();
     }
-
-    // Return the joined array.
-    return $original;
   }
+
+  return $element;
 }
 
 /**
@@ -425,43 +174,171 @@ function openlayers_i18n_string_remove($name, $string = NULL, $options = array()
 }
 
 /**
- * Form callback handler to prepare the developer dialog form.
- *
- * Prepares an object options form to be used in a frontend development dialog.
- *
- * @param array $form
- *   The form array - likely emtpy.
- * @param array $form_state
- *   The form state.
- * @param object $object
- *   The object that provides the options form. Has to have the public method
- *   optionsForms().
- *
- * @return array
- *   The populated form.
- *
- * @see \Drupal\openlayers\Source\GeoJSON::getJS()
+ * Implements hook_i18n_string_refresh().
  */
-function openlayers_dev_dialog_form($form, $form_state, $object) {
-  $object->optionsForm($form, $form_state);
-  openlayers_dev_dialog_form_clean($form);
-  return $form;
+function openlayers_i18n_string_refresh() {
+  foreach (\Drupal\openlayers\Openlayers::getPluginTypes() as $type) {
+    foreach (\Drupal\openlayers\Openlayers::loadAllExportable($type) as $machine_name => $exportable) {
+      $object = \Drupal\openlayers\Openlayers::load($type, $exportable);
+      $object->i18nStringsRefresh();
+    }
+  }
 }
 
 /**
- * Prepares a form structure to be added to a development dialog.
- *
- * Removes all JS related stuff.
- *
- * @param array $form
- *   The form array to prepare.
+ * Implements hook_libraries_info().
  */
-function openlayers_dev_dialog_form_clean(array &$form) {
-  foreach (element_children($form) as $key) {
-    unset(
-      $form[$key]['#states'],
-      $form[$key]['#attached']
-    );
-    openlayers_dev_dialog_form_clean($form[$key]);
+function openlayers_libraries_info() {
+  // During an upgrade from Openlayers 7.x-2.x branch, the new registry_autoload
+  // dependency may not be enabled, which makes it impossible to use the new
+  // namespaced classes. So provide a fallback variable instead.
+  $js_css_group = 'openlayers';
+  if (class_exists('\Drupal\openlayers\Config')) {
+    $js_css_group = \Drupal\openlayers\Config::get('openlayers.js_css.group');
   }
+
+  $info = system_get_info('module', 'openlayers');
+  $version = $info['version'] ? $info['version'] : '7.x-3.x';
+  $module_path = drupal_get_path('module', 'openlayers');
+
+  $libraries['openlayers3_integration'] = array(
+    'name' => 'Openlayers 3 Drupal integration files',
+    'vendor url' => 'https://drupal.org/project/openlayers',
+    'download url' => 'https://drupal.org/project/openlayers',
+    'version' => $version,
+    'library path' => $module_path,
+    'files' => array(
+      'js' => array(
+        $module_path . '/js/openlayers.js' => array(
+          'data' => $module_path . '/js/openlayers.js',
+          'type' => 'file',
+          'weight' => 8,
+          'group' => $js_css_group,
+        ),
+        $module_path . '/js/openlayers.pluginManager.js' => array(
+          'data' => $module_path . '/js/openlayers.pluginManager.js',
+          'type' => 'file',
+          'weight' => 12,
+          'group' => $js_css_group,
+        ),
+        $module_path . '/js/openlayers.behaviors.js' => array(
+          'data' => $module_path . '/js/openlayers.behaviors.js',
+          'type' => 'file',
+          'weight' => 14,
+          'group' => $js_css_group,
+        ),
+      ),
+      'css' => array(
+        $module_path . '/css/openlayers.css' => array(
+          'data' => $module_path . '/css/openlayers.css',
+          'type' => 'file',
+          'weight' => 4,
+          'group' => $js_css_group,
+        ),
+      ),
+    ),
+    'variants' => array(
+      'debug' => array(
+        'files' => array(
+          'js' => array(
+            'js/openlayers.js' => array(
+              'type' => 'file',
+              'weight' => 8,
+              'group' => $js_css_group,
+            ),
+            'js/openlayers.pluginManager.js' => array(
+              'type' => 'file',
+              'weight' => 12,
+              'group' => $js_css_group,
+            ),
+            'js/openlayers.behaviors.js' => array(
+              'type' => 'file',
+              'weight' => 14,
+              'group' => $js_css_group,
+            ),
+            'js/openlayers.console.js' => array(
+              'type' => 'file',
+              'weight' => 16,
+              'group' => $js_css_group,
+            ),
+            'js/openlayers.debug.js' => array(
+              'type' => 'file',
+              'weight' => 18,
+              'group' => $js_css_group,
+            ),
+          ),
+          'css' => array(
+            'css/openlayers.css' => array(
+              'type' => 'file',
+              'weight' => 4,
+              'group' => $js_css_group,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  $libraries['openlayers3'] = array(
+    'name' => 'Openlayers 3',
+    'vendor url' => 'http://openlayers.org/',
+    'download url' => 'https://github.com/openlayers/ol3/releases/download/v3.9.0/v3.9.0.zip',
+    'version callback' => array('\Drupal\openlayers\Openlayers', 'getLibraryVersion'),
+    'version arguments' => array(),
+    'library path' => $module_path,
+    // This is taken in account if the module libraries_cdn is enabled.
+    'cdn' => array(
+      'aliases' => array('ol3'),
+      'options' => array(
+        'weight' => 0,
+        'group' => $js_css_group,
+      ),
+      'request' => array(
+        // Maximum 10 seconds for the http requests to CDNs.
+        'timeout' => 10,
+      ),
+    ),
+    'variants' => array(),
+    'dependencies' => array(
+      'openlayers3_integration',
+    ),
+  );
+
+
+  if ($version = \Drupal\openlayers\Openlayers::getLocalLibraryVersion()) {
+    unset($libraries['openlayers3']['library path']);
+    $libraries['openlayers3']['variants']['local:' . $version] = array(
+      'name' => 'Openlayers ' . $version,
+      'files' => array(
+        'js' => array(
+          'build/ol.js' => array(
+            'type' => 'file',
+            'weight' => 6,
+            'group' => $js_css_group,
+          ),
+        ),
+        'css' => array(
+          'css/ol.css' => array(
+            'type' => 'file',
+            'weight' => 4,
+            'group' => $js_css_group,
+          ),
+        ),
+      ),
+    );
+  }
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function openlayers_hook_info() {
+  $hooks = array(
+    'openlayers_object_preprocess_alter',
+    'openlayers_object_postprocess_alter',
+  );
+
+  return array_fill_keys($hooks, array('group' => 'openlayers'));
 }

@@ -37,7 +37,7 @@ function openlayers_services_default_services_endpoint() {
     ),
   );
   $endpoint->resources = array(
-    'openlayers_map' => array(
+    'openlayers-map' => array(
       'operations' => array(
         'retrieve' => array(
           'enabled' => '1',
@@ -46,7 +46,7 @@ function openlayers_services_default_services_endpoint() {
     ),
   );
   $endpoint->debug = 0;
-  $export['openlayers_map'] = $endpoint;
+  $export['openlayers-map'] = $endpoint;
 
   return $export;
 }

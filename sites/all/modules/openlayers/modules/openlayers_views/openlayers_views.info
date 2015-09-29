@@ -1,5 +1,5 @@
-name = OpenLayers Views
-description = OpenLayers module for Views
+name = Openlayers Views
+description = Openlayers module for Views
 core = 7.x
 package = "Openlayers"
 
@@ -13,9 +13,9 @@ files[] = views/openlayers_views_plugin_map_views.inc
 
 registry_autoload[] = PSR-4
 
-; Information added by Drupal.org packaging script on 2015-06-25
-version = "7.x-3.0-beta3"
+; Information added by Drupal.org packaging script on 2015-09-25
+version = "7.x-3.x-dev"
 core = "7.x"
 project = "openlayers"
-datestamp = "1435264090"
+datestamp = "1443219248"
 

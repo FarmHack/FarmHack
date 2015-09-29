@@ -15,11 +15,11 @@ function openlayers_ui_OpenlayersComponents_ctools_export_ui() {
       'menu prefix' => 'admin/structure/openlayers',
       'menu item' => 'components',
       'menu title' => 'Components',
-      'menu description' => 'Administer OpenLayers components.',
+      'menu description' => 'Administer Openlayers components.',
     ),
 
     'handler' => array(
-      'class' => '\\Drupal\\openlayers\\UI\\OpenlayersComponents',
+      'class' => '\\Drupal\\openlayers_ui\\UI\\OpenlayersComponents',
       'file' => 'OpenlayersComponents.php',
     ),
 
@@ -51,8 +51,8 @@ function openlayers_ui_OpenlayersComponents_ctools_export_ui() {
 
     'title singular' => t('component'),
     'title plural' => t('components'),
-    'title singular proper' => t('OpenLayers component preset'),
-    'title plural proper' => t('OpenLayers component presets'),
+    'title singular proper' => t('Openlayers component preset'),
+    'title plural proper' => t('Openlayers component presets'),
 
     'strings' => array(
       'confirmation' => array(
@@ -71,23 +71,22 @@ function openlayers_ui_OpenlayersComponents_ctools_export_ui() {
  * Component base config form handler.
  */
 function openlayers_component_form_start($form, &$form_state) {
-  $class = new Drupal\openlayers\UI\OpenlayersComponents();
+  $class = new Drupal\openlayers_ui\UI\OpenlayersComponents();
   $class->init($form_state['plugin']);
   $class->edit_form($form, $form_state);
 
-  $maps = ctools_export_crud_load_all('openlayers_maps');
-  $options = array('' => 'Dont attach');
-  foreach ($maps as $machine_name => $data) {
-    $map = openlayers_object_load('Map', $machine_name);
-    if (property_exists($map, 'disabled') && ($map->disabled == 1 || $map->disabled == TRUE)) {
+  $options = array();
+  foreach (\Drupal\openlayers\Openlayers::loadAllExportable('Map') as $machine_name => $map) {
+    if (!is_object($map) || (property_exists($map, 'disabled') && ($map->disabled == 1 || $map->disabled == TRUE))) {
       continue;
     }
-    $options[$machine_name] = $data->name;
+    $options[$machine_name] = $map->name;
   }
 
   $form['attachToMap'] = array(
     '#type' => 'select',
     '#title' => 'Add this to a map ?',
+    '#empty_option' => t('- Do no attach -'),
     '#description' => 'Select the map to add this object to.',
     '#options' => $options,
     '#default_value' => isset($form_state['item']->attachToMap) ? $form_state['item']->attachToMap : '',
@@ -100,7 +99,7 @@ function openlayers_component_form_start($form, &$form_state) {
  * Component base config form validation handler.
  */
 function openlayers_component_form_start_validate($form, &$form_state) {
-  $class = new Drupal\openlayers\UI\OpenlayersComponents();
+  $class = new Drupal\openlayers_ui\UI\OpenlayersComponents();
   $class->init($form_state['plugin']);
   $class->edit_form_validate($form, $form_state);
 }
@@ -109,7 +108,7 @@ function openlayers_component_form_start_validate($form, &$form_state) {
  * Component base config form submit handler.
  */
 function openlayers_component_form_start_submit($form, &$form_state) {
-  $class = new Drupal\openlayers\UI\OpenlayersComponents();
+  $class = new Drupal\openlayers_ui\UI\OpenlayersComponents();
   $class->init($form_state['plugin']);
   $class->edit_form_submit($form, $form_state);
 }
@@ -121,9 +120,10 @@ function openlayers_component_form_type($form, &$form_state) {
   $form['factory_service'] = array(
     '#type' => 'select',
     '#title' => t('Component Type'),
+    '#empty_option' => t('- Select a @plugin type -', array('@plugin' => 'Component')),
     '#default_value' => isset($form_state['item']->factory_service) ? $form_state['item']->factory_service : '',
     '#description' => t('Select the type of component.'),
-    '#options' => Openlayers::getOLObjectsOptions('Component'),
+    '#options' => \Drupal\openlayers\Openlayers::getOLObjectsOptions('Component'),
     '#required' => TRUE,
   );
 
@@ -141,9 +141,10 @@ function openlayers_component_form_type_submit($form, &$form_state) {
  * Component options form handler.
  */
 function openlayers_component_form_options($form, &$form_state) {
-  $component = openlayers_object_load('Component', $form_state['item']);
-  $component->optionsForm($form, $form_state);
-  $form['options']['#tree'] = TRUE;
+  if (($component = \Drupal\openlayers\Openlayers::load('Component', $form_state['item'])) == TRUE) {
+    $component->optionsForm($form, $form_state);
+    $form['options']['#tree'] = TRUE;
+  }
 
   return $form;
 }
@@ -152,8 +153,9 @@ function openlayers_component_form_options($form, &$form_state) {
  * Component options form validation handler.
  */
 function openlayers_component_form_options_validate($form, &$form_state) {
-  $component = openlayers_object_load('Component', $form_state['item']);
-  $component->optionsFormValidate($form, $form_state);
+  if (($component = \Drupal\openlayers\Openlayers::load('Component', $form_state['item'])) == TRUE) {
+    $component->optionsFormValidate($form, $form_state);
+  }
 }
 
 /**
@@ -164,13 +166,13 @@ function openlayers_component_form_options_submit($form, &$form_state) {
     $form_state['item']->options = array_merge((array) $form_state['item']->options, (array) $form_state['values']['options']);
   }
 
-  if (!empty($form_state['item']->attachToMap)) {
-    $map = ctools_export_crud_load('openlayers_maps', $form_state['item']->attachToMap);
-    $map->options['components'][] = $form_state['item']->machine_name;
-    ctools_export_crud_save('openlayers_maps', $map);
-    unset($form_state['item']->attachToMap);
-  }
+  if (($component = \Drupal\openlayers\Openlayers::load('Component', $form_state['item'])) == TRUE) {
+    if (!empty($form_state['item']->attachToMap) && ($map = \Drupal\openlayers\Openlayers::load('map', $form_state['item']->attachToMap)) == TRUE) {
+      $map->getCollection()->append($component);
+      \Drupal\openlayers\Openlayers::save($map);
+      unset($form_state['item']->attachToMap);
+    }
 
-  $component = openlayers_object_load('Component', $form_state['item']);
-  $component->optionsFormSubmit($form, $form_state);
+    $component->optionsFormSubmit($form, $form_state);
+  }
 }

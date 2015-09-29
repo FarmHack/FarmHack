@@ -9,6 +9,6 @@ namespace Drupal\openlayers\Types;
 /**
  * Interface ProjectionInterface.
  */
-interface ProjectionInterface {
+interface ProjectionInterface extends ObjectInterface {
 
 }

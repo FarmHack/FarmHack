@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_default_projections().
+ * Implements hook_default_openlayers_projections().
  */
 function openlayers_default_openlayers_projections() {
   $export = array();

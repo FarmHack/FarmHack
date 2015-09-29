@@ -6,7 +6,7 @@
 
 namespace Drupal\openlayers\Types;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\openlayers\Types\Object;
 use Drupal\service_container\Messenger\MessengerInterface;
@@ -14,7 +14,7 @@ use Drupal\service_container\Messenger\MessengerInterface;
 /**
  * Class Error.
  *
- * @Plugin(
+ * @OpenlayersPlugin(
  *   id = "Error",
  *   arguments = {
  *     "@logger.channel.default",
@@ -25,7 +25,7 @@ use Drupal\service_container\Messenger\MessengerInterface;
  * Dummy class to avoid breaking the whole processing if a plugin class is
  * missing.
  */
-class Error extends Object {
+class Error extends Object implements ControlInterface, ComponentInterface, LayerInterface, SourceInterface, StyleInterface {
 
   /**
    * @var string
@@ -54,32 +54,18 @@ class Error extends Object {
     $this->loggerChannel = $logger_channel;
     $this->messenger = $messenger;
 
-    foreach ($this->defaultProperties() as $property => $value) {
-      $this->{$property} = $value;
+    $this->errorMessage = 'Error while loading @type @machine_name having service @service.';
+
+    if (!empty($configuration['errorMessage'])) {
+      $this->errorMessage = $configuration['errorMessage'];
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function defaultProperties() {
-    $properties = parent::defaultProperties();
-    $properties['errorMessage'] = 'Error while loading @type @machine_name having service @service.';
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(array $data) {
-    foreach ($data as $property => $value) {
-      $this->{$property} = $data[$property];
-    }
-
-    if (isset($data['options'])) {
-      $this->options = array_replace_recursive((array) $this->options, (array) $data['options']);
-    }
-
+  public function init() {
+    parent::init();
     $this->loggerChannel->error($this->getMessage(), array('channel' => 'openlayers'));
     $this->messenger->addMessage($this->getMessage(), 'error', FALSE);
   }
@@ -90,7 +76,7 @@ class Error extends Object {
   public function getMessage() {
     $machine_name = isset($this->machine_name) ? $this->machine_name : 'undefined';
     $service = isset($this->factory_service) ? $this->factory_service : 'undefined';
-    $type = isset($this->type) ? $this->type : 'undefined';
+    $type = isset($this->configuration['type']) ? $this->configuration['type'] : 'undefined';
 
     return t($this->errorMessage, array(
       '@machine_name' => $machine_name,
@@ -102,49 +88,36 @@ class Error extends Object {
   /**
    * {@inheritdoc}
    */
-  public function getSource() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSources() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLayers() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getControls() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInteractions() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getComponents() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getType() {
     return 'Error';
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStyle() {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSource() {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStyle(StyleInterface $style) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSource(SourceInterface $source) {
+
+  }
+
 }

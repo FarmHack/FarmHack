@@ -5,70 +5,83 @@
  */
 
 namespace Drupal\openlayers\Types;
+use Drupal\openlayers\Openlayers;
 
 /**
  * Class Layer.
  */
 abstract class Layer extends Object implements LayerInterface {
-
   /**
-   * {@inheritdoc}
+   * The array containing the options.
+   *
+   * @var array
    */
-  protected function buildCollection() {
-    parent::buildCollection();
-
-    foreach (array('source', 'style') as $type) {
-      if ($data = $this->getOption($type, FALSE)) {
-        // @TODO Throw proper exception if an object isn't available?
-        if ($object = openlayers_object_load($type, $data)) {
-          $this->getCollection()->merge($object->getCollection());
-        }
-      }
-    }
-  }
+  protected $options = array();
 
   /**
    * Returns the source of this layer.
    *
-   * @return openlayers_source_interface|FALSE
+   * @return SourceInterface|FALSE
    *   The source assigned to this layer.
    */
   public function getSource() {
-    $source = array_values($this->getCollection()->getObjects('source'));
-
-    return ($source[0] instanceof SourceInterface) ? $source[0] : FALSE;
+    $source = $this->getObjects('source');
+    if ($source = array_shift($source)) {
+      return ($source instanceof SourceInterface) ? $source : FALSE;
+    }
+    return FALSE;
   }
 
   /**
    * Returns the style of this layer.
    *
-   * @return openlayers_style_interface|FALSE
+   * @return StyleInterface|FALSE
    *   The style assigned to this layer.
    */
   public function getStyle() {
-    $style = array_values($this->getCollection()->getObjects('style'));
-    return (isset($style[0]) && $style[0] instanceof StyleInterface) ? $style[0] : FALSE;
+    $style = $this->getObjects('style');
+    if ($style = array_shift($style)) {
+      return ($style instanceof StyleInterface) ? $style : FALSE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Set the source of this layer.
+   *
+   * @param SourceInterface $source
+   *   The source object.
+   */
+  public function setSource(SourceInterface $source) {
+    /* @var Source $source */
+    $this->setOption('source', $source->getMachineName());
+  }
+
+  /**
+   * Set the style of this layer.
+   *
+   * @param StyleInterface $style
+   *   The style object.
+   */
+  public function setStyle(StyleInterface $style) {
+    /* @var Style $style */
+    $this->setOption('style', $style->getMachineName());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getJS() {
-    $options = $this->options;
+  public function optionsToObjects() {
+    $import = parent::optionsToObjects();
 
-    if ($source = $this->getSource()) {
-      $options['source'] = $source->machine_name;
+    if ($style = $this->getOption('style')) {
+      $import = array_merge($import, Openlayers::load('style', $style)->getCollection()->getFlatList());
     }
 
-    if ($style = $this->getStyle()) {
-      $options['style'] = $style->machine_name;
+    if ($source = $this->getOption('source')) {
+      $import = array_merge($import, Openlayers::load('source', $source)->getCollection()->getFlatList());
     }
 
-    return array(
-      'mn' => $this->machine_name,
-      'fs' => $this->factory_service,
-      'opt' => $options,
-    );
+    return $import;
   }
-
 }

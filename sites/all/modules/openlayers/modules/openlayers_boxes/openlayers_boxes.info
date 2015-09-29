@@ -1,0 +1,14 @@
+name = Openlayers Boxes
+description = Openlayers integration with Boxes module.
+core = 7.x
+package = "Openlayers"
+
+dependencies[] = openlayers
+dependencies[] = boxes
+
+; Information added by Drupal.org packaging script on 2015-09-25
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "openlayers"
+datestamp = "1443219248"
+

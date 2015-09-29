@@ -6,38 +6,82 @@
 
 namespace Drupal\openlayers\Types;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\openlayers\Component\Annotation\OpenlayersPlugin;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\openlayers\Openlayers;
 use Drupal\openlayers\Types\Object;
 
 
 /**
  * Class Collection.
  *
- * @Plugin(
+ * @OpenlayersPlugin(
  *   id = "Collection"
  * )
  */
 class Collection extends PluginBase {
 
   /**
-   * @var array
-   *  List of objects in this collection. The items have to be instances of
-   * \Drupal\openlayers\Types\Object.
+   * @var ObjectInterface[] $objects
+   *   List of objects in this collection. The items have to be instances of
+   *   \Drupal\openlayers\Types\Object.
    */
   protected $objects = array();
 
   /**
+   * Import a flat list of Openlayers Objects.
+   *
+   * @param ObjectInterface[] $import
+   *   The array of objects to import.
+   */
+  public function import(array $import = array()) {
+    foreach ($import as $object) {
+      /* @var Object $object */
+      $this->merge($object->getCollection());
+    }
+  }
+
+  /**
    * Add object to this collection.
    *
-   * @param Object $object
+   * @param ObjectInterface $object
    *   Object instance to add to this collection.
    */
-  public function append(Object $object) {
-    list($plugin_manager, $plugin_id) = array_pad(explode(':', $object->factory_service), 2, NULL);
-    list($module, $plugin_type) = array_pad(explode('.', drupal_strtolower($plugin_manager), 2), 2, NULL);
+  public function append(ObjectInterface $object) {
+    $object->setWeight($object->getWeight() + count($this->objects));
+    $this->objects[$object->getType() . '_' . $object->getMachineName()] = $object;
+  }
 
-    $this->objects[$plugin_type][$object->machine_name] = $object;
+  /**
+   * Add object to this collection.
+   *
+   * @param ObjectInterface $object
+   *   Object instance to add to this collection.
+   */
+  public function prepend(ObjectInterface $object) {
+    $this->objects = array_merge(array($object->getType() . '_' . $object->getMachineName() => $object), $this->objects);
+  }
+
+  /**
+   * Remove object from this collection.
+   *
+   * @param ObjectInterface $object
+   *   Object instance to remove from this collection.
+   */
+  public function delete(ObjectInterface $object) {
+    unset($this->objects[$object->getType() . '_' . $object->getMachineName()]);
+  }
+
+  /**
+   * Remove object type.
+   *
+   * @param array $types
+   *   The types of objects to remove.
+   */
+  public function clear(array $types = array()) {
+    foreach ($types as $type) {
+      unset($this->objects[$type]);
+    }
   }
 
   /**
@@ -48,17 +92,20 @@ class Collection extends PluginBase {
    */
   public function getAttached() {
     $attached = array();
-    foreach ($this->objects as $objects) {
-      foreach ($objects as $object) {
-        $object_attached = $object->attached() + array(
-          'js' => array(),
-          'css' => array(),
-          'library' => array(),
-          'libraries_load' => array(),
-        );
-        foreach (array('js', 'css', 'library', 'libraries_load') as $type) {
-          foreach ($object_attached[$type] as $data) {
-            $attached[$type][] = $data;
+    foreach ($this->getFlatList() as $object) {
+      $object_attached = $object->attached() + array(
+        'js' => array(),
+        'css' => array(),
+        'library' => array(),
+        'libraries_load' => array(),
+      );
+      foreach (array('js', 'css', 'library', 'libraries_load') as $type) {
+        foreach ($object_attached[$type] as $data) {
+          if (isset($attached[$type])) {
+            array_unshift($attached[$type], $data);
+          }
+          else {
+            $attached[$type] = array($data);
           }
         }
       }
@@ -73,18 +120,13 @@ class Collection extends PluginBase {
    *   All the JS settings of the collection objects.
    */
   public function getJS() {
-    $clone = clone $this;
     $settings = array();
-    foreach ($clone->objects as $type => $objects) {
-      foreach ($objects as $object) {
-        $settings[$type][] = $object->getJS();
-      }
+
+    foreach ($this->getFlatList() as $object) {
+      $settings[$object->getType()][] = $object->getJS();
     }
 
-    $settings = array_map_recursive('_floatval_if_numeric', $settings);
-    $settings = removeEmptyElements($settings);
-
-    return $settings;
+    return array_change_key_case($settings, CASE_LOWER);
   }
 
   /**
@@ -99,41 +141,45 @@ class Collection extends PluginBase {
    */
   public function getObjects($type = NULL) {
     if ($type == NULL) {
-      return $this->objects;
+      $list = array();
+      foreach ($this->getFlatList() as $object) {
+        $list[$object->getType()][] = $object;
+      }
+      return array_change_key_case($list, CASE_LOWER);
     }
 
-    if (isset($this->objects[$type])) {
-      return $this->objects[$type];
-    }
-
-    return array();
+    return $this->getFlatList(array($type));
   }
 
   /**
-   * Flat array with all the collection objects.
+   * Return an array with all the collection objects.
    *
-   * @param string $type
-   *   Type to filter for. If set only a list with objects of this type is
-   *   returned.
+   * @param array $types
+   *   Array of type to filter for. If set, only a list with objects of this
+   *   type is returned.
    *
-   * @return array
+   * @return \Drupal\openlayers\Types\Object[]
    *   List of objects of this collection or list of a specific type of objects.
    */
-  public function getFlatList($type = NULL) {
-    $list = array();
+  public function getFlatList(array $types = array()) {
+    $list = $this->objects;
 
-    if ($type != NULL && isset($this->objects[$type])) {
-      foreach ($this->objects[$type] as $object) {
-        $list[] = $object;
-      }
+    if (!empty($types)) {
+      $types = array_values($types);
+
+      array_walk($types, function(&$value) {
+        $value = drupal_strtolower($value);
+      });
+
+      $list = array_filter($this->objects, function($obj) use ($types) {
+        /* @var Object $obj */
+        return in_array($obj->getType(), $types);
+      });
     }
-    else {
-      foreach ($this->objects as $objects) {
-        foreach ($objects as $object) {
-          $list[] = $object;
-        }
-      }
-    }
+
+    uasort($list, function($a, $b) {
+      return $a->getWeight() - $b->getWeight();
+    });
 
     return $list;
   }
@@ -145,10 +191,22 @@ class Collection extends PluginBase {
    *   The collection to merge into this one.
    */
   public function merge(Collection $collection) {
-    foreach ($collection->getObjects() as $objects) {
-      foreach ($objects as $object) {
-        $this->append($object);
-      }
+    foreach ($collection->getFlatList() as $object) {
+      $this->prepend($object);
     }
+  }
+
+  /**
+   * Get the collection as an export array with id's instead of objects.
+   *
+   * @return array
+   *   The export array.
+   */
+  public function getExport() {
+    $export = array();
+    foreach ($this->getFlatList() as $object) {
+      $export[$object->getType()][] = $object->getMachineName();
+    }
+    return array_change_key_case($export, CASE_LOWER);
   }
 }

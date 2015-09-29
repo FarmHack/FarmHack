@@ -1,55 +1,62 @@
-Drupal.openlayers.pluginManager = (function($) {
+(function ($, Drupal) {
+
   "use strict";
+
   var plugins = [];
-  return {
-    attach: function(context, settings) {
+
+  Drupal.openlayers.pluginManager = {
+    attach: function (context, settings) {
       for (var i in plugins) {
         var plugin = plugins[i];
-        if (goog.isFunction(plugin.attach)) {
+        if (typeof plugin.attach === 'function') {
           plugin.attach(context, settings);
         }
       }
     },
-    detach: function(context, settings) {
+    detach: function (context, settings) {
       for (var i in plugins) {
         var plugin = plugins[i];
-        if (goog.isFunction(plugin.detach)) {
+        if (typeof plugin.detach === 'function') {
           plugin.detach(context, settings);
         }
       }
     },
-    alter: function(){
+    alter: function () {
       // @todo: alter hook
     },
-    getPlugin: function(factoryService) {
+    getPlugin: function (factoryService) {
       if (this.isRegistered(factoryService)) {
         return plugins[factoryService];
       }
       return false;
     },
-    getPlugins: function(){
+    getPlugins: function () {
       return Object.keys(plugins);
     },
-    register: function(plugin) {
-      if (!goog.isObject(plugin)) {
+    register: function (plugin) {
+      if ((typeof plugin !== 'object') || (plugin === null)) {
         return false;
       }
 
-      if (!plugin.hasOwnProperty('fs') || !goog.isFunction(plugin.init)) {
+      if (typeof plugin.init !== 'function') {
+        return false;
+      }
+
+      if (!plugin.hasOwnProperty('fs')) {
         return false;
       }
 
       plugins[plugin.fs] = plugin;
     },
-    createInstance: function(factoryService, data) {
+    createInstance: function (factoryService, data) {
       if (!this.isRegistered(factoryService)) {
         return false;
       }
 
       try {
         var obj = plugins[factoryService].init(data);
-      } catch(e) {
-        if (goog.isDef(console)) {
+      } catch (e) {
+        if (console !== undefined) {
           Drupal.openlayers.console.log(e.message);
           Drupal.openlayers.console.log(e.stack);
         }
@@ -59,15 +66,17 @@ Drupal.openlayers.pluginManager = (function($) {
         }
       }
 
-      if (goog.isObject(obj)) {
+      var objType = typeof obj;
+      if ((objType === 'object') && (objType !== null) || (objType === 'function')) {
         obj.mn = data.data.mn;
         return obj;
       }
 
       return false;
     },
-    isRegistered: function(factoryService) {
+    isRegistered: function (factoryService) {
       return (factoryService in plugins);
     }
   };
-})(jQuery);
+
+}(jQuery, Drupal));

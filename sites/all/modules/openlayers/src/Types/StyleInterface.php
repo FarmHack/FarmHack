@@ -9,5 +9,6 @@ namespace Drupal\openlayers\Types;
 /**
  * Interface StyleInterface.
  */
-interface StyleInterface {
+interface StyleInterface extends ObjectInterface {
+
 }

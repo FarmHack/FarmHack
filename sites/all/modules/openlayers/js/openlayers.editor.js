@@ -1,7 +1,9 @@
-Drupal.behaviors.openlayers_editor = (function($){
+(function ($, Drupal) {
+
   "use strict";
-  return {
-    attach: function(context, settings) {
+
+  Drupal.behaviors.openlayers_editor = {
+    attach: function (context, settings) {
       $('textarea[data-editor]').each(function () {
         var textarea = $(this);
 
@@ -29,9 +31,9 @@ Drupal.behaviors.openlayers_editor = (function($){
         // copy back to textarea on form submit...
         textarea.closest('form').submit(function () {
           textarea.val(editor.getSession().getValue());
-        })
+        });
 
       });
     }
   };
-})(jQuery);
+}(jQuery, Drupal));

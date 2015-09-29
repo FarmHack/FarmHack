@@ -5,33 +5,19 @@
  */
 
 namespace Drupal\openlayers\Types;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * Interface openlayers_object_interface.
  */
-interface ObjectInterface {
-  /**
-   * Return a list of default properties.
-   *
-   * @return array
-   *   The default properties for this class.
-   */
-  public function defaultProperties();
-
+interface ObjectInterface extends PluginInspectionInterface {
   /**
    * Initializes the object.
-   *
-   * @param array $data
-   *   The configuration data.
    */
-  public function init(array $data);
+  public function init();
 
   /**
    * The type of this object.
-   *
-   * @todo: Shouldn't we automatically compute this based on the fully qualified
-   * class name ?
-   * ex: \Drupal\openlayers\Control\MousePosition => Control
    *
    * @return string|FALSE
    *   The object type or FALSE on failure.
@@ -39,26 +25,34 @@ interface ObjectInterface {
   public function getType();
 
   /**
-   * Returns the plugin definition.
-   *
-   * @return array
-   *   The plugin definition.
-   */
-  public function getConfiguration();
-
-  /**
    * @TODO was does this?
    *
    * @param string|array $parents
-   *   @TODO Define how this has to look like if it is an array.
+   * @TODO Define how this has to look like if it is an array.
    */
   public function clearOption($parents);
+
+  /**
+   * Return the options array.
+   *
+   * @return array
+   *   The array of options.
+   */
+  public function getOptions();
+
+  /**
+   * Set the options array.
+   *
+   * @param array $options
+   *   The options array.
+   */
+  public function setOptions(array $options = array());
 
   /**
    * Returns an option.
    *
    * @param string|array $parents
-   *   @TODO Define how this has to look like if it is an array.
+   * @TODO Define how this has to look like if it is an array.
    * @param mixed $default_value
    *   The default value to return if the option isn't set. Set to NULL if not
    *   defined.
@@ -72,7 +66,7 @@ interface ObjectInterface {
    * Set an option.
    *
    * @param string|array $parents
-   *   @TODO Define how this has to look like if it is an array.
+   * @TODO Define how this has to look like if it is an array.
    *
    * @param mixed $value
    *   The value to set.
@@ -148,7 +142,7 @@ interface ObjectInterface {
    * @param \Drupal\openlayers\Types\ObjectInterface $context
    *   The context of the build. Mostly the map object.
    */
-  public function preBuild(array &$build, \Drupal\openlayers\Types\ObjectInterface $context = NULL);
+  public function preBuild(array &$build, ObjectInterface $context = NULL);
 
   /**
    * Invoked after an objects render array is built.
@@ -160,5 +154,134 @@ interface ObjectInterface {
    * @param \Drupal\openlayers\Types\ObjectInterface $context
    *   The context of the build. Mostly the map object.
    */
-  public function postBuild(array &$build, \Drupal\openlayers\Types\ObjectInterface $context = NULL);
+  public function postBuild(array &$build, ObjectInterface $context = NULL);
+
+  /**
+   * Return an object, CTools Exportable.
+   *
+   * @return \StdClass
+   */
+  public function getExport();
+
+  /**
+   * Return the object configuration.
+   *
+   * @return array
+   */
+  public function getConfiguration();
+
+  /**
+   * Return an array of OL objects indexed by their type.
+   *
+   * @param string $type
+   * @return array
+   */
+  public function getObjects($type = NULL);
+
+  /**
+   * Returns an array with the maps this object is attached on.
+   *
+   * @return array
+   *   An array of map objects this object is attached on. Keyed by the map
+   *   machine name.
+   */
+  public function getParents();
+
+  /**
+   * Return the module that provides this plugin.
+   *
+   * @return string
+   */
+  public function getProvider();
+
+  /**
+   * Returns the path to the plugin directory.
+   *
+   * @return string
+   */
+  public function getClassDirectory();
+
+  /**
+   * Returns the path to the class file.
+   *
+   * @return string
+   */
+  public function getClassPath();
+
+  /**
+   * Return the Collection object linked to the object.
+   *
+   * @return Collection
+   */
+  public function getCollection();
+
+  /**
+   * Return the JS to insert in the page when building the object.
+   *
+   * @return array
+   */
+  public function getJS();
+
+  /**
+   * Set the weight of an object.
+   *
+   * @param int $weight
+   * @return void
+   */
+  public function setWeight($weight);
+
+  /**
+   * Get the weight of an object.
+   *
+   * @return int
+   */
+  public function getWeight();
+
+  /**
+   * Return a flat array containing Openlayers Objects from the options array.
+   *
+   * @return Object[]
+   */
+  public function optionsToObjects();
+
+  /**
+   * Return the human name of the object.
+   *
+   * @return string
+   */
+  public function getName();
+
+  /**
+   * Return the unique machine name of the object.
+   *
+   * @return string
+   *   The unique machine name of this object.
+   */
+  public function getMachineName();
+
+  /**
+   * Return the description of the object.
+   *
+   * @return string
+   */
+  public function getDescription();
+
+  /**
+   * Return the description of the object's plugin.
+   *
+   * @return string
+   */
+  public function getPluginDescription();
+
+  /**
+   * Refresh string translations.
+   */
+  public function i18nStringsRefresh();
+
+  /**
+   * Return the Factory Service of the object.
+   *
+   * @return string
+   */
+  public function getFactoryService();
 }

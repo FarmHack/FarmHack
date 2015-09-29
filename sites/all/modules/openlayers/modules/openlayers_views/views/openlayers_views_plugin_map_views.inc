@@ -45,7 +45,7 @@ class openlayers_views_plugin_map_views extends openlayers_views_plugin_style_so
 
     $output = NULL;
     $map_machine_name = 'map_views_' . $this->view->name . '_' . $this->view->current_display;
-    if (empty($this->skipMapRender) && ($this->map = openlayers_object_load('Map', $map_machine_name)) && !($this->map instanceof \Drupal\openlayers\Types\Error)) {
+    if (empty($this->skipMapRender) && ($this->map = \Drupal\openlayers\Openlayers::load('Map', $map_machine_name)) == TRUE && !($this->map instanceof \Drupal\openlayers\Types\Error)) {
       // Inject the features so that the map handler doesn't execute the view
       // again.
       $this->map->setFeatures($this->features);
