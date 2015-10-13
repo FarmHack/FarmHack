@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Impact Assessment Reports feature.
+ */
+
+include_once 'impact_assessment_reports.features.inc';
