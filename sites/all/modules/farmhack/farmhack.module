@@ -18,8 +18,8 @@ function farmhack_custom_theme() {
   $path = current_path();
   $alias = drupal_get_path_alias($path);
   $args = explode('/', $alias);
-  if ($args[0] == 'library') {
-    return 'bootstrap_farmhack';
+  if ($args[0] == 'tools') {
+    return 'bartik';
   }
 }
 
