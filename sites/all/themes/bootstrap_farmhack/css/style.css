@@ -20,6 +20,19 @@
   width: 45%;
 }
 
+.rate-widget-1 .rate-thumbs-up-btn-up {
+  background: url(/sites/all/themes/bootstrap_farmhack/images/heart.png) no-repeat 0 0;
+  height: 30px;
+  width: 30px;
+}
+
+.rate-widget-2 .rate-thumbs-up-btn-up {
+  background: url(/sites/all/themes/bootstrap_farmhack/images/wrench.png) no-repeat 0 0;
+  height: 30px;
+  width: 30px;
+}
+
+
 @media  (max-width: 600px) {
   .search-results .item {
     width: 95%;
