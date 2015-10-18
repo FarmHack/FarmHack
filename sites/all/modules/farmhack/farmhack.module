@@ -18,7 +18,7 @@ function farmhack_custom_theme() {
   $path = current_path();
   $alias = drupal_get_path_alias($path);
   $args = explode('/', $alias);
-  $allowed = array('library', 'forum', 'forums', 'people', 'home', 'calendar');
+  $allowed = array('library', 'forum', 'forums', 'people', 'home', 'calendar', 'shops', 'shop');
   if (in_array($args[0], $allowed)) {
     return 'bootstrap_farmhack';
   }
