@@ -23,9 +23,10 @@ function farmhack_apachesolr_environments() {
     'node' => array(
       0 => 'event_shared',
       1 => 'forum',
-      2 => 'opentools_tool',
-      3 => 'tool',
-      4 => 'wiki',
+      2 => 'impact_assessment_report',
+      3 => 'opentools_tool',
+      4 => 'tool',
+      5 => 'wiki',
     ),
   );
   $export['solr'] = $environment;

@@ -147,6 +147,12 @@ function farmhack_context_default_contexts() {
           'region' => 'sidebar_first',
           'weight' => '-10',
         ),
+        'facetapi-8o8kdtP8CKjahDIu1Wy5LGxnDHg3ZYnT' => array(
+          'module' => 'facetapi',
+          'delta' => '8o8kdtP8CKjahDIu1Wy5LGxnDHg3ZYnT',
+          'region' => 'sidebar_first',
+          'weight' => '-9',
+        ),
       ),
     ),
   );

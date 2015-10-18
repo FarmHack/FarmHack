@@ -59,7 +59,7 @@ We also seek to bring our non-farmer allies on board: engineers, architects, des
 
 Have a suggestion or see a problem?  Speak up in the [forum for the Tool called "FarmHack.org"](http://farmhack.net/tools/farmhacknet#forum).
 
-If you would like to get involved, contact RJ at rj@rjsteinert.com
+If you would like to get involved, contact info@farmhack.net
 ',
       'format' => 'full_html',
     ),

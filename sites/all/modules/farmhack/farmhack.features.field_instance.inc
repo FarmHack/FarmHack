@@ -562,7 +562,66 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 5,
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-tool-field_tags'
+  $field_instances['node-tool-field_tags'] = array(
+    'bundle' => 'tool',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 13,
+      ),
+      'notifications' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tags',
+    'label' => 'Tags',
+    'required' => 0,
+    'settings' => array(
+      'jquery_ui_multiselect' => array(
+        'dividerLocation' => 0.5,
+        'doubleClickable' => 1,
+        'dragToAdd' => 1,
+        'enabled' => 0,
+        'height' => 0,
+        'includeAddAll' => 1,
+        'includeRemoveAll' => 1,
+        'searchable' => 1,
+        'selectedContainerOnLeft' => 1,
+        'sortable' => 1,
+        'width' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 4,
     ),
   );
 
@@ -689,7 +748,9 @@ function farmhack_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => '<b>Concept</b>: idea for a tool, not built yet <br>
+<b>Prototype</b>: tool has been built, but documentation is incomplete <br>
+<b>Ready to Build</b>: tool has been fully documented - someone else could take your plans and replicate',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -713,7 +774,7 @@ function farmhack_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_tool_stage',
-    'label' => 'tool_stage',
+    'label' => 'Tool Stage',
     'required' => 1,
     'settings' => array(
       'jquery_ui_multiselect' => array(
@@ -736,7 +797,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -783,7 +844,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 18,
+      'weight' => 23,
     ),
   );
 
@@ -830,7 +891,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 19,
+      'weight' => 24,
     ),
   );
 
@@ -877,7 +938,7 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 17,
+      'weight' => 22,
     ),
   );
 
@@ -924,19 +985,47 @@ function farmhack_field_default_field_instances() {
       'module' => 'multiple_selects',
       'settings' => array(),
       'type' => 'multiple_selects',
-      'weight' => 20,
+      'weight' => 25,
     ),
   );
 
   // Exported field_instance: 'node-tool-field_wiki'
   $field_instances['node-tool-field_wiki'] = array(
     'bundle' => 'tool',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => '<h2>
+	Bill of materials</h2>
+
+<p>
+	&nbsp;</p>
+
+<h2>
+	Other tools needed to build this tool</h2>
+
+<p>
+	&nbsp;</p>
+
+<h2>
+	Step-by-step build instructions</h2>
+
+<p>
+	&nbsp;</p>
+
+<h2>
+	Supporting materials</h2>
+
+<p>
+	ie. SketchUp files, CAD drawings, photos, video, technical drawings.&nbsp;</p>
+',
+        'format' => 'filtered_html',
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -979,10 +1068,10 @@ function farmhack_field_default_field_instances() {
     'bundle' => 'tool',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Describe how to use this Tool.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -1028,7 +1117,7 @@ function farmhack_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -1068,6 +1157,9 @@ function farmhack_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('<b>Concept</b>: idea for a tool, not built yet <br>
+<b>Prototype</b>: tool has been built, but documentation is incomplete <br>
+<b>Ready to Build</b>: tool has been fully documented - someone else could take your plans and replicate');
   t('<em>Add one need per line, e.g. </em>consistent germination is important economically<em> AND </em>commercially available solutions are too expensive');
   t('<em>Enter a list of relevant terms separated by commas. Existing tags will be suggested as you type.</em>');
   t('<em>Existing tags (e.g.</em> farmer<em>) will be suggested as you type.</em>');
@@ -1079,6 +1171,7 @@ function farmhack_field_default_field_instances() {
   t('Add a short narrative to describe your tool concept.');
   t('Because');
   t('Commerce Markup');
+  t('Describe how to use this Tool.');
   t('Description');
   t('Documentation Wiki (Drupal)');
   t('I am a');
@@ -1095,9 +1188,9 @@ function farmhack_field_default_field_instances() {
   t('This tool is a branch from these other tools');
   t('This tool is a component of these other tools');
   t('This tool merges these other tools together');
+  t('Tool Stage');
   t('User Manual Wiki (Drupal)');
   t('What functionality solves this problem?');
-  t('tool_stage');
 
   return $field_instances;
 }

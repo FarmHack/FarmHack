@@ -228,6 +228,18 @@ function farmhack_strongarm() {
             'visible' => TRUE,
           ),
         ),
+        'impact_link_entity_view_1' => array(
+          'default' => array(
+            'weight' => '10',
+            'visible' => TRUE,
+          ),
+        ),
+        'impact_assessment_reports_on_tool_entity_view_1' => array(
+          'default' => array(
+            'weight' => '10',
+            'visible' => TRUE,
+          ),
+        ),
       ),
     ),
   );
