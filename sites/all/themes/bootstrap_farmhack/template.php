@@ -4,7 +4,7 @@
  * template.php
  */
 function bootstrap_farmhack_apachesolr_search_page_alter(array &$build, array $search_page) {
-  if (arg(0) == "library" && arg(1) == "tools") {
+  if (arg(0) == "tools" && arg(1) == "") {
     // Manage the loading of the library/tools page
     drupal_add_css(drupal_get_path('theme', 'bootstrap_farmhack'). '/css/library-tools.css');
     drupal_add_js( '
@@ -49,7 +49,7 @@ function bootstrap_farmhack_apachesolr_search_page_alter(array &$build, array $s
 
 
 function bootstrap_farmhack_preprocess_search_result(&$vars) {
-  if (arg(0) == "library" && arg(1) == "tools") {
+  if (arg(0) == "tools" && arg(1) == "") {
     $vars['nid'] = $vars['result']['node']->entity_id;
     $vars['url'] = drupal_get_path_alias('node/' . $vars['nid']);
     $vars['node'] = node_load($vars['result']['node']->entity_id);
