@@ -15,25 +15,6 @@ function opentools_init() {
     drupal_add_css(drupal_get_path('module', 'opentools') . '/css/opentools.css');
   }
 
-  // Reroute Wiki pages 
-  if(arg(0) == "node" && is_numeric(arg(1)) && arg(2) != 'edit' && arg(2) != 'revisions') {
-    $node = node_load(arg(1));
-    if ($node->type == "wiki") {
-      $space = opentools_get_active_space();
-      if(is_array($space) && $parent = $space["object"]) {
-        drupal_goto(drupal_get_path_alias("node/" . $space["id"]), array("fragment" => "wiki"));
-      }
-    }
-  } 
-  
-  // Reroute Forum pages
-  if(arg(0) == "forum" && is_numeric(arg(1)) && arg(2) != 'edit') {
-    $space = opentools_get_active_space();
-    if(is_array($space) && $space["object"]) {
-      drupal_goto(drupal_get_path_alias("node/" . $space['id']), array('fragment'=> "forum"));
-    }
-  } 
-
   // Warn when creating loose wiki pages
   if($_GET['q'] == 'node/add/wiki') {
     drupal_set_message("You are creating a loose Wiki page that nothing links to.  You will need to link to this Wiki page from somewhere after you save it if you want anyone to find it.", 'warning');
