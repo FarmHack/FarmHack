@@ -6,21 +6,3 @@
 
 include_once 'farmhack.features.inc';
 
-function farmhack_init() {
-
-}
-
-function farmhack_form_alter(&$form, &$form_state, $form_id) {
-
-}
-
-function farmhack_custom_theme() {
-  $path = current_path();
-  $alias = drupal_get_path_alias($path);
-  $args = explode('/', $alias);
-  $allowed = array('tools', 'forum', 'people', 'home', 'calendar', 'shops', 'shop');
-  if (in_array($args[0], $allowed)) {
-    return 'bootstrap_farmhack';
-  }
-}
-
