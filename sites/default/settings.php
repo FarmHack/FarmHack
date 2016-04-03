@@ -506,6 +506,15 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
  * Remove the leading hash signs to disable.
  */
 # $conf['allow_authorize_operations'] = FALSE;
+ 
+$databases['default']['default'] = array(
+   'driver' => 'mysql',
+   'database' => 'farmhack',
+   'username' => 'root',
+   'password' => 'password',
+   'host' => 'mysql',
+   'collation' => 'utf8_general_ci',
+ );
 
 // Include local dev environment settings, if possible.
 if (file_exists(dirname(__FILE__) .'/settings.local.inc')) {
