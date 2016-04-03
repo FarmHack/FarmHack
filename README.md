@@ -1,4 +1,15 @@
 
+## Install FarmHak.org on your computer using Docker
+```
+# Get the code
+git clone git@github.com:FarmHack/FarmHack.org.git 
+# Uncompress the default database
+cd FarmHack.org/default-database
+tar xvf farmhack.dev.2015-03-13.sanitized.sql.tgz
+cd ..
+# Start the containers
+docker-compose up
+```
 
 ## Install FarmHack.org on your computer in 6 commands
 Prereq is having `drush` installed. See [drush.org](http://www.drush.org).
