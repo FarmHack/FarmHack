@@ -1,0 +1,15 @@
+farmhack:
+  image: drupal:7 
+  ports: 
+    - "80:80"
+  links: 
+    - mysql:mysql
+  volumes: 
+    - ./sites/:/var/www/html/sites/
+mysql:
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: password 
+    MYSQL_DATABASE: farmhack
+  volumes:
+    - ./default-database:/docker-entrypoint-initdb.d
